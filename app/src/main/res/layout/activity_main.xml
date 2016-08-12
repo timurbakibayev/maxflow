@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.gii.maxflow.MainActivity"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="50dp">
+    <include layout="@layout/content_main"
+        android:id="@+id/canvas"/>
+    </LinearLayout>
+
+    <!--
+    <com.gii.maxflow.circlePicker
+        android:layout_width="match_parent"
+        android:layout_marginBottom="60dp"
+        android:gravity="bottom|center"
+        android:layout_height="30dp"
+        />
+        -->
+    <LinearLayout
+        android:id="@+id/toolBarMenuContainer"
+        android:orientation="horizontal"
+        android:gravity="bottom|center"
+        android:background="#77FFFFAA"
+        android:backgroundTint="@color/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        >
+
+        <!--android:background="@drawable/preferedbackground"-->
+
+        <ImageButton
+            android:id="@+id/bottom_map"
+            android:background="#7c7cb1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:minHeight="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_map_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/bottom_list"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:minHeight="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/_ic_view_list_black_24dp"
+            android:background="#dbdada" />
+
+        <ImageButton
+            android:id="@+id/bottom_pie"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:clickable="true"
+            android:minHeight="16dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/_ic_pie_chart_white_24px"
+            android:background="#dbdada" />
+
+
+    </LinearLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:visibility="gone"
+        android:src="@drawable/_ic_arrow_left_24dp" />
+
+    <!--
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/right_labels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        fab:fab_addButtonColorNormal="@color/white"
+        fab:fab_addButtonColorPressed="@color/white_pressed"
+        fab:fab_addButtonPlusIconColor="@color/half_black"
+        android:layout_gravity="bottom|end"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left"
+        android:layout_alignParentBottom="true">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_icon="@drawable/_ic_pie_chart_white_24px"
+            fab:fab_colorNormal="@color/colorPrimaryDark"
+            fab:fab_title="@string/report"
+            fab:fab_colorPressed="@color/colorPrimary"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_charts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_icon="@drawable/_ic_pie_chart_white_24px"
+            fab:fab_colorNormal="@color/colorPrimaryDark"
+            fab:fab_title="@string/charts"
+            fab:fab_colorPressed="@color/colorPrimary"
+            android:visibility="gone"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_operations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_icon="@drawable/_ic_view_list_black_24dp"
+            fab:fab_colorNormal="@color/colorPrimaryDark"
+            fab:fab_title="@string/operations"
+            fab:fab_colorPressed="@color/colorPrimary"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    -->
+
+</android.support.design.widget.CoordinatorLayout>

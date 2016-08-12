@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_id": "anyway-wallet",
+    "project_number": "276787617041",
+    "name": "Anyway Wallet"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276787617041:android:7ab937d804296429",
+        "client_id": "android:com.gii.maxflow",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.gii.maxflow",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

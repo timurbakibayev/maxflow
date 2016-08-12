@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Anyway Wallet</string>
+    <string name="action_change_password">Сменить пароль</string>
+    <string name="action_piano">Пианино</string>
+    <string name="action_rate">Оцените приложение...</string>
+    <string name="action_reset_password">Сбросить пароль</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_sign_in">Войти или зарегистрироваться</string>
+    <string name="action_sign_in_short">Войти</string>
+    <string name="action_sign_out">Выйти</string>
+    <string name="april">апр</string>
+    <string name="august">авг</string>
+    <string name="saved">Сохранено</string>
+    <string name="buy_1m">Купить 1 месяц</string>
+    <string name="buy_1y">Купить 1 год</string>
+    <string name="change_password">Смена пароля</string>
+    <string name="change_password_new1">Введите новый пароль</string>
+    <string name="change_password_new2">Повторите пароль</string>
+    <string name="change_password_not_match">Пароли не совпадают</string>
+    <string name="claim_1m">Получить 1 месяц бесплатно</string>
+    <string name="claim_3m">Получить 3 месяца бесплатно</string>
+    <string name="cloudLogin">Облако...</string>
+    <string name="cloudLogout">Выйти</string>
+    <string name="copyFile">Сохранить как...</string>
+    <string name="december">дек</string>
+    <string name="delete">Удалить</string>
+    <string name="deleteFile">Удалить...</string>
+    <string name="description">Описание</string>
+    <string name="edit">Редактировать</string>
+    <string name="edit_operation">Реадктировать операцию</string>
+    <string name="emailBodyXML">Этот файл может быть открыт с помощью Microsoft Excel, Internet Explorer, Microsoft Edge или другим просмотрщиком XML. Спасибо за исползование Anyway Wallet!</string>
+    <string name="enterEmails">Введите адреса почты (test@gmail.com,test1@outlook.com,...)</string>
+    <string name="enter_amount">Введите сумму</string>
+    <string name="error_field_required">Это поле обязательно</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_invalid_email">Неверный адрес почты</string>
+    <string name="error_invalid_password">Этот пароль слишком короткий</string>
+    <string name="february">фев</string>
+    <string name="file">Файл...</string>
+    <string name="filter">Фильтр</string>
+    <string name="filter_all">ВСЕ</string>
+    <string name="filter_reset">Очистить фильтр</string>
+    <string name="filter_text">Поиск по тексту</string>
+    <string name="getFilesFromCloud">Получить файлы из облака</string>
+    <string name="hello_world">Привет, мир!</string>
+    <string name="hint_amount">Сумма</string>
+    <string name="hint_cash">Наличные, Работа, Фастфуд и т.д.</string>
+    <string name="hint_goal_amount">Лимит/Цель</string>
+    <string name="hint_limit">Лимит</string>
+    <string name="hint_goal">Цель</string>
+    <string name="hint_limit_button">Установить лимит</string>
+    <string name="hint_photo_button">Снять фото</string>
+    <string name="hint_remove_photo_button">Убрать фото</string>
+    <string name="hint_goal_button">Установить цель</string>
+    <string name="hint_current_amount">Текущая сумма</string>
+    <string name="hint_pin">Введите пин-код</string>
+    <string name="hint_description">Введите описание</string>
+    <string name="hint_description_exchange">Обмен валюты:</string>
+    <string name="hint_start_amount">Начальная сумма</string>
+    <string name="hint_correction_amount">Корректировка</string>
+    <string name="title_choose_default_currency">Выберите валюту по умолчанию</string>
+    <string name="title_choose_default_currency_fix">Найдены операции без указания валюты. Присвоить основную валюту этим операциям?</string>
+    <string name="title_choose_direction">Выберите направление</string>
+    <string name="icon">Значок</string>
+    <string name="january">янв</string>
+    <string name="july">июля</string>
+    <string name="june">июня</string>
+    <string name="last_month">Последний месяц</string>
+    <string name="last_week">Последняя неделя</string>
+    <string name="last_year">Последний год</string>
+    <string name="licence_expires">Лицензия истекает </string>
+    <string name="march">марта</string>
+    <string name="may">мая</string>
+    <string name="newFile">Новый...</string>
+    <string name="new_operation">Новая операция</string>
+    <string name="new_page">Новая\nстраница</string>
+    <string name="november">нояб</string>
+    <string name="october">окт</string>
+    <string name="offline">Оффлайн</string>
+    <string name="openFile">Открыть...</string>
+    <string name="openFileShared">Открыть чужой файл...</string>
+    <string name="copyOfflineFile">Скопировать из оффлайн...</string>
+    <string name="operations">Операции</string>
+    <string name="pref_autofill_amount">Заполнить последнюю сумму и описание при создании новой операции</string>
+    <string name="pref_circle_calc">Всегда показывать итоговую сумму на главном экране</string>
+    <string name="pref_circles">Кружки</string>
+    <string name="pref_header_general">Общие настройки</string>
+    <string name="pref_header_view">Вид и Звуки</string>
+    <string name="pref_prevent_create">Запретить создание новых кружков. Помогает против случайного создания кружков на медленных устройствах.</string>
+    <string name="pref_prevent_color_icons">Спрятать цветные иконки во время выбора</string>
+    <string name="pref_prevent_move">Запретить перемещение кружков. Помогает против случайного перемещения кружков на медленных устройствах.</string>
+    <string name="pref_ringtone_silent">Тишина</string>
+    <string name="pref_show_circle_amount">Показывать суммы над кружками в главном окне</string>
+    <string name="pref_show_circle_amount_trans">Показывать сумму в прозрачном прямоугольнике</string>
+    <string name="pref_show_circle_name">Отображать названия кружков в главном окне</string>
+    <string name="pref_auto_circle_size">Автоматически изменять размер кружков в зависимости от суммы</string>
+    <string name="pref_title_auto_circle_size">Авто размер кружка</string>
+    <string name="pref_show_operation_animation">Анимировать операции</string>
+    <string name="pref_show_operation_arrow">Отображать стрелки</string>
+    <string name="pref_show_operation_arrow_amount">Отображать суммы возле стрелок</string>
+    <string name="pref_sounds">Звуки</string>
+    <string name="pref_title_add_friends_to_messages">Добавлять друзей в сообщения</string>
+    <string name="pref_title_autofill_amount">Автозаполнение суммы и описания</string>
+    <string name="pref_title_circle_calc">Всегда показывать итог</string>
+    <string name="pref_title_display_name">Валюта</string>
+    <string name="pref_title_pin_code">Пин-код</string>
+    <string name="pref_title_prevent_create">Запретить новые кружки</string>
+    <string name="pref_title_prevent_color_icons">Спрятать цветные иконки</string>
+    <string name="pref_title_ask_time">Спрашивать время</string>
+    <string name="pref_ask_time">Спрашивать время при выборе даты</string>
+    <string name="pref_title_prevent_move">Запретить перемещение кружков</string>
+    <string name="pref_title_ringtone">Звук</string>
+    <string name="pref_title_show_circle_amount">Отображать суммы</string>
+    <string name="pref_title_show_circle_amount_trans">Прозрачные суммы</string>
+    <string name="pref_title_show_circle_name">Отображать названия</string>
+    <string name="pref_title_show_operation_animation">Анимация операций</string>
+    <string name="pref_title_show_operation_arrow">Отображать стрелки</string>
+    <string name="pref_title_show_operation_arrow_amount">Отображать суммы для стрелок</string>
+    <string name="pref_title_vibrate">Вибрация</string>
+    <string name="prompt_email">Электронная почта</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="register_failed">Не удалось зарегистрироваться</string>
+    <string name="rename">Переименовать</string>
+    <string name="reset_password">Сбросить пароль</string>
+    <string name="reset_password_failed">Не удалось сбросить пароль</string>
+    <string name="save">Сохранить</string>
+    <string name="convert">Обменять</string>
+    <string name="september">сент</string>
+    <string name="settings">Настройки...</string>
+    <string name="userManual">Инструкция</string>
+    <string name="exportToPDF">Экспорт в PDF</string>
+    <string name="Currencies">Валюты</string>
+    <string name="shareFile">Поделиться...</string>
+    <string name="shareFileOfflineForbidden">Поделиться можно только облачными файлами</string>
+    <string name="shareFileXML">Экспортировать в XML</string>
+    <string name="size">Размер</string>
+    <string name="statistics">Статистика</string>
+    <string name="subscription_expired">Извините, Ваша подписка истекла...</string>
+    <string name="successfully_changed_password">Пароль успешно изменён</string>
+    <string name="successfully_registered">Учетная запись успешно зарегистрирована</string>
+    <string name="successfully_reset_password">Пожалуйста, проверьте свою электронную почту</string>
+    <string name="thank_you">Покупка завершена!!! Большое спасибо!</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="today">Сегодня</string>
+    <string name="total_grand">Итого:</string>
+    <string name="total_on_page">Итого на странице:</string>
+    <string name="total_on_page_converted">В переводе на основную валюту:</string>
+    <string name="total_operations">Итого операций на странице:</string>
+    <string name="transfer">Перевести</string>
+    <string name="via">Через:</string>
+    <string name="wrong_password">Неверный пароль</string>
+    <string name="new_circle">Новый кружок</string>
+    <string name="new_circle_description">Введите название кружка, например Наличные или Кофе</string>
+    <string name="create">Создать</string>
+    <string name="cancel">Отмена</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="fixing_operations">Исправляем операции...</string>
+    <string name="you_have">У Вас есть </string>
+    <string name="and"> и</string>
+    <string name="done">Готово!</string>
+    <string name="page">Страница</string>
+    <string name="edit_circle">Редактирование</string>
+    <string name="delete_circle">Удаление кружка</string>
+    <string name="delete_operation">Удаление операции</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="you_need_to_select_currencies">Необходимо выбрать список валют</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email         completions."</string>
+    <string name="pref_default_display_name">R</string>
+    <string name="pref_description_low_res">Использовать значки низкого разрешения для экономии памяти</string>
+    <string name="pref_header_data_sync">Данные и синхронизация</string>
+    <string name="pref_low_res">Значки низкого разрешения</string>
+    <string name="use_template">Использовать шаблон</string>
+    <string name="pref_title_sync_frequency">Частота синхронизации</string>
+    <string name="pref_title_system_sync_settings">Системные настройки синхронизации</string>
+
+
+    <string name="report">Отчет</string>
+    <string name="charts">Диаграммы</string>
+    <string name="report_text_filter">Фильтр по тексту:</string>
+    <string name="report_trend">Тренд</string>
+    <string name="report_operations">Операции</string>
+    <string name="report_income">Приход</string>
+    <string name="report_expenses">Расход</string>
+    <string name="report_total_operations">Количество операций:</string>
+    <string name="report_total_amount">Итого:</string>
+    <string name="report_no_operations">Нет операций</string>
+    <string name="report_no_my_money_selected1">Пожалуйста, пометьте кружки с Вашими</string>
+    <string name="report_no_my_money_selected2">активами (наличные, виза, долги)</string>
+    <string name="report_no_my_money_selected3">знаком $ (нажмите дважды на кружок</string>
+    <string name="report_no_my_money_selected4">и нажмите на кнопку $).</string>
+    <string name="report_circle_only_source">Этот кружок имеет один источник:</string>
+    <string name="report_circle_only_expense">У этого кружка один получатель:</string>
+    <string name="report_only_source">Имеется только один источник:</string>
+    <string name="report_only_expense">Имеется только один получатель:</string>
+    <string name="report_total_income">Итого приход:</string>
+    <string name="report_total_expense">Итого расход:</string>
+
+    <string name="myAppFree_Title">myAppFree!</string>
+    <string name="myAppFree_ThankYou">Спасибо!</string>
+    <string name="myAppFree_Message">Теперь у Вас есть 3 бесплатных месяца облачного сервиса благодаря myAppFree!\nПожалуйста, войдите в облако (login), чтобы использовать их!</string>
+    <string name="icons_Message">Эта функциональность предназначена только для работы в облаке.\nПожалуйста, войдите войдите в облако (login).</string>
+
+    <string name="title_activity_help">User Manual</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_scrolling_help">Anyway Wallet</string>
+
+    <string name="circle_job">Работа</string>
+    <string name="circle_card">Кредитка</string>
+    <string name="circle_cash">Наличные</string>
+    <string name="circle_house">Дом</string>
+    <string name="circle_food">Еда</string>
+    <string name="circle_entertainment">Развлечения</string>
+    <string name="circle_sprot">Спорт</string>
+    <string name="circle_music">Музыка</string>
+    <string name="circle_cinema">Кино</string>
+    <string name="circle_correction">Коррекция</string>
+    <string name="circle_exchange">Обмен</string>
+
+    <string name="large_text">
+
+        "С чего начать?\n\n"
+        "Создайте несколько кружков, и вы готовы к работе!\n"
+        "Просто переносите деньги с одного кружка в другой!\n"
+        "Идея программы очень простая: деньги никуда не исчезают бесследно "
+        "и не появляются из ниоткуда - они переходят из одного кружка в другой.\n\n"
+
+        "Что из себя представляет кружок?\n\n"
+        "Кружки представляют собой центры ресурсов, а именно центры доходов "
+        "(например зарплата, проценты по вкладу, деньги за сдачу недвижимости и т.п.), "
+        "центры расходов (любые возможные траты: продукты, бензин, ремонт машины, налоги, "
+        "страховка, развлечения и многое другое) или так называемые "внутренние" центры, "
+        "такие центры ресурсов, которые не попадают в две первые категории. К внутренним "
+        "центрам относятся банковские счета, остатки на кредитных карточках, наличные "
+        "деньги и т.п. принадлежащие вам или членам вашей семьи. Транзакция между "
+        "внутренними центрами не является ни доходом ни расходом (пример: снятие наличных "
+        "денег с вашего банковского счёта).\n\n"
+
+        "Как создать кружок?\n\n"
+        "Долгим нажатием на пустое место экрана пользователь создаёт кружок, "
+        "а затем выбирает его название, цвет и иконку, а так же может варьировать "
+        "размер кружка (см. ниже).\n\n"
+
+        "Как провести операцию/транзакцию?\n\n"
+        "Достаточно нажать на кружок, из которого вы собираетесь "
+        "начать транзакцию (источник), и провести пальцем на тот кружок, в "
+        "котором вы собираетесь закончить транзакцию (получатель).\n\n"
+
+        "Страницы\n\n"
+        "По сути, страницу можно понимать как отчетный период, начало и конец "
+        "которого Вы определяете по своему усмотрению. Для удобства представления "
+        "данных пользователь может начать работу “с чистого листа”, создав новую "
+        "страницу. Для этого необходимо нажать на стрелку “право” в меню инструментов "
+        "(toolbar). При создании новой страницы сбрасываются все числа/суммы над кружочками, "
+        "таким образом можно начать снова их аккумулировать. В любой момент можно вернутся "
+        "на предыдущую страницу, чтобы посмотреть прошлые транзакции.\n"
+        "Все суммы кружков, помеченных как “мои средства” (отмечены знаком $ в свойствах "
+        "кружочка, см. п. Мои Средства), переходят с прошлой страницы на новую. Например, не имеет "
+        "смысла сбрасывать остаток наличности в Вашем кошельке или на дебетовой карте при "
+        "переходе на следующий период, так так деньги у Вас в кошельке или на дебетовой "
+        "карте никуда не исчезают. Также имеет смысл видеть долги с прошлого месяца (см. "
+        "ниже).\n"
+        "Например, если Вы получили очередную зарплату, имеет смысл начать новую страницу. "
+        "Таким образом можно будет отследить расходы именно этого месяца (с момента "
+        "создания нового периода).\n\n"
+
+
+        "Фильтры\n\n"
+        "Для удобства поиска и просмотра информации в Anyway Wallet реализованы фильтры. "
+        "Для применения фильтров достаточно нажать на даты в меню инструментов (toolbar) "
+        "вверху экрана. Можно отфильтровать транзакции по датам и по тексту. Если в текст "
+        "набрать, например, “такси”, то будут показаны все записи, в описании которых "
+        "присутствует “такси”, а так же все операции, связанные с кружками, в названии "
+        "которых есть слово “такси”.\n\n"
+
+        "Сложные фильтры\n\n"
+        "Можно писать более сложные фильтры, разделяя условия пробелами:\n"
+        "&#62;5 &#60;10 такси\n"
+        "найдет все операции с суммами между 5 и 10 (включительно), содержащие 'такси'.\n\n"
+
+
+        "Мои средства\n\n"
+        "Для того, чтобы Anyway Wallet мог отделить расходы от доходов, необходимо "
+        "подсказать программе, в каких кружках хранятся Ваши средства. Для этого достаточно "
+        "дважды нажать на кружок или последовательно нажать на кружок и плавающую кнопку в "
+        "правом нижнем углу, а затем нажать на знак $ в меню. \n"
+        "Знаком “Мои средства” необходимо пометить Ваши наличные, банковские карты и долги, "
+        "т.е. всё то, что не попадает не в доходы, не в расходы. \n"
+        "Если пометить кружок этим знаком, то сумма, указанная над кружком, будет "
+        "переходить из одной страницы на другую (в новый месяц). При этом суммы обрамляются "
+        "не обычным прямоугольником, а шевроном, что показывает, что сумма накоплена с "
+        "предыдущих страниц.\n\n"
+
+
+        "Как группировать/отделять кружки?\n\n"
+        "Для удобства пользования кружки можно объединять в тематические группы и "
+        "создавать иерархическую структуру. Покажем это на наглядном примере: предположим, "
+        "у вас в семье есть два автомобиля, VW и BMW,  а расходы по каждому из них вы "
+        "решили поделить на бензин, налоги, ремонт и последний пункт: прочее (сюда вы "
+        "решили поместить все остальные расходы, например, мойку машины, зимние покрышки, "
+        "страховка, замена масла и т.п.). Что бы не загромождать экран вы создаёте иерархию "
+        "кружков. Вначале вы создаёте кружки Авто, VW и ВMW. Далее, нажав на кружок VW и, вдвинув "
+        "его в кружок Авто, вы делаете кружок VW подкружком Авто. "
+        "Нажимая на кружок Автоб вы можете заставить VW появиться или спрятаться. \n"
+        "Таким же образом можно далее поступить с кружком "BMW". В свою очередь для каждого "
+        "из кружков VW и BMW можно создать подкружки бензин, налоги, ремонт, прочее "
+        "вышеописанным образом. Разорвать связь можно таким же образом - снова поместив "
+        "дочерний кружок на “родителя”.\n\n"
+
+        "Как изменять размеры кружков?\n\n"
+        "В тот момент, когда Вы изменяете положения кружков (режим редактирования - "
+        "долгое нажатие на любой из кружков), можно жестом увеличения/уменьшения "
+        "экрана (zoom) изменять размер кружка. Т.е. необходимо нажать на экран двумя "
+        "пальцами, а затем или сдвигать, или раздвигать их.\n\n"
+
+        "Как посмотреть, изменить или удалить транзакцию?\n\n"
+        "Во время просмотра транзакций (правая нижняя плавающая кнопка или двойное "
+        "нажатие на любой кружок) каждую транзакцию можно сдвинуть вправо для "
+        "редактирования и влево для удаления.\n\n"
+
+        "Как переименовать кружок, удалить кружок, изменить картинку или цвет?\n\n"
+        "Для выполнения этих действий необходимо зайти в кружок двойным нажатием на него, "
+        "а затем воспользоваться кнопками в верхней правой части экрана.\n\n"
+
+        "Как задать лимиты и цели.\n\n"
+        "При переименовании кружков можно задать лимит или цель. Этот параметр никак "
+        "не влияет на работу программы (не задает ограничений на операции), а только "
+        "показывает небольшой график возле соответствующего кружка, который заполняется "
+        "по мере приближения к цели.\n\n"
+
+        "Как посмотреть статистику (отчет)?\n\n"
+        "Для составления отчета необходимо нажать на плавающую кнопку Отчет в правой нижней "
+        "части окна. Если выделен любой кружок, то отчет будет составлен по данному кружку. "
+        "Если ни один кружок не выделен, то отчет будет общим, по всем счетам. При этом те "
+        "кружки, которые обозначены знаком $, считаются Вашими счетами.\n\n"
+
+        "Как работать с файлами - создавать, открывать, удалять и экспортировать?\n"
+        "Файлы помогают не только вести учет Ваших средств, но и планировать, вести учет "
+        "денег Вашего бизнеса. Можно в отдельном файле вести учет в другой валюте. Или "
+        "можно просто потренироваться. Чтобы открыть, создать или удалить файл, необходимо "
+        "зайти в меню, Файл.\n"
+        "Файлы, которые были созданы в режиме offline, хранятся на Вашем устройстве и не "
+        "синхронизируются с облаком. Никакие данные из этого файла не попадают в сеть ни "
+        "в каком виде! Если Вы позже захотите перенести файл в облако из offline, то "
+        "необходимо зайти в свою учетную запись (т.е. залогиниться), нажать на меню, "
+        "Файл, Скопировать из offline.\n"
+        "Файлы offline хранятся на Вашем устройстве в папке MaxFlow. Это файлы формата "
+        "XML, которые Вы можете скопировать на другое устройство, поместив в "
+        "соответствующую папку.\n"
+	    "С помощью команды меню, Файл, Экспортировать в XML можно создать упрощенную "
+        "версию данных для чтения в Microsoft Excel и отправить её по электронной почте. "
+        "Это может быть полезным для анализа Ваших данных на компьютере\n\n"
+
+        "Как дать доступ к файлу другому пользователю?\n\n"
+        "Если есть необходимость дать доступ другому пользователю к Вашему файлу, "
+        "находящемуся в облаке, достаточно нажать на меню, Файл, Поделиться. После чего "
+        "через запятую можно перечислить все адреса электронной почты, которым Вы хотите "
+        "дать доступ.\n"
+        "Чтобы открыть файл, которым поделились с Вами, необходимо нажать на меню, Файл, "
+        "Открыть чужой файл. Этот файл можно сохранить в своем облаке, в этом случае "
+        "создается копия, хозяином которой являетесь Вы.\n"
+        "Имейте в виду, что доступ дается на чтение и запись! Т.е. Вы предоставляете "
+        "возможность изменения и удаления данных! Однако удалить файл может только "
+        "хозяин файла.\n"
+        "Для отключения доступа достаточно удалить соответствующий адрес электронной "
+        "почты в том же меню. Доступ будет ограничен.\n\n"
+
+        "Облака -  как что и где хранится.\n\n"
+        "Для хранения Ваших данных мы используем сервера Google, и облачный сервис "
+        "Firebase. Мы следуем всем рекомендациям Google по политике безопасности и "
+        "многократно тестируем возможность взлома, чтобы обеспечить надежное "
+        "хранение ваших файлов.\n"
+        "Если Вы в какой-то момент не подключены к интернету, то Вы можете дальше "
+        "продолжать работать в режиме offline. Все Ваши новые записи и изменения "
+        "попадут в сеть при первом доступе к Интернету.\n\n\n"
+    </string>
+
+
+    <!--            NO NEED TO TRANSLATE BELOW:   -->
+
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="currency_array">
+        <item>RUB</item>
+        <item>UAH</item>
+        <item>KZT</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>AED</item>
+        <item>AFN</item>
+        <item>ALL</item>
+        <item>AMD</item>
+        <item>ANG</item>
+        <item>AOA</item>
+        <item>ARS</item>
+        <item>AUD</item>
+        <item>AWG</item>
+        <item>AZN</item>
+        <item>BAM</item>
+        <item>BBD</item>
+        <item>BDT</item>
+        <item>BGN</item>
+        <item>BHD</item>
+        <item>BIF</item>
+        <item>BMD</item>
+        <item>BND</item>
+        <item>BOB</item>
+        <item>BRL</item>
+        <item>BSD</item>
+        <item>BTC</item>
+        <item>BTN</item>
+        <item>BWP</item>
+        <item>BYR</item>
+        <item>BZD</item>
+        <item>CAD</item>
+        <item>CDF</item>
+        <item>CHF</item>
+        <item>CLF</item>
+        <item>CLP</item>
+        <item>CNY</item>
+        <item>COP</item>
+        <item>CRC</item>
+        <item>CUC</item>
+        <item>CUP</item>
+        <item>CVE</item>
+        <item>CZK</item>
+        <item>DJF</item>
+        <item>DKK</item>
+        <item>DOP</item>
+        <item>DZD</item>
+        <item>EEK</item>
+        <item>EGP</item>
+        <item>ERN</item>
+        <item>ETB</item>
+        <item>FJD</item>
+        <item>FKP</item>
+        <item>GEL</item>
+        <item>GGP</item>
+        <item>GHS</item>
+        <item>GIP</item>
+        <item>GMD</item>
+        <item>GNF</item>
+        <item>GTQ</item>
+        <item>GYD</item>
+        <item>HKD</item>
+        <item>HNL</item>
+        <item>HRK</item>
+        <item>HTG</item>
+        <item>HUF</item>
+        <item>IDR</item>
+        <item>ILS</item>
+        <item>IMP</item>
+        <item>INR</item>
+        <item>IQD</item>
+        <item>IRR</item>
+        <item>ISK</item>
+        <item>JEP</item>
+        <item>JMD</item>
+        <item>JOD</item>
+        <item>JPY</item>
+        <item>KES</item>
+        <item>KGS</item>
+        <item>KHR</item>
+        <item>KMF</item>
+        <item>KPW</item>
+        <item>KRW</item>
+        <item>KWD</item>
+        <item>KYD</item>
+        <item>LAK</item>
+        <item>LBP</item>
+        <item>LKR</item>
+        <item>LRD</item>
+        <item>LSL</item>
+        <item>LTL</item>
+        <item>LVL</item>
+        <item>LYD</item>
+        <item>MAD</item>
+        <item>MDL</item>
+        <item>MGA</item>
+        <item>MKD</item>
+        <item>MMK</item>
+        <item>MNT</item>
+        <item>MOP</item>
+        <item>MRO</item>
+        <item>MTL</item>
+        <item>MUR</item>
+        <item>MVR</item>
+        <item>MWK</item>
+        <item>MXN</item>
+        <item>MYR</item>
+        <item>MZN</item>
+        <item>NAD</item>
+        <item>NGN</item>
+        <item>NIO</item>
+        <item>NOK</item>
+        <item>NPR</item>
+        <item>NZD</item>
+        <item>OMR</item>
+        <item>PAB</item>
+        <item>PEN</item>
+        <item>PGK</item>
+        <item>PHP</item>
+        <item>PKR</item>
+        <item>PLN</item>
+        <item>PYG</item>
+        <item>QAR</item>
+        <item>RON</item>
+        <item>RSD</item>
+        <item>RWF</item>
+        <item>SAR</item>
+        <item>SBD</item>
+        <item>SCR</item>
+        <item>SDG</item>
+        <item>SEK</item>
+        <item>SGD</item>
+        <item>SHP</item>
+        <item>SLL</item>
+        <item>SOS</item>
+        <item>SRD</item>
+        <item>STD</item>
+        <item>SVC</item>
+        <item>SYP</item>
+        <item>SZL</item>
+        <item>THB</item>
+        <item>TJS</item>
+        <item>TMT</item>
+        <item>TND</item>
+        <item>TOP</item>
+        <item>TRY</item>
+        <item>TTD</item>
+        <item>TWD</item>
+        <item>TZS</item>
+        <item>UGX</item>
+        <item>UYU</item>
+        <item>UZS</item>
+        <item>VEF</item>
+        <item>VND</item>
+        <item>VUV</item>
+        <item>WST</item>
+        <item>XAF</item>
+        <item>XAG</item>
+        <item>XAU</item>
+        <item>XCD</item>
+        <item>XDR</item>
+        <item>XOF</item>
+        <item>XPD</item>
+        <item>XPF</item>
+        <item>XPT</item>
+        <item>YER</item>
+        <item>ZAR</item>
+        <item>ZMK</item>
+        <item>ZMW</item>
+        <item>ZWL</item>
+    </string-array>
+
+
+</resources>

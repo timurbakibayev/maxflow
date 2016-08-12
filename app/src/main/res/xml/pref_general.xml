@@ -1,0 +1,70 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <!-- <EditTextPreference
+        android:defaultValue="@string/pref_default_display_name"
+        android:inputType="textCapWords"
+        android:id="@+id/currency_item"
+        android:key="currency_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_display_name" /> -->
+
+    <EditTextPreference
+        android:inputType="number"
+        android:key="pin"
+        android:maxLines="1"
+        android:maxLength="4"
+        android:numeric="integer"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_pin_code" />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="askTime"
+        android:title="@string/pref_title_ask_time"
+        android:summary="@string/pref_ask_time" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="prevent_create"
+        android:title="@string/pref_title_prevent_create"
+        android:summary="@string/pref_prevent_create" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="prevent_color_icons"
+        android:title="@string/pref_title_prevent_color_icons"
+        android:summary="@string/pref_prevent_color_icons" />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="prevent_move"
+        android:title="@string/pref_title_prevent_move"
+        android:summary="@string/pref_prevent_move" />
+
+    <!-- <SwitchPreference
+        android:defaultValue="false"
+        android:key="autofill_amount"
+        android:title="@string/pref_title_autofill_amount"
+        android:summary= "@string/pref_autofill_amount" />
+-->
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code.
+    <ListPreference
+        android:defaultValue="-1"
+        android:entries="@array/pref_example_list_titles"
+        android:entryValues="@array/pref_example_list_values"
+        android:key="example_list"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_add_friends_to_messages" />
+    -->
+</PreferenceScreen>

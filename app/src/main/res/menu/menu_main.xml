@@ -1,0 +1,75 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+    <group android:id="@+id/groupFile">
+    <item android:id="@+id/action_File" android:title="@string/file"
+        android:orderInCategory="180" app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/action_OpenFile" android:title="@string/openFile"
+                android:orderInCategory="180" app:showAsAction="never">
+                <menu>
+                </menu>
+            </item>
+            <item android:id="@+id/action_OpenFileShared" android:title="@string/openFileShared"
+                android:orderInCategory="180" app:showAsAction="never">
+                <menu>
+                </menu>
+            </item>
+            <item android:id="@+id/action_CopyFileOfflie" android:title="@string/copyOfflineFile"
+                android:orderInCategory="180" app:showAsAction="never">
+                <menu>
+                </menu>
+            </item>
+            <item android:id="@+id/action_NewFile" android:title="@string/newFile"
+                android:orderInCategory="180" app:showAsAction="never" />
+            <item android:id="@+id/action_DeleteFile" android:title="@string/deleteFile"
+                android:orderInCategory="180" app:showAsAction="never" />
+            <item android:id="@+id/action_CopyFile" android:title="@string/copyFile"
+                android:orderInCategory="180" app:showAsAction="never" />
+            <item android:id="@+id/action_ShareFile" android:title="@string/shareFile"
+                android:orderInCategory="180" app:showAsAction="never"
+                />
+            <item android:id="@+id/action_ShareFileXML" android:title="@string/shareFileXML"
+                android:orderInCategory="180" app:showAsAction="never"
+                />
+        </menu>
+    </item>
+    </group>
+    <!-- <item android:title="" android:orderInCategory="180" android:enabled="false"></item>-->
+    <group android:id="@+id/groupOther">
+        <item android:id="@+id/action_cloud_login" android:title="@string/cloudLogin"
+            android:orderInCategory="180" app:showAsAction="never" />
+        <item android:id="@+id/action_settings" android:title="@string/settings"
+            android:orderInCategory="180" app:showAsAction="never" />
+        <item android:id="@+id/action_help" android:title="@string/userManual"
+            android:orderInCategory="180" app:showAsAction="never" />
+        <item android:id="@+id/action_pdf" android:title="@string/exportToPDF"
+            android:orderInCategory="180" app:showAsAction="never" />
+        <item android:id="@+id/action_currency" android:title="@string/Currencies"
+            android:orderInCategory="180" app:showAsAction="never" />
+    </group>
+    <group android:id="@+id/promotion">
+        <item android:id="@+id/action_rate" android:title="@string/action_rate" android:orderInCategory="180"
+            app:showAsAction="never" />
+    </group>
+    <item
+        android:title="Previous Month"
+        android:id="@+id/action_prevMonth"
+        android:icon="@drawable/_ic_arrow_left_24dp"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+
+    <item
+        android:title="Next Month"
+        android:id="@+id/action_nextMonth"
+        android:icon="@drawable/_ic_arrow_right_24dp"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+
+
+    <item android:id="@+id/action_monthClick"
+        app:showAsAction="always"
+        android:actionLayout="@layout/datemenu"
+        android:title="September"/>
+
+</menu>
