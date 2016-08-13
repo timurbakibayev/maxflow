@@ -888,6 +888,8 @@ public class Storage {
         GIIApplication.gii.reportWindow.onDraw(page.getCanvas(), document, this);
         document.finishPage(page);
 
+        //TODO: if this is a PDF, recycle the bitmaps!
+
         String pdfName = properties.getFileNameWithoutXML() + ".pdf";
 
         try {

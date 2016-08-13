@@ -547,6 +547,9 @@ public class Graphics {
             Bitmap.Config conf = Bitmap.Config.ARGB_8888;
             if (bounds.width() < 1 || bounds.height() < 1)
                 bounds.set(0,0,10,10);
+            if (_circle.theIcon != null &&
+                    !_circle.theIcon.isRecycled())
+                _circle.theIcon.recycle();
             _circle.theIcon = Bitmap.createBitmap(bounds.width(), bounds.height(), conf).copy(conf,true);
             Canvas littleCanvas = new Canvas(_circle.theIcon);
             moved.set(newBounds.centerX(), newBounds.centerY());
@@ -1013,11 +1016,12 @@ public class Graphics {
                 toCircle.name.equals("none"))
             return;
 
+        //TODO: skip this if in PDF mode
         if (gii.prefs.getBoolean("show_arrow_only_related", true))
             if (!gii.selectedId.equals(fromCircle.id) &&
                     !gii.selectedId.equals(toCircle.id))
                 return;
-        
+
         paint.setStyle(Paint.Style.STROKE);
         float strokeWidth = 4 * properties.scaleFactor +
                 properties.scaleFactor * 30 / GIIApplication.gii.maxDisplayedAmount * operation.absAmountInLocalCurrency;
