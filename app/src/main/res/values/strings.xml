@@ -171,6 +171,8 @@
     <string name="pref_title_show_circle_name">Show circle names</string>
     <string name="pref_title_show_circle_amount">Show circle amounts</string>
     <string name="pref_title_show_circle_amount_trans">Transparent amount</string>
+    <string name="pref_title_related_arrows">Show arrows only for selected circle</string>
+    <string name="pref_related_arrows">Show only arrows related to the selected circle - both incomes and expenses</string>
 
     <string name="pref_title_display_name">Currency name</string>
     <string name="pref_title_pin_code">Pin Code</string>

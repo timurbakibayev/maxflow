@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             if (storage == null)
                 storage = new Storage(GIIApplication.gii);
             fileName = storage.fileListOffline("xml", GIIApplication.gii.properties);
-            n9= 0;
+            n9 = 0;
             for (int i = 0; i < fileName.size(); i++) {
                 n9++;
                 if (GIIApplication.gii.ref.getAuth() == null)

@@ -113,6 +113,8 @@
     <string name="pref_title_ringtone">Звук</string>
     <string name="pref_title_show_circle_amount">Отображать суммы</string>
     <string name="pref_title_show_circle_amount_trans">Прозрачные суммы</string>
+    <string name="pref_title_related_arrows">Показывать стрелки только для выделенного кружка</string>
+    <string name="pref_related_arrows">Показывать только стрелки, относящиеся к выделенному кружку - и входящие и исходящие</string>
     <string name="pref_title_show_circle_name">Отображать названия</string>
     <string name="pref_title_show_operation_animation">Анимация операций</string>
     <string name="pref_title_show_operation_arrow">Отображать стрелки</string>

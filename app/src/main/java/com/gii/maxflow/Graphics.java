@@ -1012,6 +1012,12 @@ public class Graphics {
         if (fromCircle.name.equals("none") ||
                 toCircle.name.equals("none"))
             return;
+
+        if (gii.prefs.getBoolean("show_arrow_only_related", true))
+            if (!gii.selectedId.equals(fromCircle.id) &&
+                    !gii.selectedId.equals(toCircle.id))
+                return;
+        
         paint.setStyle(Paint.Style.STROKE);
         float strokeWidth = 4 * properties.scaleFactor +
                 properties.scaleFactor * 30 / GIIApplication.gii.maxDisplayedAmount * operation.absAmountInLocalCurrency;

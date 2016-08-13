@@ -149,9 +149,11 @@ public class ExchangeRates {
         for (Map.Entry<String, Float> entry : currentRate.entrySet()) {
             Log.e(TAG, "readRatesFromInternet: currency: -" + entry.getKey() + "- rate: " + entry.getValue() );
         }
+        /*
         Log.e(TAG, "readRatesFromInternet: KZT: " + currentRate.get("KZT"));
         Log.e(TAG, "readRatesFromInternet: USD: " + currentRate.get("USD"));
         Log.e(TAG, "readRatesFromInternet: RUB: " + currentRate.get("RUB"));
+        */
     }
 
     public float getRate(String currency) {

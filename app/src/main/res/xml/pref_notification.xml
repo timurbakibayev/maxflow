@@ -16,12 +16,6 @@
         android:summary="@string/pref_show_circle_amount"
         android:title="@string/pref_title_show_circle_amount" />
 
-    <!-- <SwitchPreference
-        android:defaultValue="true"
-        android:dependency="show_circle_amount"
-        android:key="show_circle_amount_transparent"
-        android:summary="@string/pref_show_circle_amount_trans"
-        android:title="@string/pref_title_show_circle_amount_trans" /> -->
 
     <SwitchPreference
         android:defaultValue="false"
@@ -34,6 +28,13 @@
         android:key="show_operation_arrow"
         android:summary="@string/pref_show_operation_arrow"
         android:title="@string/pref_title_show_operation_arrow" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:dependency="show_operation_arrow"
+        android:key="show_arrow_only_related"
+        android:summary="@string/pref_related_arrows"
+        android:title="@string/pref_title_related_arrows" />
 
     <SwitchPreference
         android:defaultValue="false"
