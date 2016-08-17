@@ -171,6 +171,9 @@ public class ExchangeRates {
     public float convert(float convertAmount, String fromCurrency, String toCurrency) {
         if (toCurrency == null || toCurrency.equals(""))
             return convertAmount;
+        if (currentRate.get(fromCurrency) == null ||
+                currentRate.get(toCurrency) == null)
+            return convertAmount;
         float rate1 = currentRate.get(fromCurrency);
         float rate2 = currentRate.get(toCurrency);
         if (rate1 != 0) {
