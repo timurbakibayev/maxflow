@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -114,6 +115,8 @@ public class Report {
 
     public void init() {
 
+        //GIIApplication.gii.graphics.white.setShader(null);
+
         context = gii.getContext();
 
         Log.e("Report", "init: (" + gii.selectedId + ")" + gii.selectedCircle.name);
@@ -127,7 +130,8 @@ public class Report {
         fabPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         this.context = context;
 
-        textPaint.setColor(gii.graphics.nameFont.getColor());
+        //textPaint.setColor(gii.graphics.nameFont.getColor());
+        textPaint.setColor(Color.DKGRAY);
         textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         bigTextPaint.setColor(textPaint.getColor());
         bigTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -328,7 +332,6 @@ public class Report {
                 .setMessage(gii.getContext().getString(R.string.are_you_sure))
                 .setPositiveButton(gii.getContext().getString(R.string.delete), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //TODO: check this part!
                         dialog.dismiss();
                         for (Circle _circle: gii.circle) {
                             if (_circle.id.equals(gii.selectedId)) {

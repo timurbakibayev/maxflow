@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by Timur on 15-Nov-15.
@@ -74,6 +75,7 @@ public class Graphics {
     Paint gray = new Paint();
 
     Paint nameFont = new Paint();
+    Paint totalFont = new Paint();
     Paint dkBlueCircle = new Paint();
     Paint dkBlue = new Paint();
     Paint dkBlue1 = new Paint();
@@ -85,6 +87,7 @@ public class Graphics {
     Paint selectorPaint;
 
     Paint white = new Paint();
+    Paint blackTransp = new Paint();
     Paint whiteUnder = new Paint();
     Paint whiteTransp = new Paint();
     Paint blueTransp = new Paint();
@@ -125,10 +128,12 @@ public class Graphics {
         float lastScaleFactor = properties.scaleFactor;
         PointF lastBackgroundPosition = properties.backgroundPosition;
 
+        nameFont.setColor(Color.rgb(255, 255, 255));
+
         if (selectedId.equals("-1")) {
             pdfMode = true;
             Rect bounds = new Rect(-1,-1,1,1);
-
+            nameFont.setColor(Color.BLUE);
             //detect bounds to rescale;
             for (Circle _circle : circle) {
                 if (!_circle.deleted && _circle.visible) {
@@ -289,7 +294,7 @@ public class Graphics {
                     }
                 }*/
                 if (_circle.childrenId.size() > 0 && !_circle.showChildren) {
-                    canvas.drawCircle(moved.x, moved.y, (int) (radius* properties.scaleFactor * 1.2), gray);
+                    //canvas.drawCircle(moved.x, moved.y, (int) (radius* properties.scaleFactor * 1.2), gray);
                     for (int i = 0; i < Math.min(3, _circle.childrenId.size()); i++) {
                         Circle subCircle =gii.circleById(_circle.childrenId.get(i),circle);
                         mapToScreen(_circle.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && _circle.id.equals(selectedId), moveXY), properties, moved);
@@ -314,7 +319,7 @@ public class Graphics {
 
                     if (_circle.id.equals(selectedId)) {
                         selectorPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                        selectorPaint.setShader(new RadialGradient(moved.x,moved.y,(float)(radius * properties.scaleFactor*1.63),
+                        selectorPaint.setShader(new RadialGradient(moved.x,moved.y,(float)(radius * properties.scaleFactor*1.73),
                                 circleColor[_circle.color % circleColor.length].getColor(),Color.TRANSPARENT,
                                 Shader.TileMode.CLAMP));
                         canvas.drawCircle(moved.x, moved.y, (float)(radius * properties.scaleFactor * 1.5), selectorPaint);
@@ -339,121 +344,60 @@ public class Graphics {
 
                 //Show the name inside the circle
                 //redefine text size depending on the circle radius and the length of the amount of the circle
-                if (gii.prefs.getBoolean("show_circle_name",true)) { //was < 5
-                    float nameTextWidth = _circle.nameTextWidth * properties.scaleFactor;
-                    //float textSizeChange = (_circle.radius * 1.5f * properties.scaleFactor / nameTextWidth);
-                    //nameFont.setTextSize(25 * properties.scaleFactor * textSizeChange);
-                    nameFont.setTextSize(40 * properties.scaleFactor);
-                    canvas.drawText(_circle.name, moved.x - nameTextWidth / 2, moved.y + nameFont.getTextSize() + _circle.radius * properties.scaleFactor, nameFont);
-                }
+                if (pdfMode)
+                    if (gii.prefs.getBoolean("show_circle_name",true)) { //was < 5
+                        float nameTextWidth = _circle.nameTextWidth * properties.scaleFactor;
+                        //float textSizeChange = (_circle.radius * 1.5f * properties.scaleFactor / nameTextWidth);
+                        //nameFont.setTextSize(25 * properties.scaleFactor * textSizeChange);
+                        nameFont.setTextSize(40 * properties.scaleFactor);
+                        canvas.drawText(_circle.name, moved.x - nameTextWidth / 2, moved.y + nameFont.getTextSize() + _circle.radius * properties.scaleFactor, nameFont);
+                    }
             }
         }
 
 
         //draw amount, show amount
         //white.setAlpha(130);
-        for (Circle acc : circle) {
-            if (!acc.deleted && acc.visible) {
-                mapToScreen(acc.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId), moveXY), properties,moved);
-                if (!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId)) {
-                    mapToScreen(moveXY,properties,moved);
-                }
+        if (pdfMode)
+            for (Circle acc : circle) {
+                if (!acc.deleted && acc.visible) {
+                    mapToScreen(acc.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId), moveXY), properties,moved);
+                    if (!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId)) {
+                        mapToScreen(moveXY,properties,moved);
+                    }
 
+                    if (moved.x + acc.radius * properties.scaleFactor< 0 || moved.x - acc.radius * properties.scaleFactor > canvas.getWidth() ||
+                            moved.y - acc.radius * properties.scaleFactor > canvas.getHeight() || moved.y + acc.radius * properties.scaleFactor < 0)
+                        continue;
 
-                if (moved.x + acc.radius * properties.scaleFactor< 0 || moved.x - acc.radius * properties.scaleFactor > canvas.getWidth() ||
-                        moved.y - acc.radius * properties.scaleFactor > canvas.getHeight() || moved.y + acc.radius * properties.scaleFactor < 0)
-                    continue;
+                    if (acc.displayAmount.size() != 0) {
+                        float movedY = (moved.y - (acc.radius * properties.scaleFactor));
+                        float txtWidth = acc.amountTextWidth * properties.scaleFactor;
+                        float movedX = (moved.x + (acc.radius * properties.scaleFactor * 1.1f)) - txtWidth;
+                        float amWidth = txtWidth + 10 * properties.scaleFactor;
+                        float amHeight = dkBlue.getTextSize()*1.2f;
+                        float verticalMiddle = movedY + amHeight/2;
 
-                if (acc.displayAmount.size() != 0) {
-                    String amountText = "";
-                    //if (!acc.myMoney || properties.filtered)
-                    //    amountText = gii.df.format(acc.amount); //- dkBlue.measureText(amountText) / 2 below
-                    //else
-                    //    amountText = gii.df.format(acc.amountTotal);
-                //if (acc.showAmount != 0) {
-                //    String amountText = gii.df.format(acc.showAmount);
-                    //if (!amountText.contains("."))
-                    //    amountText = amountText + ".";
-                    //while (amountText.length()-amountText.indexOf(".") < 3)
-                    //    amountText = amountText + "0";
-                    //if (acc.dxShowAmount != 0)
-                    //    acc.amountTextWidth = dkBlue.measureText(amountText);
-                    //float realWidth = dkBlue.measureText(amountText);
+                        if (gii.prefs.getBoolean("show_circle_amount",true)) {
+                            dkBlue.setStyle(Paint.Style.STROKE);
 
-                    float movedY = (moved.y - (acc.radius * properties.scaleFactor));
-                    float txtWidth = acc.amountTextWidth * properties.scaleFactor;
-                    float movedX = (moved.x + (acc.radius * properties.scaleFactor * 1.1f)) - txtWidth;
-                    float amWidth = txtWidth + 10 * properties.scaleFactor;
-                    float amHeight = dkBlue.getTextSize()*1.2f;
-                    float verticalMiddle = movedY + amHeight/2;
-                    //canvas.drawRect(moved.x - 4 * properties.scaleFactor,movedY - 4 * properties.scaleFactor,moved.x + txtWidth+4* properties.scaleFactor,movedY + dkBlue.getTextSize()+6* properties.scaleFactor,dkBlue);
-                    //canvas.drawRect(movedX, movedY, movedX + txtWidth, movedY + dkBlue.getTextSize() + 2 * properties.scaleFactor, whiteTransp);
-
-                    tmpPath.reset();
-                    tmpPath.moveTo(movedX - 7 * properties.scaleFactor,movedY);
-                    tmpPath.lineTo(movedX, verticalMiddle);
-                    tmpPath.lineTo(movedX - 7 * properties.scaleFactor, movedY + amHeight);
-                    tmpPath.lineTo(movedX + amWidth, movedY + amHeight);
-                    tmpPath.lineTo(movedX + amWidth + 7 * properties.scaleFactor, verticalMiddle);
-                    tmpPath.lineTo(movedX + amWidth, movedY);
-                    tmpPath.lineTo(movedX - 7 * properties.scaleFactor, movedY);
-                    float fraction = 0;
-
-                    if (gii.prefs.getBoolean("show_circle_amount",true)) {
-                        dkBlue.setStyle(Paint.Style.STROKE);
-
-                        /*if (gii.prefs.getBoolean("show_circle_amount_rect",false)) {
-                            if (!acc.myMoney || properties.filtered) {
-                                canvas.drawRect((int) movedX, (int) movedY, (int) (movedX + amWidth), (int) (movedY + amHeight), whiteTransp);
-                                if (acc.goalAmount != 0 && !properties.filtered) {
-                                    canvas.drawRect((int) movedX, (int) movedY, (int) (movedX + amWidth), (int) (movedY + amHeight), blueTransp);
-                                    canvas.drawRect((int) movedX, (int) movedY, (int) (movedX + amWidth * fraction), (int) (movedY + amHeight), greenToRedTransp);
-                                }
-                                canvas.drawRect((int) movedX, (int) movedY, (int) (movedX + amWidth), (int) (movedY + amHeight), dkBlue);
-                            } else {
-                                canvas.drawPath(tmpPath, whiteTransp);
-                                canvas.drawPath(tmpPath, dkBlue);
-                                if (acc.goalAmount != 0) {
-                                    canvas.drawPath(tmpPath, blueTransp);
-                                    canvas.drawPath(tmpPath1, greenToRedTransp);
+                            dkBlue.setStyle(Paint.Style.FILL_AND_STROKE);
+                            dkBlue1.setStyle(Paint.Style.FILL_AND_STROKE);
+                            int movedYOffset = 0;
+                            for (Map.Entry<String, Float> entry : acc.displayAmount.entrySet()) {
+                                if (Math.abs(entry.getValue()) > 0.1f) {
+                                    txtWidth = acc.displayAmountTextWidth.get(entry.getKey()) * properties.scaleFactor;
+                                    movedX = (moved.x + (acc.radius * properties.scaleFactor * 0.7f)) - txtWidth;
+                                    movedYOffset++;
+                                    canvas.drawText(gii.df.format(entry.getValue()), movedX, movedY + dkBlue.getTextSize() * movedYOffset, dkBlue);
+                                    movedX = movedX + txtWidth;
+                                    canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, dkBlue1);
                                 }
                             }
-                        }
-
-
-                        dkBlue.setStyle(Paint.Style.FILL_AND_STROKE);
-                        canvas.drawText(amountText, movedX, movedY + dkBlue.getTextSize(), whiteUnder);
-                        canvas.drawText(amountText, movedX, movedY + dkBlue.getTextSize(), dkBlue);*/
-
-                        dkBlue.setStyle(Paint.Style.FILL_AND_STROKE);
-                        dkBlue1.setStyle(Paint.Style.FILL_AND_STROKE);
-                        int movedYOffset = 0;
-                        //movedY =
-                        for (Map.Entry<String, Float> entry : acc.displayAmount.entrySet()) {
-                            txtWidth = acc.displayAmountTextWidth.get(entry.getKey()) * properties.scaleFactor;
-                            movedX = (moved.x + (acc.radius * properties.scaleFactor * 0.7f)) - txtWidth;
-                            //movedX = moved.x  - txtWidth;
-                            movedYOffset++;
-                            canvas.drawText(gii.df.format(entry.getValue()) , movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
-                            canvas.drawText(gii.df.format(entry.getValue()) , movedX, movedY + dkBlue.getTextSize() * movedYOffset, dkBlue);
-                            //movedX = (moved.x + (acc.radius * properties.scaleFactor * 0.7f));
-                            movedX = movedX + txtWidth;
-                            //canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
-                            canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, dkBlue1);
                         }
                     }
                 }
             }
-        }
-        //canvas.drawText(gii.prefs.getString("pin",""), 70, 70, dkBlue);
-        //drawCurrentUsername and file:
-        //dkBlue.setTextSize(20);
-        //if (!properties.firebaseUserEmail.equals(""))
-            //canvas.drawText(properties.firebaseUserEmail + "/" + properties.fileName, 20, 50, dkBlue);
-        //else
-            //canvas.drawText("offline/" + properties.fileName, 20, 50, dkBlue);
-        //drawCounter++;
-        //canvas.drawText("Recalculations: " + numberOfRecalculcations, 20, 70, dkBlue);
 
         if (popupNeedsToUpdate)
             drawPopup(canvas);
@@ -479,7 +423,7 @@ public class Graphics {
             }
             i = 0;
             dkBlue.setStrokeWidth(1);
-            canvas.drawRect(0,0,canvas.getWidth(),30 + dkBlue.getTextSize(),whiteUnder);
+            //canvas.drawRect(0,0,canvas.getWidth(),30 + dkBlue.getTextSize(),whiteUnder);
             String toDisplayTotal = gii.activity.getString(R.string.you_have) + " ";
             for (Map.Entry<String, Float> entry : acc.displayAmount.entrySet()) {
                 toDisplayTotal = toDisplayTotal + gii.df.format(entry.getValue()) + " " + entry.getKey();
@@ -487,8 +431,9 @@ public class Graphics {
                     toDisplayTotal = toDisplayTotal + ", ";
                 i++;
             }
+            //dkBlue.setColor(Color.WHITE);
             if (acc.displayAmount.size() > 0)
-                canvas.drawText(toDisplayTotal, 10, dkBlue.getTextSize()*1.5f, dkBlue);
+                canvas.drawText(toDisplayTotal, 10, totalFont.getTextSize()*1.5f, totalFont);
         }
     }
 
@@ -526,7 +471,7 @@ public class Graphics {
         }
 
         //TODO: make intervals for bounds.width() (increase quality by steps)
-        String newParams = _circle.picture + "," + _circle.color  + "," + fillPercent;
+        String newParams = _circle.picture + "," + _circle.color  + "," + fillPercent + "," + _circle.amount;
 
         if (bounds.right < 0 || bounds.left > canvas.getWidth() ||
                 bounds.top > canvas.getHeight() || bounds.bottom < 0)
@@ -555,27 +500,45 @@ public class Graphics {
             moved.set(newBounds.centerX(), newBounds.centerY());
             float radius = newBounds.width() / 2.8f;
 
-            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.40), circleColor[parentIconColorNo % circleColor.length]);
+            Paint gradientPaint = new Paint();
+            gradientPaint.setAntiAlias(true);
+            gradientPaint.setColor(circleColor[parentIconColorNo % circleColor.length].getColor());
+            gradientPaint.setShader(new LinearGradient(newBounds.centerX(),0, newBounds.centerX(), newBounds.bottom,
+                    Color.WHITE, circleColor[parentIconColorNo % circleColor.length].getColor(),
+                    Shader.TileMode.CLAMP));
+            gradientPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+
+            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.40), gradientPaint);
             white.setAlpha(255);
-            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.2), white);
+            white.setAntiAlias(true);
+            int origColor = circleColor[parentIconColorNo % circleColor.length].getColor();
+            int darkerColor = Color.rgb(Math.max(Color.red(origColor)-70,5),
+                    Math.max(Color.green(origColor)-70,5),
+                    Math.max(Color.blue(origColor)-70,5));
+            white.setShader(new LinearGradient(newBounds.centerX(),0, newBounds.centerX(), newBounds.bottom / 1.5f,
+                    darkerColor, Color.WHITE, Shader.TileMode.CLAMP));
+            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.25), white);
+            white.setShader(null);
 
+            gradientPaint.setShader(new LinearGradient(newBounds.centerX(),0, newBounds.centerX(), newBounds.bottom * 2,
+                    circleColor[parentIconColorNo % circleColor.length].getColor(), Color.WHITE,
+                    Shader.TileMode.CLAMP));
 
-            //littleCanvas.clipPath(null);
-
-            if (fillPercent > 0) {
-                //srcRect.set(0, fill_with_red.getHeight() - (int) (fill_with_red.getHeight() * fillPercent), fill_with_red.getWidth(), fill_with_red.getHeight());
-                //destRect.set(newBounds.left, newBounds.bottom - (int) (newBounds.height() * fillPercent), newBounds.right, newBounds.bottom);
-                //littleCanvas.drawBitmap(fill_with_red, srcRect, destRect, null);
-            }
-
-            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.1), circleColor[iconColorNo % circleColor.length]);
             //rect0.set(0, 0, circleBitmap[iconBitmapNo % circleBitmap.length].getWidth(), circleBitmap[iconBitmapNo % circleBitmap.length].getHeight());
             rect1.set((int) (moved.x - (radius * 0.65)), (int) (moved.y - radius * 0.65),
                     (int) (moved.x + radius * 0.65), (int) (moved.y + radius * 0.65));
 
+
+
             //canvas.drawBitmap(circleBitmap[iconBitmapNo % circleBitmap.length], rect0, rect1, null);
+            //drawableIcon[iconBitmapNo % drawableIcon.length].setColorFilter(new
+            //        PorterDuffColorFilter(0xffff00, PorterDuff.Mode.MULTIPLY));
             drawableIcon[iconBitmapNo % drawableIcon.length].setBounds(rect1);
             drawableIcon[iconBitmapNo % drawableIcon.length].draw(littleCanvas);
+
+            gradientPaint.setAlpha(150);
+            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.24), gradientPaint);
+            gradientPaint.setAlpha(255);
 
             if (_circle.photoString != null &&
                     !_circle.photoString.equals("")) {
@@ -602,9 +565,10 @@ public class Graphics {
                 littleCanvas.drawBitmap(tmpBitmap, cutRect,
                         new Rect((int)(moved.x - radius * 1.2f), (int)(moved.y - radius * 1.2f),
                                 (int)(moved.x + radius * 1.2f), (int)(moved.y + radius * 1.2f)),null);
+                tmpBitmap.recycle();
             }
 
-            if (fillPercent > 0) {
+            if (fillPercent > 0 && 2==3) {
                 white.setAlpha(130);
                 Path percentPath = new Path();
                 percentPath.moveTo(moved.x,moved.y);
@@ -628,7 +592,53 @@ public class Graphics {
             } else {
                 //littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.2), white);
             }
+
+            //darken the circle, so that amounts are visible:
+            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.2), blackTransp);
+            Circle acc = _circle;
+            float movedY = newBounds.centerY();
+            int movedYOffset = 0;
+
+            float maxAmountTextWidth = 1;
+            for (Map.Entry<String, Float> entry : acc.displayAmount.entrySet()) {
+                if (Math.abs(entry.getValue()) > 0.1f) {
+                    float txtWidth = acc.displayAmountTextWidth.get(entry.getKey());
+                    if (maxAmountTextWidth < txtWidth)
+                        maxAmountTextWidth = txtWidth;
+                }
+            }
+
+            for (Map.Entry<String, Float> entry : acc.displayAmount.entrySet()) {
+                if (Math.abs(entry.getValue()) > 0.1f) {
+                    float txtWidth = acc.displayAmountTextWidth.get(entry.getKey()) * gii.properties.scaleFactor;
+                    float movedX = moved.x  - txtWidth;
+                    //movedX = moved.x  - txtWidth;
+                    movedYOffset++;
+                    //canvas.drawText(gii.df.format(entry.getValue()), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
+                    //nameFont.setTextSize(20 * gii.properties.scaleFactor);
+                    //movedX = (moved.x + (acc.radius * properties.scaleFactor * 0.7f));
+                    movedX = movedX + txtWidth;
+                    //canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
+                    float textSizeChange = (newBounds.width() * 0.7f /2 / maxAmountTextWidth);
+                    if (acc.displayAmount.size() == 1 && !entry.getKey().equals(""))
+                        textSizeChange = (newBounds.width() * 1.2f /2 / maxAmountTextWidth);
+                    nameFont.setTextSize(25 * textSizeChange);
+                    nameFont.setFakeBoldText(true);
+                    nameFont.setStrokeWidth(2);
+                    String theText = gii.df.format(entry.getValue()) + " " + entry.getKey();
+                    littleCanvas.drawText(theText, movedX - nameFont.measureText(theText)/2, movedY + nameFont.getTextSize() * movedYOffset, nameFont);
+                    nameFont.setFakeBoldText(false);
+                }
+            }
+
+            float nameTextWidth = _circle.nameTextWidth;
+            float textSizeChange = (newBounds.width() * 0.8f / nameTextWidth);
+            nameFont.setTextSize(25 * textSizeChange);
+            nameFont.setAntiAlias(true);
+            littleCanvas.drawText(_circle.name, moved.x - nameFont.measureText(_circle.name) / 2, moved.y - 5 * gii.properties.scaleFactor, nameFont);
         }
+
+
         canvas.drawBitmap(_circle.theIcon, new Rect(0,0,_circle.theIcon.getWidth(),_circle.theIcon.getHeight()), bounds, null );
         moved.set(bounds.centerX(), bounds.centerY());
     }
@@ -840,6 +850,8 @@ public class Graphics {
 
         bgColor = new Paint();
         bgColor.setColor(Color.rgb(220,250,220));
+        //bgColor.setShader(new LinearGradient(200,0, 1000, 1000, Color.rgb(200, 200, 255), Color.rgb(77,55,230),  Shader.TileMode.CLAMP));
+        bgColor.setShader(new RadialGradient(200,0, 1000, Color.rgb(200, 200, 255), Color.rgb(77,55,230),  Shader.TileMode.CLAMP));
         bgColor.setStyle(Paint.Style.FILL_AND_STROKE);
 
         gray = new Paint();
@@ -863,8 +875,12 @@ public class Graphics {
         green.setStrokeWidth(3);
 
         nameFont = new Paint();
-        nameFont.setColor(Color.rgb(47, 96, 96));
         nameFont.setStyle(Paint.Style.FILL);
+
+        totalFont = new Paint();
+        totalFont.setColor(Color.rgb(255, 255, 255));
+        totalFont.setStyle(Paint.Style.FILL);
+        totalFont.setTextSize(25);
 
         chain = new Paint();
         chain.setColor(Color.rgb (21,124,194));
@@ -901,6 +917,12 @@ public class Graphics {
             blueTransp.setAlpha(200);
         else
             blueTransp.setAlpha(255);
+
+        blackTransp= new Paint(); //for amounts to be visible
+        blackTransp.setColor(Color.BLACK);
+        blackTransp.setStyle(Paint.Style.FILL_AND_STROKE);
+        blackTransp.setAlpha(70);
+        blackTransp.setAntiAlias(true);
 
         greenTransp = new Paint(); //for amounts
         greenTransp.setColor(Color.GREEN);
@@ -976,6 +998,7 @@ public class Graphics {
             circleColor[i] = new Paint();
             circleColor[i].setStyle(Paint.Style.FILL_AND_STROKE);
             circleColor[i].setColor(manyColors[i]);
+            circleColor[i].setAntiAlias(true);
             //circleColor[i].setAlpha(150);
         }
 
@@ -1016,17 +1039,17 @@ public class Graphics {
                 toCircle.name.equals("none"))
             return;
 
-        //TODO: skip this if in PDF mode
         if (gii.prefs.getBoolean("show_arrow_only_related", true))
             if (!gii.selectedId.equals(fromCircle.id) &&
-                    !gii.selectedId.equals(toCircle.id))
+                    !gii.selectedId.equals(toCircle.id) &&
+                    !pdfMode)
                 return;
 
         paint.setStyle(Paint.Style.STROKE);
-        float strokeWidth = 4 * properties.scaleFactor +
-                properties.scaleFactor * 30 / GIIApplication.gii.maxDisplayedAmount * operation.absAmountInLocalCurrency;
-        paint.setStrokeWidth(strokeWidth); //4*properties.scaleFactor
-
+        //float strokeWidth = 4 * properties.scaleFactor +
+       //         properties.scaleFactor * 30 / GIIApplication.gii.maxDisplayedAmount * operation.absAmountInLocalCurrency;
+        paint.setStrokeWidth(4 * properties.scaleFactor); //4*properties.scaleFactor
+        paint.setAntiAlias(true);
         //Path myPath = new Path();
 
         int offset = 20;
@@ -1034,8 +1057,8 @@ public class Graphics {
         mapToScreen(fromCircle.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && fromCircle.id.equals(selectedId), moveXY),properties,point0);
         mapToScreen(toCircle.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && toCircle.id.equals(selectedId), moveXY),properties,point1);
 
-        Geometry.moveToAngle(point0, Geometry.calculateAngle(point0, point1), fromCircle.radius * 1.1f * properties.scaleFactor, point0);
-        Geometry.moveToAngle(point1, Geometry.calculateAngle(point1, point0), toCircle.radius * 1.1f * properties.scaleFactor, point1);
+        Geometry.moveToAngle(point0, Geometry.calculateAngle(point0, point1), fromCircle.radius * 1.1f * properties.scaleFactor + paint.getStrokeWidth()*2, point0);
+        Geometry.moveToAngle(point1, Geometry.calculateAngle(point1, point0), toCircle.radius * 1.1f * properties.scaleFactor + paint.getStrokeWidth()*2, point1);
         Geometry.moveToAngle(point1, Geometry.calculateAngle(point1, point0), 5 * properties.scaleFactor, point11);
         Geometry.moveToAngle(point1, Geometry.calculateAngle(point1, point0) - 15, 25 * properties.scaleFactor, point2);
         Geometry.moveToAngle(point1, Geometry.calculateAngle(point1, point0) + 15, 25 * properties.scaleFactor, point3);
@@ -1078,7 +1101,7 @@ public class Graphics {
                 canvas.rotate(180, centerText.x, centerText.y - paint.getTextSize()/2.5f );
             }
 
-            canvas.drawText(operationAmount, centerText.x - operation.amountTextWidth * properties.scaleFactor / 2, centerText.y + strokeWidth / 2, paint);
+            canvas.drawText(operationAmount, centerText.x - operation.amountTextWidth * properties.scaleFactor / 2, centerText.y , paint);
             canvas.restore();
         }
     }
@@ -1222,9 +1245,13 @@ public class Graphics {
         //bgRect0.set(0, 0, backgroundBitmap.getWidth(), backgroundBitmap.getHeight());
         //bgRect1.set(0, 0, canvas.getWidth(),Math.max(canvas.getHeight(),(int)(canvas.getWidth()*ratio)));
         //canvas.drawBitmap(backgroundBitmap,bgRect0,bgRect1,null);
-        //canvas.drawRect(0,0,canvas.getWidth(),canvas.getHeight(),bgColor);
+        canvas.drawRect(0,0,canvas.getWidth(),canvas.getHeight(),bgColor);
 
     }
+
+    int littleCirclesCount = 5;
+    PointF[] accelerateVectorLittleCircle = new PointF[littleCirclesCount];
+    PointF[] positionLittleCircle = new PointF[littleCirclesCount];
 
     public void showPopUpOperation(Operation operation,  ArrayList<Circle> circle) {
         popupNeedsToUpdate = true;
@@ -1235,8 +1262,14 @@ public class Graphics {
         popupCircleTo =gii.circleById(operation.toCircle, circle);
         operationListWindow.circle = circle;
         operationListWindow.monthName = monthName;
+        Random rnd = new Random();
+        for (int i = 0; i < littleCirclesCount; i++) {
+            accelerateVectorLittleCircle[i] = new PointF(rnd.nextFloat() * 10 - 5, rnd.nextFloat() * 10 - 5);
+            positionLittleCircle[i] = new PointF(popupCircleFrom.coordinates.x, popupCircleFrom.coordinates.y);
+        }
     }
 
+    PointF neededAcceleration = new PointF(0,0);
     public void updatePopUpOperation() {
         popupPositionStartShow++;
         if (popupPositionStartShow < 30)
@@ -1259,15 +1292,34 @@ public class Graphics {
 
         if (popupPosition >= 95)
             popupNeedsToUpdate = false;
+
+        Circle acc2 = gii.circleById(popupOperation.toCircle, gii.circle);
+        int stepsLeft = 91 - popupPosition;
+        if (stepsLeft <= 0)
+            stepsLeft = 1;
+
+        int k = (popupPosition<10)?3:1;
+        try {
+            for (int i = 0; i < littleCirclesCount; i++) {
+                neededAcceleration.set((acc2.coordinates.x - positionLittleCircle[i].x) / stepsLeft,
+                        (acc2.coordinates.y - positionLittleCircle[i].y) / stepsLeft);
+                accelerateVectorLittleCircle[i].set(accelerateVectorLittleCircle[i].x + (neededAcceleration.x - accelerateVectorLittleCircle[i].x) / stepsLeft,
+                        accelerateVectorLittleCircle[i].y + (neededAcceleration.y - accelerateVectorLittleCircle[i].y) / stepsLeft);
+                positionLittleCircle[i].set(positionLittleCircle[i].x + accelerateVectorLittleCircle[i].x * k,
+                        positionLittleCircle[i].y + accelerateVectorLittleCircle[i].y * k);
+            }
+        } catch (Exception e){};
     }
     private void drawPopup(Canvas canvas) {
         canvas.drawRect(popupRectangle,whiteTransp);
         operationListWindow.drawOperation(popupRectangle, popupOperation, canvas);
-        animateNewOperation(popupOperation, canvas);
+        try {
+            animateNewOperation(popupOperation, canvas);
+        } catch (Exception e) {};
     }
 
     private void animateNewOperation(Operation popupOperation, Canvas canvas) {
-        if (popupPosition > 50)
+        if (popupPosition > 90)
             return;
         if (!gii.prefs.getBoolean("show_operation_animation",true))
             return;
@@ -1275,6 +1327,25 @@ public class Graphics {
         Circle acc2 =gii.circleById(popupOperation.toCircle, gii.circle);
         mapToScreen(acc1.coordinates,gii.properties, moved);
         mapToScreen(acc2.coordinates,gii.properties, moved1);
+
+        for (int i = 0; i < littleCirclesCount; i++) {
+            //float progress = (popupPosition - 10 * i);
+            //if (progress > 0 && progress < 30) {
+            //    float radius = (20 + 25 - (Math.abs(progress - 15))) * gii.properties.scaleFactor;
+            float radius = (95 - Math.abs(popupPosition - 45)) * gii.properties.scaleFactor / 2;
+            mapToScreen(positionLittleCircle[i], gii.properties, moved);
+            //moved.set(moved.x + (moved1.x - moved.x) * progress / 30,
+            //        moved.y + (moved1.y - moved.y) * progress / 30);
+            rect1 = new Rect((int) (moved.x - (radius)), (int) (moved.y - radius),
+                    (int) (moved.x + radius), (int) (moved.y + radius));
+            canvas.save();
+            canvas.rotate((popupPosition  + i * 10) * 20, moved.x, moved.y);
+            //TODO: here should be a coin, not the circle icon
+            drawIcon(null, acc1.picture, acc1.color, acc1.color, rect1, 0, false, canvas);
+            canvas.restore();
+            //}
+        }
+        /*
         chain.setColor(circleColor[acc1.getColor()%circleColor.length].getColor());
         //drawASolidLine(moved.x, moved.y, moved1.x, moved1.y, chain, gii.properties, canvas);
         for (int i = 2; i >= 0; i--) {
@@ -1291,6 +1362,7 @@ public class Graphics {
                 canvas.restore();
             }
         }
+        */
     }
 
 

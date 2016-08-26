@@ -159,7 +159,7 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="fixing_operations">Исправляем операции...</string>
-    <string name="you_have">У Вас есть </string>
+    <string name="you_have">Баланс: </string>
     <string name="and"> и</string>
     <string name="done">Готово!</string>
     <string name="page">Страница</string>
@@ -440,6 +440,7 @@
         <item>BTN</item>
         <item>BWP</item>
         <item>BYR</item>
+        <item>BYN</item>
         <item>BZD</item>
         <item>CAD</item>
         <item>CDF</item>

@@ -1427,14 +1427,13 @@ public class GII extends View {
         //cloud.downloadCircles(circle, properties);
         //cloud.downloadOperations(operation, properties);
         //Log.e("Dir problem","GII.updateFile()");
+
         storage.saveFile(properties, circle, operation);
         if (recalculate) {
             recalculateAll();
             Log.e("RecalculateAll", "initiate gii 1301");
         }
     }
-
-
 
     //this function is called when we release a mouse/touch
     private void checkMouseUp() {
@@ -2110,6 +2109,8 @@ public class GII extends View {
     public AppState lastAppState = appState.idle;
     int lastPageNo = 0;
     boolean askingForPin = false;
+    boolean firstTimerTick = true;
+    boolean lastFiltered = false;
     Calendar timerCal = Calendar.getInstance();
     public void timerTick() {
         if (!pinCodeEntered && !prefs.getString("pin", "").equals("") && !askingForPin) {
@@ -2122,6 +2123,16 @@ public class GII extends View {
 
         if (!pinCodeEntered)
             return;
+
+
+        if (firstTimerTick || lastFiltered != properties.filtered) {
+            if (properties.filtered)
+                activity.bottom_filter.setBackgroundColor(Color.rgb(124, 124, 177));
+            else
+                activity.bottom_filter.setBackgroundColor(Color.TRANSPARENT);
+            lastFiltered = properties.filtered;
+            firstTimerTick = false;
+        }
 
         if (properties.backgroundPosition.x != properties.backgroundPosition.x ||
                 properties.backgroundPosition.y != properties.backgroundPosition.y) {
@@ -2224,9 +2235,14 @@ public class GII extends View {
             if (lastAppState == AppState.editMode)
                 updateFile(true);
 
-            activity.bottom_list.setBackgroundColor(Color.rgb(219,219,219));
-            activity.bottom_map.setBackgroundColor(Color.rgb(219,219,219));
-            activity.bottom_pie.setBackgroundColor(Color.rgb(219,219,219));
+            activity.bottom_list.setBackgroundColor(Color.TRANSPARENT);
+            activity.bottom_map.setBackgroundColor(Color.TRANSPARENT);
+            activity.bottom_pie.setBackgroundColor(Color.TRANSPARENT);
+
+            activity.bottom_filter.setBackgroundColor(Color.TRANSPARENT);
+            if (properties.filtered)
+                activity.bottom_filter.setBackgroundColor(Color.rgb(124,124,177));
+
 
             if (appState == AppState.showOperations) {
                 activity.bottom_list.setBackgroundColor(Color.rgb(124,124,177));
@@ -2332,6 +2348,8 @@ public class GII extends View {
 //TODO: Try attaching pictures to transactions
 
 //TODO: show goal amount in Calculator, if any
+
+//TODO: a parent of b, make b parent of a and app crashes :(
 
 
 //Changes: Backup for offline files, new create circle, performance/bugs, faster saving file, doubleClick on free space,

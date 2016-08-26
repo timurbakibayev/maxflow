@@ -5,88 +5,137 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/blue_semi_transparent"
     tools:context="com.gii.maxflow.MainActivity"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:background="#8A7FF2"
+            android:layout_gravity="bottom">
 
-    </android.support.design.widget.AppBarLayout>
+            <LinearLayout
+                android:id="@+id/toolBarMenuContainerLeft"
+                android:orientation="horizontal"
+                android:gravity="bottom|right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_alignParentLeft="true"
+                >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="50dp">
-    <include layout="@layout/content_main"
-        android:id="@+id/canvas"/>
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/bottom_menu"
+                android:background="@android:color/transparent"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:minHeight="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="left"
+                android:src="@drawable/ic_menu_black_24dp" />
 
-    <!--
-    <com.gii.maxflow.circlePicker
-        android:layout_width="match_parent"
-        android:layout_marginBottom="60dp"
-        android:gravity="bottom|center"
-        android:layout_height="30dp"
-        />
-        -->
-    <LinearLayout
-        android:id="@+id/toolBarMenuContainer"
-        android:orientation="horizontal"
-        android:gravity="bottom|center"
-        android:background="#77FFFFAA"
-        android:backgroundTint="@color/background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        >
+                <ImageButton
+                    android:id="@+id/bottom_filter"
+                    android:background="@android:color/transparent"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:clickable="true"
+                    android:minHeight="16dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="left"
+                    android:src="@drawable/ic_search_black_24dp1" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/toolBarMenuContainer"
+                android:orientation="horizontal"
+                android:gravity="bottom|right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_alignParentRight="true"
+                >
 
         <!--android:background="@drawable/preferedbackground"-->
 
-        <ImageButton
-            android:id="@+id/bottom_map"
-            android:background="#7c7cb1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:minHeight="16dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/ic_map_black_24dp" />
 
-        <ImageButton
-            android:id="@+id/bottom_list"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:minHeight="16dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/_ic_view_list_black_24dp"
-            android:background="#dbdada" />
 
-        <ImageButton
-            android:id="@+id/bottom_pie"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:clickable="true"
-            android:minHeight="16dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/_ic_pie_chart_white_24px"
-            android:background="#dbdada" />
+            <ImageButton
+                android:id="@+id/bottom_map"
+                android:background="#7c7cb1"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:minHeight="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_map_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/bottom_list"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:minHeight="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/_ic_view_list_black_24dp"
+                android:background="@android:color/transparent" />
+
+            <ImageButton
+                android:id="@+id/bottom_pie"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:clickable="true"
+                android:minHeight="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/_ic_pie_chart_white_24px"
+                android:background="@android:color/transparent" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:visibility="visible"
+                android:background="#8A7FF2"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        </android.support.design.widget.AppBarLayout>
+
+        <!--
+        <com.gii.maxflow.circlePicker
+            android:layout_width="match_parent"
+            android:layout_marginBottom="60dp"
+            android:gravity="bottom|center"
+            android:layout_height="30dp"
+            />
+            -->
+
+
+        <include layout="@layout/content_main"
+            android:id="@+id/canvas"/>
 
 
     </LinearLayout>
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

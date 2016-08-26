@@ -464,13 +464,22 @@ public class Circle {
     public void setDisplayAmountTextWidth(Paint paint) {
         displayAmountTextWidth = new HashMap<String, Float>();
         for (Map.Entry<String, Float> entry : displayAmount.entrySet())
-            displayAmountTextWidth.put(entry.getKey(),paint.measureText(GII.df.format(entry.getValue())));//+entry.getKey()
+            if (!entry.getKey().equals(""))
+                displayAmountTextWidth.put(entry.getKey(),paint.measureText(GII.df.format(entry.getValue()) + " " + entry.getKey()));
+            else {
+                if (entry.getValue() > 10)
+                    displayAmountTextWidth.put(entry.getKey(), paint.measureText(GII.df.format(entry.getValue())));
+                else
+                    displayAmountTextWidth.put(entry.getKey(), paint.measureText("10"));
+            }
     }
 
     public void addDisplayAmountsFromCircle(Circle sourceCircle) {
         for (Map.Entry<String, Float> entry : sourceCircle.displayAmount.entrySet()) {
             displayAmount.put(entry.getKey(),displayAmount.get(entry.getKey()) == null?entry.getValue():
                     displayAmount.get(entry.getKey()) + entry.getValue());
+            amount += GIIApplication.gii.exchangeRates.convert(entry.getValue(),entry.getKey(),
+                    GIIApplication.gii.properties.defaultCurrency);
         }
     }
 

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
     private static final String TAG = "MainActivity";
 
+    ImageButton bottom_filter;
     ImageButton bottom_map;
     ImageButton bottom_list;
     ImageButton bottom_pie;
@@ -232,6 +235,8 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         if (GIIApplication.gii != null)
             GIIApplication.gii.recalculateAll();
 
+        toolbarIsVisibile = prefs.getBoolean("toolbar",false);
+        saveToolbar();
         return true;
     }
 
@@ -240,10 +245,20 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
         Log.e("RC","CREATE");
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            getWindow().setStatusBarColor(Color.rgb(277/2,255/2,(255+230)/2));
+        }
 
         //DONE: REMOVE!
         //unlockIDKFA();
@@ -251,13 +266,29 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         prepareBeep();
 
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        ((ImageButton)findViewById(R.id.bottom_menu)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchtoolbar();
+            }
+        });
+
+        ((ImageButton)findViewById(R.id.bottom_filter)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GIIApplication.gii.filterDialog();
+            }
+        });
+
         setSupportActionBar(toolbar);
         toolbar.setTitle("Anyway");
         toolbar.setSubtitle("def_file");
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
+        bottom_filter = (ImageButton) findViewById(R.id.bottom_filter);
         bottom_list = (ImageButton) findViewById(R.id.bottom_list);
         bottom_map = (ImageButton) findViewById(R.id.bottom_map);
         bottom_pie = (ImageButton) findViewById(R.id.bottom_pie);
@@ -385,6 +416,33 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         }
         canvas.addView(GIIApplication.gii);
         grantCameraPermission();
+    }
+
+    boolean toolbarIsVisibile = false;
+
+    private void switchtoolbar() {
+        toolbarIsVisibile = prefs.getBoolean("toolbar",false);
+        toolbarIsVisibile = !toolbarIsVisibile;
+        saveToolbar();
+    }
+
+    private void saveToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        View decorView = getWindow().getDecorView();
+
+        if (toolbarIsVisibile) {
+            toolbar.setVisibility(View.VISIBLE);
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            ((ImageButton)findViewById(R.id.bottom_menu)).setBackgroundColor(Color.rgb(124,124,177));
+        }
+        else {
+            toolbar.setVisibility(View.GONE);
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            ((ImageButton)findViewById(R.id.bottom_menu)).setBackgroundColor(Color.TRANSPARENT);
+        }
+        SharedPreferences.Editor edit= prefs.edit();
+        edit.putBoolean("toolbar", toolbarIsVisibile);
+        edit.commit();
     }
 
     public void grantCameraPermission() {
@@ -590,7 +648,6 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                 Toast.makeText(this, "Could not open Android market, please install the market app.", Toast.LENGTH_SHORT).show();
             }
         }
-        //TODO: remember, that app was rated, never show it again
     }
 
     public void chooseCurrencies() {
