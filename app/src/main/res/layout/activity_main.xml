@@ -15,9 +15,10 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/RLBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#8A7FF2"
+            android:background="#00B9FF"
             android:layout_gravity="bottom">
 
             <LinearLayout
@@ -72,7 +73,7 @@
 
             <ImageButton
                 android:id="@+id/bottom_map"
-                android:background="#7c7cb1"
+                android:background="#CB429D"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:clickable="true"
@@ -116,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:visibility="visible"
-                android:background="#8A7FF2"
+                android:background="#00B9FF"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         </android.support.design.widget.AppBarLayout>

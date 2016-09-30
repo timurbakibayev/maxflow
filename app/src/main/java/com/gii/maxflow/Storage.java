@@ -798,17 +798,17 @@ public class Storage {
                 GIIApplication.gii.getContext().getString(R.string.circle_music)
         };
         PointF[] newpoint = {
-                new PointF(140,-270),
-                new PointF(-80,-270),
+                new PointF(160,-270),
+                new PointF(-100,-270),
                 new PointF(40,-530),
                 new PointF(30,80),
-                new PointF(-200,-20),
-                new PointF(280,-40),
-                new PointF(385,160),
-                new PointF(445,-125),
-                new PointF(545,70)
+                new PointF(-240,-20),
+                new PointF(320,-40),
+                new PointF(425,250),
+                new PointF(530,-190),
+                new PointF(595,70)
         };
-        float newradius = 60;
+        float newradius = 120;
         boolean deleted = false;
         boolean syncedCloud = false;
         boolean sentCloud = false;

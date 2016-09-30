@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- A 'parent' preference, which enables/disables child preferences (below)
          when checked/unchecked. -->
@@ -22,6 +23,38 @@
         android:key="circle_size_auto"
         android:summary="@string/pref_auto_circle_size"
         android:title="@string/pref_title_auto_circle_size" />
+
+    <com.rarepebble.colorpicker.ColorPreference
+        android:key="backColorBar"
+        android:title="@string/pref_color_bar"
+        android:defaultValue="#00B9FF"
+        app:colorpicker_showAlpha = "false"
+        app:colorpicker_selectNoneButtonText = "RESET"
+        />
+
+    <com.rarepebble.colorpicker.ColorPreference
+        android:key="backColorTop"
+        android:title="@string/pref_color_top"
+        android:defaultValue="#00B9FF"
+        app:colorpicker_showAlpha = "false"
+        app:colorpicker_selectNoneButtonText = "RESET"
+        />
+
+    <com.rarepebble.colorpicker.ColorPreference
+        android:key="backColorBottom"
+        android:title="@string/pref_color_bottom"
+        android:defaultValue="#CB429D"
+        app:colorpicker_showAlpha = "false"
+        app:colorpicker_selectNoneButtonText = "RESET"
+        />
+
+    <com.rarepebble.colorpicker.ColorPreference
+        android:key="backColorAccent"
+        android:title="@string/pref_color_accent"
+        android:defaultValue="#CB429D"
+        app:colorpicker_showAlpha = "false"
+        app:colorpicker_selectNoneButtonText = "RESET"
+        />
 
     <SwitchPreference
         android:defaultValue="true"

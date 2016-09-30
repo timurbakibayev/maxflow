@@ -1,7 +1,6 @@
 package com.gii.maxflow;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -411,7 +409,6 @@ public class OperationListWindow {
 
         new AlertDialog.Builder(GIIApplication.gii.activity)
                 .setTitle(GIIApplication.gii.activity.getString(R.string.title_choose_direction))
-                //.setView(pin)
                 .setSingleChoiceItems(showOptions, 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -889,6 +886,7 @@ public class OperationListWindow {
             for (final Operation _operation: operation)
                 if (_operation.id.equals(currentOperation)) {
 
+                    /*
                     final EditText newAmount = new EditText(context);
                     final EditText descriptionBox = new EditText(context);
                     //final EditText datePickerTo = new EditText(context);
@@ -963,6 +961,9 @@ public class OperationListWindow {
                             layout.removeAllViews();
                         }
                     }).show();
+                    */
+                    GIIApplication.gii.calcWindow.init(GIIApplication.gii.graphics,_operation);
+                    GIIApplication.gii.appState = GII.AppState.calculator;
                 }
         }
     }
@@ -1144,7 +1145,7 @@ public class OperationListWindow {
             }
         }
 
-        sum = gii.parseFloatFromString(gii.df.format(sum));
+        sum = (float)(Math.floor(sum * 100) / 100);
 
         //null point reference
         if (!gii.properties.defaultCurrency.equals("") && (abstractCircleForTotals.displayAmount.get(gii.properties.defaultCurrency) == null ||

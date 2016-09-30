@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -104,10 +105,26 @@ public class Calculator {
 
     public static int mSelectedIndex = 0;
 
-    public void init(Graphics graphics) {
-        calcDisplay = "0";
-        calcResult = "0";
-        calcDescription = "";
+    public Operation editOperation = null;
+
+    public void init(Graphics graphics, Operation editOperation) {
+        this.editOperation = editOperation;
+        if (editOperation == null) {
+            this.calcCurrency = GIIApplication.gii.properties.defaultCurrency;
+            this.calcResult = "0";
+            this.calcDisplay = "0";
+            this.calcDescription = "";
+        } else {
+            calcDescription = editOperation.description;
+            DecimalFormat dfSimple = new DecimalFormat("#.##");
+            calcDisplay = dfSimple.format(editOperation.amount);
+            int checkInt = (int)editOperation.amount;
+            if (checkInt == editOperation.amount)
+                calcDisplay = "" + checkInt;
+            calcResult = calcDisplay;
+            calcCurrency = editOperation.currency;
+            GIIApplication.gii.calendarTo.setTime(editOperation.date);
+        }
         paintGray.setColor(Color.rgb(240,240,240));
         paintLevel1.setColor(Color.rgb(250,250,250));
         paintLevel2.setColor(Color.rgb(242,244,244));

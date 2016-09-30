@@ -23,8 +23,8 @@ android {
         applicationId "com.gii.maxflow"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 60
-        versionName "17.1"
+        versionCode 67
+        versionName "18.1"
     }
     buildTypes {
         release {
@@ -54,6 +54,6 @@ dependencies {
     //compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.batch.android:batch-sdk:1.5.+'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
-
+    compile 'com.rarepebble:colorpicker:2.0.0'
 }
 //apply plugin: 'application'

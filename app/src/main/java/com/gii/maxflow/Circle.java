@@ -19,6 +19,8 @@ public class Circle {
     @JsonIgnore
     public Map<String, Float> displayAmount = new HashMap<String, Float>();
     @JsonIgnore
+    public Map<String, Float> displayAmountWidget = new HashMap<String, Float>();
+    @JsonIgnore
     public Map<String, Float> displayAmountTextWidth = new HashMap<String, Float>();
 
     @JsonIgnore
@@ -454,11 +456,20 @@ public class Circle {
     public void resetDisplayAmount() {
         displayAmount = new HashMap<String, Float>();
     }
+    public void resetDisplayAmountWidget() {
+        displayAmountWidget = new HashMap<String, Float>();
+    }
 
     public void addDisplayAmount(String currency, float amount) {
         if (currency.equals(""))
             currency = GIIApplication.gii.properties.defaultCurrency;
         displayAmount.put(currency,displayAmount.get(currency) == null?amount:displayAmount.get(currency) + amount);
+    }
+
+    public void addDisplayAmountWidget(String currency, float amount) {
+        if (currency.equals(""))
+            currency = GIIApplication.gii.properties.defaultCurrency;
+        displayAmountWidget.put(currency,displayAmountWidget.get(currency) == null?amount:displayAmountWidget.get(currency) + amount);
     }
 
     public void setDisplayAmountTextWidth(Paint paint) {
@@ -467,7 +478,7 @@ public class Circle {
             if (!entry.getKey().equals(""))
                 displayAmountTextWidth.put(entry.getKey(),paint.measureText(GII.df.format(entry.getValue()) + " " + entry.getKey()));
             else {
-                if (entry.getValue() > 10)
+                if (Math.abs(entry.getValue()) > 10)
                     displayAmountTextWidth.put(entry.getKey(), paint.measureText(GII.df.format(entry.getValue())));
                 else
                     displayAmountTextWidth.put(entry.getKey(), paint.measureText("10"));

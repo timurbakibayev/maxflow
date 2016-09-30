@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
  */
 public class GIIApplication extends Application  {
     static GII gii;
+    public static String widgetText = "";
 
     @Override
     public void onCreate() {

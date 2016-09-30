@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -57,11 +59,15 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
     private static final String TAG = "MainActivity";
 
+    public int backgroundColorBar = 2;
+    public int backgroundColorTop = 2;
+    public int backgroundColorBottom = 2;
+    public int backgroundColorAccent = 2;
+
     ImageButton bottom_filter;
     ImageButton bottom_map;
     ImageButton bottom_list;
     ImageButton bottom_pie;
-
 
     FloatingActionButton fab;
     //com.getbase.floatingactionbutton.FloatingActionsMenu fabMenu;
@@ -91,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     @Override
     protected void onResume() {
         super.onResume();
+        updateColors();
         Log.e("RC","Resume");
         active = true;
         GIIApplication.gii.updateTitle();
@@ -180,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             n11 = 0;
             owner.clear();
             submenu.clear();
+            //TODO: shallow query (get only keys, no values)
             GII.ref.child("maxflow/" + GII.ref.getAuth().getUid()).
                     addValueEventListener(new ValueEventListener() {
                         @Override
@@ -197,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                         }
                     });
             submenuShared.clear();
+            //TODO: shallow query (get only keys, no values)
             GII.ref.child("shared/" + GII.ref.getAuth().getUid()).
                     addValueEventListener(new ValueEventListener() {
                         @Override
@@ -247,18 +256,9 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
+
         Log.e("RC","CREATE");
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
-
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            getWindow().setStatusBarColor(Color.rgb(277/2,255/2,(255+230)/2));
-        }
 
         //DONE: REMOVE!
         //unlockIDKFA();
@@ -266,6 +266,9 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         prepareBeep();
 
         setContentView(R.layout.activity_main);
+
+        updateColors();
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         ((ImageButton)findViewById(R.id.bottom_menu)).setOnClickListener(new View.OnClickListener() {
@@ -418,6 +421,30 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         grantCameraPermission();
     }
 
+    private void updateColors() {
+        backgroundColorBar = prefs.getInt("backColorBar",Color.parseColor("#00B9FF"));
+        backgroundColorTop = prefs.getInt("backColorTop",Color.parseColor("#00B9FF"));
+        backgroundColorBottom = prefs.getInt("backColorBottom",Color.parseColor("#CB429D"));
+        backgroundColorAccent = prefs.getInt("backColorAccent",Color.parseColor("#CB429D"));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            getWindow().setStatusBarColor(backgroundColorBar);
+        }
+        ((Toolbar) findViewById(R.id.toolbar)).setBackgroundColor(backgroundColorBar);
+        ((RelativeLayout)findViewById(R.id.RLBar)).setBackgroundColor(backgroundColorBar);
+
+        if (GIIApplication.gii != null &&
+                GIIApplication.gii.graphics.bgColor != null) {
+            GIIApplication.gii.graphics.bgColor.setShader(
+                    new RadialGradient(200, 0, 1000, backgroundColorTop, backgroundColorBottom, Shader.TileMode.CLAMP));
+            GIIApplication.gii.lastAppState = GII.AppState.calculator;
+        }
+    }
+
     boolean toolbarIsVisibile = false;
 
     private void switchtoolbar() {
@@ -433,7 +460,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         if (toolbarIsVisibile) {
             toolbar.setVisibility(View.VISIBLE);
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            ((ImageButton)findViewById(R.id.bottom_menu)).setBackgroundColor(Color.rgb(124,124,177));
+            ((ImageButton)findViewById(R.id.bottom_menu)).setBackgroundColor(backgroundColorAccent);
         }
         else {
             toolbar.setVisibility(View.GONE);
@@ -475,6 +502,12 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
     @Override
     public void onBackPressed() {
+        if (GIIApplication.gii.appState == GII.AppState.calculator &&
+                GIIApplication.gii.calcWindow.editOperation != null) {
+            GIIApplication.gii.appState = GII.AppState.showOperations;
+            return;
+        }
+
         if (GIIApplication.gii.appState == GII.AppState.reporting ||
                 GIIApplication.gii.appState == GII.AppState.chartPlotting ||
                 GIIApplication.gii.appState == GII.AppState.showOperations ||
@@ -720,6 +753,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             GIIApplication.gii.properties.defaultCurrency = GIIApplication.gii.properties.currency.toUpperCase();
             GIIApplication.gii.properties.syncedWithCloud = false;
             GIIApplication.gii.updateFile(true);
+            checkIfThereAreOperationsWithMissingCurrency();
             return;
         }
 

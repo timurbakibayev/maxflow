@@ -87,6 +87,7 @@ public class Graphics {
     Paint selectorPaint;
 
     Paint white = new Paint();
+    Paint pink = new Paint();
     Paint blackTransp = new Paint();
     Paint whiteUnder = new Paint();
     Paint whiteTransp = new Paint();
@@ -851,7 +852,7 @@ public class Graphics {
         bgColor = new Paint();
         bgColor.setColor(Color.rgb(220,250,220));
         //bgColor.setShader(new LinearGradient(200,0, 1000, 1000, Color.rgb(200, 200, 255), Color.rgb(77,55,230),  Shader.TileMode.CLAMP));
-        bgColor.setShader(new RadialGradient(200,0, 1000, Color.rgb(200, 200, 255), Color.rgb(77,55,230),  Shader.TileMode.CLAMP));
+        bgColor.setShader(new RadialGradient(200,0, 1000, gii.activity.backgroundColorTop, gii.activity.backgroundColorBottom,  Shader.TileMode.CLAMP));
         bgColor.setStyle(Paint.Style.FILL_AND_STROKE);
 
         gray = new Paint();
@@ -948,6 +949,11 @@ public class Graphics {
         whiteUnder.setStyle(Paint.Style.FILL_AND_STROKE);
         whiteUnder.setAlpha(220);
 
+
+        pink = new Paint();
+        pink.setColor(Color.CYAN);
+        pink.setShader(new LinearGradient(0,0,300,0 , Color.rgb(174, 118, 206), Color.rgb(238,77,185),  Shader.TileMode.CLAMP));
+        pink.setStyle(Paint.Style.FILL_AND_STROKE);
         //white.setAlpha(255);
 
         arrowPaint = new Paint();
@@ -1311,7 +1317,7 @@ public class Graphics {
         } catch (Exception e){};
     }
     private void drawPopup(Canvas canvas) {
-        canvas.drawRect(popupRectangle,whiteTransp);
+        canvas.drawRect(popupRectangle,pink);
         operationListWindow.drawOperation(popupRectangle, popupOperation, canvas);
         try {
             animateNewOperation(popupOperation, canvas);

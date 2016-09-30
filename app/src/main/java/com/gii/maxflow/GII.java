@@ -3,6 +3,8 @@ package com.gii.maxflow;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -41,6 +43,7 @@ import com.firebase.client.Firebase;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -116,6 +119,7 @@ public class GII extends View {
     Storage storage = new Storage(this); //a class that saves and loads XML
 
     Circle abstractTotalCircle = new Circle();
+    //Circle abstractTotalCircleWidget = new Circle();
 
     public java.util.ArrayList<Circle> circle = new ArrayList<>(); //the circles, loaded and saved to XML
     public java.util.ArrayList<Operation> operation = new ArrayList<>(); //the operations, loaded and saved to XML
@@ -363,7 +367,8 @@ public class GII extends View {
     }
 
     public String emailOrOffline = getContext().getString(R.string.offline);
-    static DecimalFormat df = new DecimalFormat("#.##");
+    //static DecimalFormat df = new DecimalFormat("#.##");
+    static DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 
     public String currency(float amount, String currency) {
         Locale currentLocale = Locale.getDefault();
@@ -382,6 +387,7 @@ public class GII extends View {
     }
 
     public void loadFile(String s) {
+
         loaded = 0;
         operationListWindow.monthName = monthName;
         graphics.monthName = monthName;
@@ -516,9 +522,12 @@ public class GII extends View {
             GIIApplication.gii.pressFloatingButton();
         }
     });(*/
+    String textStandings;
+
     public void recalculateAll() {
         Log.e("RecalculateAll","Calculation started...");
         abstractTotalCircle.resetDisplayAmount();
+        abstractTotalCircle.resetDisplayAmountWidget();
 
         graphics.dkBlue.setTextSize(20);
         graphics.nameFont.setTextSize(40);
@@ -531,9 +540,13 @@ public class GII extends View {
         }
 
         Log.e("RecalculateAll","Step 1");
+        String newTextStangings = "";
+        int maxStandingsLength = 0;
+        int maxStandingsWordLength = 0;
         for (Circle _circle : circle) {
             _circle.recalculateChildren(circle);
             _circle.resetDisplayAmount();
+            _circle.resetDisplayAmountWidget();
             float amount = 0;
             Calendar tempCalendar = Calendar.getInstance();
             if (!_circle.deleted) {
@@ -567,6 +580,14 @@ public class GII extends View {
                                 _circle.addDisplayAmount(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, +_operation.amount);
                             }
                         }
+                        if (_circle.myMoney) {
+                            if (_operation.fromCircle.equals(_circle.id)) {
+                                _circle.addDisplayAmountWidget(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, -_operation.amount);
+                            }
+                            if (_operation.toCircle.equals(_circle.id)) {
+                                _circle.addDisplayAmountWidget(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, +_operation.amount);
+                            }
+                        }
                     }
                 }
             }
@@ -593,7 +614,72 @@ public class GII extends View {
                     abstractTotalCircle.addDisplayAmount(entry.getKey(), entry.getValue());
                     abstractTotalCircle.setDisplayAmountTextWidth(graphics.dkBlue);
                 }
+                if (maxStandingsWordLength < _circle.name.length())
+                    maxStandingsWordLength = _circle.name.length();
+
+                for (Map.Entry<String,Float> entry : _circle.displayAmountWidget.entrySet()) {
+                    if (Math.abs(entry.getValue()) > 0.01) {
+                        int len = (df.format(entry.getValue()) + " " + entry.getKey()).length();
+                        if (maxStandingsLength < len)
+                            maxStandingsLength = len;
+
+                    }
+                    abstractTotalCircle.addDisplayAmountWidget(entry.getKey(), entry.getValue());
+                    //abstractTotalCircle.setDisplayAmountTextWidth(graphics.dkBlue);
+                }
+
             }
+        }
+
+        Log.e(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
+        if (maxStandingsWordLength < 5 ) // 5 is the length of "Total"
+            maxStandingsLength += (5 - maxStandingsWordLength);
+        Log.e(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
+
+        for (Circle _circle : circle) {
+            if (_circle.myMoney) {
+                String nTS = "";
+                if (_circle.displayAmountWidget.size() > 0)
+                    nTS = nTS + _circle.name + " ";
+                int i = 0;
+                for (Map.Entry<String,Float> entry : _circle.displayAmountWidget.entrySet()) {
+                    if (Math.abs(entry.getValue()) > 0.01) {
+                        i++;
+                        int len = (df.format(entry.getValue()) + " " + entry.getKey()).length();
+                        if (i == 1) {
+                            for (int j = 0; j < maxStandingsLength + 1 - len; j++)
+                                nTS = nTS + " ";
+                        }
+                        nTS = nTS + df.format(entry.getValue()) + " " + entry.getKey() +"\n";
+                    }
+                }
+                if (i > 0) {
+                    newTextStangings = newTextStangings + nTS;
+                }
+            }
+        }
+        newTextStangings = newTextStangings + "----------------\nTotal";
+        int i = 0;
+        for (Map.Entry<String,Float> entry : abstractTotalCircle.displayAmountWidget.entrySet()) {
+            if (Math.abs(entry.getValue()) > 0.01) {
+                i++;
+                int len = (df.format(entry.getValue()) + " " + entry.getKey()).length();
+                if (i == 1) {
+                    for (int j = 0; j < maxStandingsLength + 2 - len; j++)
+                        newTextStangings = newTextStangings + " ";
+                }
+                newTextStangings = newTextStangings + df.format(entry.getValue()) + " " + entry.getKey() +"\n";
+            }
+        }
+        if (!textStandings.equals(newTextStangings)) {
+            SharedPreferences.Editor edit= prefs.edit();
+            edit.putString("widgetText", newTextStangings);
+            edit.commit();
+            textStandings = newTextStangings;
+
+            int[] ids = AppWidgetManager.getInstance(activity).getAppWidgetIds(new ComponentName(activity, StandingsWidgetProvider.class));
+            StandingsWidgetProvider myWidget = new StandingsWidgetProvider();
+            myWidget.onUpdate(activity, AppWidgetManager.getInstance(activity),ids);
         }
         Log.e("RecalculateAll","Step 2");
         for (Circle _circle : circle)
@@ -650,8 +736,8 @@ public class GII extends View {
                     maxAbsAmount = _circle.amount;
 
             for (Circle _circle : circle) {
-                if (_circle.radius != Math.max(_circle.amount/maxAbsAmount * 60 + 60, 60))
-                _circle.setRadius(Math.max(_circle.amount/maxAbsAmount * 60 + 60,60));
+                if (_circle.radius != Math.max(_circle.amount/maxAbsAmount * 120 + 120, 120))
+                _circle.setRadius(Math.max(_circle.amount/maxAbsAmount * 120 + 120,120));
                 if (_circle.radius <= 0)
                     Log.e("Achtung!!!","Radius is zero! " + _circle.name + ", " + _circle.amount + ", total " + _circle.amountTotal);
             }
@@ -857,7 +943,7 @@ public class GII extends View {
             } else {
                 if (!selectedId.equals("none")) {
                     float radius = circleById(selectedId).radius;
-                    circleById(selectedId).setRadius(Math.max(25f, Math.min(detector.getScaleFactor() * radius, 150)));
+                    circleById(selectedId).setRadius(Math.max(50f, Math.min(detector.getScaleFactor() * radius, 250)));
                 }
             }
             return true;
@@ -873,6 +959,10 @@ public class GII extends View {
             edit.putString("AndroidID", generateNewId());
             edit.commit();
         }
+        textStandings =  prefs.getString("widgetText","0 USD\n-----------\nTotal: 0 USD");
+        DecimalFormatSymbols symbols = df.getDecimalFormatSymbols();
+        symbols.setGroupingSeparator(' ');
+        df.setDecimalFormatSymbols(symbols);
     }
 
     public GII(Context context, AttributeSet attributeSet) {
@@ -1013,7 +1103,7 @@ public class GII extends View {
                     checkBackroundPosition();
                 }
                 if (appState == AppState.creating) {
-                    if (geometry.distance(canvasMovingStartingPoint, new PointF(event.getX(), event.getY())) > 20)
+                    if (geometry.distance(canvasMovingStartingPoint, new PointF(event.getX(), event.getY())) > 50)
                         appState = AppState.canvasMoving;
                 }
                 if (appState == AppState.canvasMoving ||
@@ -1037,8 +1127,8 @@ public class GII extends View {
                 checkMouseUp();
                 gesture.clear();
                 if (appState == AppState.canvasMoving) {
-                    velocity = new PointF((lastY1.x-lastY0.x) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 70,
-                            (lastY1.y-lastY0.y) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 70);
+                    velocity = new PointF((lastY1.x-lastY0.x) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 10,
+                            (lastY1.y-lastY0.y) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 10);
                     fling = true;
                 }
 
@@ -1625,8 +1715,22 @@ public class GII extends View {
 
     private void checkCalcWindow() {
         if (calcWindow.ready) {
-            appState = AppState.idle;
-            newOperation(newOperationFromCircle,newOperationToCircle,calcWindow.calcDescription,calcWindow.calcResult,calcWindow.calcCurrency);
+            if (calcWindow.editOperation == null ) { //add a new operation
+                appState = AppState.idle;
+                newOperation(newOperationFromCircle, newOperationToCircle, calcWindow.calcDescription, calcWindow.calcResult, calcWindow.calcCurrency);
+            } else { //eidting operation
+                for (Operation operation1 : operation) {
+                    if (operation1.id.equals(calcWindow.editOperation.id)) {
+                        operation1.setDate(calendarTo.getTime());
+                        operation1.setCurrency(calcWindow.calcCurrency);
+                        operation1.setAmount(parseFloatFromString(calcWindow.calcResult.toString()));
+                        operation1.setDescription(calcWindow.calcDescription);
+                        operation1.setSyncedWithCloud(false);
+                        operationListWindow.needToUpdateFile = true;
+                        appState = AppState.showOperations;
+                    }
+                }
+            }
         }
     }
 
@@ -1637,9 +1741,7 @@ public class GII extends View {
         calendarTo = Calendar.getInstance();
         newOperationFromCircle = touchCircle.get(0);
         newOperationToCircle = touchCircle.get(touchCircle.size() - 1);
-        calcWindow.init(graphics);
-
-        calcWindow.calcCurrency = properties.defaultCurrency;
+        calcWindow.init(graphics, null);
 
         if (calcWindow.calcCurrency.equals("") && exchangeRates.currencyArray().length > 0) {
             calcWindow.calcCurrency = exchangeRates.currencyArray()[0];
@@ -2107,7 +2209,7 @@ public class GII extends View {
     //Date lastOperationsUpdate = new Date(0);
     //This function is called from the MainActivity.java every 50ms.
     public AppState lastAppState = appState.idle;
-    int lastPageNo = 0;
+    int lastPageNo = -1;
     boolean askingForPin = false;
     boolean firstTimerTick = true;
     boolean lastFiltered = false;
@@ -2127,7 +2229,7 @@ public class GII extends View {
 
         if (firstTimerTick || lastFiltered != properties.filtered) {
             if (properties.filtered)
-                activity.bottom_filter.setBackgroundColor(Color.rgb(124, 124, 177));
+                activity.bottom_filter.setBackgroundColor(activity.backgroundColorAccent);
             else
                 activity.bottom_filter.setBackgroundColor(Color.TRANSPARENT);
             lastFiltered = properties.filtered;
@@ -2159,7 +2261,7 @@ public class GII extends View {
             if (interval >= timeToCreate) {
                 if ((gesture.size() == 1)) {
                     if (!prefs.getBoolean("prevent_create",false)) {
-                        newCircle(gesture.get(0), 60);
+                        newCircle(gesture.get(0), 120);
                         appState = AppState.idle;
                     }
                 }
@@ -2241,23 +2343,23 @@ public class GII extends View {
 
             activity.bottom_filter.setBackgroundColor(Color.TRANSPARENT);
             if (properties.filtered)
-                activity.bottom_filter.setBackgroundColor(Color.rgb(124,124,177));
+                activity.bottom_filter.setBackgroundColor(activity.backgroundColorAccent);
 
 
             if (appState == AppState.showOperations) {
-                activity.bottom_list.setBackgroundColor(Color.rgb(124,124,177));
+                activity.bottom_list.setBackgroundColor(activity.backgroundColorAccent);
                 //fab.setVisibility(View.GONE);
                 //fabMenu.setVisibility(View.VISIBLE);
             }
             else if (appState == AppState.reporting) {
-                activity.bottom_pie.setBackgroundColor(Color.rgb(124,124,177));
+                activity.bottom_pie.setBackgroundColor(activity.backgroundColorAccent);
                 //fab.setVisibility(View.VISIBLE);
                 //fabMenu.setVisibility(View.GONE);
             } else if (appState == AppState.calculator || appState == AppState.iconChoose) {
                 //fab.setVisibility(View.GONE);
                 //fabMenu.setVisibility(View.GONE);
             } else {
-                activity.bottom_map.setBackgroundColor(Color.rgb(124,124,177));
+                activity.bottom_map.setBackgroundColor(activity.backgroundColorAccent);
             }
         }
 
@@ -2288,12 +2390,13 @@ public class GII extends View {
             graphics.updatePopUpOperation();
         }
 
-        if (needToRecalculate) {
+        if (needToRecalculate || lastPageNo != properties.currentPageNo) {
             timerCal = Calendar.getInstance();
             long interval = timerCal.getTimeInMillis() - lastRecalculateInitiative;
 
-            if (interval > 1000) {
+            if (interval > 1000 || lastPageNo != properties.currentPageNo) {
                 recalculateAll();
+                lastPageNo = properties.currentPageNo;
                 Log.e("RecalculateAll", "initiate gii 2023");
                 needToRecalculate = false;
                 lastRecalculateInitiative = timerCal.getTimeInMillis();

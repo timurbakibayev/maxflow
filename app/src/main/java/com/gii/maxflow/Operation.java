@@ -133,6 +133,11 @@ public class Operation implements Comparable<Operation>{
     //    this.sentToCloud = sentToCloud;
     //}
 
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }

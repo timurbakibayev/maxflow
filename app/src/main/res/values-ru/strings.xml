@@ -109,6 +109,11 @@
     <string name="pref_title_prevent_color_icons">Спрятать цветные иконки</string>
     <string name="pref_title_ask_time">Спрашивать время</string>
     <string name="pref_ask_time">Спрашивать время при выборе даты</string>
+    <string name="pref_color_top">Цвет верхней части фона</string>
+    <string name="pref_color_bottom">Цвет нижней части фона</string>
+    <string name="pref_color_accent">Цвет выделения</string>
+
+    <string name="pref_color_bar">Цвет шапки (меню)</string>
     <string name="pref_title_prevent_move">Запретить перемещение кружков</string>
     <string name="pref_title_ringtone">Звук</string>
     <string name="pref_title_show_circle_amount">Отображать суммы</string>
