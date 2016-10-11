@@ -374,17 +374,12 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             //GIIApplication.gii.fabMenu = fabMenu;
             storage = new Storage(GIIApplication.gii);
             GIIApplication.gii.cloud = cloud;
-            GIIApplication.gii.graphics.loadResources(this.getApplicationContext());
+            GIIApplication.gii.graphics.loadResources(this.getApplicationContext(),true);
             GIIApplication.gii.chart1.loadResouces(this.getApplicationContext());
-            /*if (ParseUser.getCurrentUser() != null && ParseUser.getCurrentUser().getUsername() != null)
-                GIIApplication.gii.refreshUser(ParseUser.getCurrentUser().getUsername());
-            else
-            */
         }
         canvas = (RelativeLayout) findViewById(R.id.canvas);
         GIIApplication.gii.bindActivity(this);
         GIIApplication.gii.fab = fab;
-        //GIIApplication.gii.fabMenu = fabMenu;
         GIIApplication.gii.lastAppState = GII.AppState.unreal;
 
         if (GIIApplication.gii.ref.getAuth() == null) {
@@ -895,7 +890,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             GIIApplication.gii.refreshUser();
             toolbar.setSubtitle(GIIApplication.gii.ref.getAuth().getProviderData().get("email").toString());
         }
-        GIIApplication.gii.graphics.loadResources(GIIApplication.gii.getContext());
+        GIIApplication.gii.graphics.loadResources(GIIApplication.gii.getContext(),true);
         prepareBeep();
         invalidateOptionsMenu();
         if (monthDescription != null)

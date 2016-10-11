@@ -144,8 +144,8 @@ public class GII extends View {
     String firstGestureCircleId = "none";
     boolean doNotMove = false;
 
-    String selectedId = "none"; //an Id of a currently selected circle
-    Circle selectedCircle = new Circle("none"); //an Id of a currently selected circle
+    String selectedId = "none"; //an Id of the currently selected circle
+    Circle selectedCircle = new Circle("none"); //the currently selected circle
     String moveIntoId = "none"; //an Id to group into while edit mode
 
     PointF moveXY = new PointF(0,0);
@@ -198,9 +198,6 @@ public class GII extends View {
 
         if (appState == AppState.showOperations) {
             operationListWindow.onDraw(canvas, getContext());
-            //graphics.animateBottomMenu(Math.abs(operationListWindow.backgroundPosition.y) < 10);
-            //if (!selectedId.equals("none"))
-            //    graphics.drawBottomMenu(canvas,appState);
             return;
         }
 
