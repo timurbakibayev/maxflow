@@ -1372,7 +1372,7 @@ public class Graphics {
     PointF neededAcceleration = new PointF(0,0);
     public void updatePopUpOperation() {
         popupPositionStartShow++;
-        if (popupPositionStartShow < 30)
+        if (popupPositionStartShow < 20)
             return;
         int diameter = (int)(Math.min(canvasWidth,canvasHeight)/6);
         popupPosition++;
@@ -1394,7 +1394,7 @@ public class Graphics {
             popupNeedsToUpdate = false;
 
         Circle acc2 = gii.circleById(popupOperation.toCircle, gii.circle);
-        int stepsLeft = 91 - popupPosition;
+        int stepsLeft = 50 - popupPosition;
         if (stepsLeft <= 0)
             stepsLeft = 1;
 
@@ -1419,7 +1419,7 @@ public class Graphics {
     }
 
     private void animateNewOperation(Operation popupOperation, Canvas canvas) {
-        if (popupPosition > 90)
+        if (popupPosition > 55)
             return;
         if (!gii.prefs.getBoolean("show_operation_animation",true))
             return;

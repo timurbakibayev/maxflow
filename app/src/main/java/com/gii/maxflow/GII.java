@@ -1974,11 +1974,19 @@ public class GII extends View {
                     _circle.setCoordinates(new PointF(point.x,point.y),circle,prefs.getString("AndroidID",""));
                     _circle.setSyncedWithCloud(false);
                 } else {
-                    _circle.setParentId(moveIntoId);
-                    _circle.setSyncedWithCloud(false);
-                    moveIntoId = "";
-                    selectedId = "none";
-                    selectedCircle = new Circle("none");
+                    if (!_circle.childrenId.contains(moveIntoId)) {
+                        _circle.setParentId(moveIntoId);
+                        _circle.setSyncedWithCloud(false);
+                        moveIntoId = "";
+                        selectedId = "none";
+                        selectedCircle = new Circle("none");
+                    }
+                    else {
+                        moveIntoId = "";
+                        selectedId = "none";
+                        selectedCircle = new Circle("none");
+                        Log.e(TAG, "moveCircle: cannot have a cycle!");
+                    }
                 }
             }
         }
