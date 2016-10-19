@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RadialGradient;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -40,10 +41,20 @@ public class Graphics {
     Circle popupCircleTo;
     OperationListWindow operationListWindow;
     GII gii;
+    public boolean tutorial = false;
     public Graphics(GII gii) {
         this.gii = gii;
         operationListWindow = new OperationListWindow(gii);
     }
+
+    Context context;
+    public Graphics(Context context, GII gii, String options) {
+        this.gii = gii;
+        operationListWindow = new OperationListWindow(gii);
+        if (options.equals("tutorial"))
+            loadResources(context, false, true);
+    }
+
     public String[] monthName;
 
     Rect bgRect0 = new Rect(150,150,150,150);
@@ -129,12 +140,10 @@ public class Graphics {
         float lastScaleFactor = properties.scaleFactor;
         PointF lastBackgroundPosition = properties.backgroundPosition;
 
-        nameFont.setColor(Color.rgb(255, 255, 255));
-
         if (selectedId.equals("-1")) {
             pdfMode = true;
             Rect bounds = new Rect(-1,-1,1,1);
-            nameFont.setColor(Color.BLUE);
+            //nameFont.setColor(Color.BLUE);
             //detect bounds to rescale;
             for (Circle _circle : circle) {
                 if (!_circle.deleted && _circle.visible) {
@@ -345,7 +354,7 @@ public class Graphics {
 
                 //Show the name inside the circle
                 //redefine text size depending on the circle radius and the length of the amount of the circle
-                if (pdfMode)
+                if (pdfMode && 2 == 3)
                     if (gii.prefs.getBoolean("show_circle_name",true)) { //was < 5
                         float nameTextWidth = _circle.nameTextWidth * properties.scaleFactor;
                         //float textSizeChange = (_circle.radius * 1.5f * properties.scaleFactor / nameTextWidth);
@@ -359,7 +368,7 @@ public class Graphics {
 
         //draw amount, show amount
         //white.setAlpha(130);
-        if (pdfMode)
+        if (pdfMode && 2 ==3 )
             for (Circle acc : circle) {
                 if (!acc.deleted && acc.visible) {
                     mapToScreen(acc.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId), moveXY), properties,moved);
@@ -453,9 +462,9 @@ public class Graphics {
     private String TAG = "Graphics";
     Rect srcRect = new Rect(0,0,0,0);
     Rect destRect = new Rect(0,0,0,0);
-    public void drawIcon(Circle _circle, int iconBitmapNo, int iconColorNo, int parentIconColorNo, Rect bounds, float fillPercent, boolean limitGoal, Canvas canvas) {
+    public  void drawIcon(Circle _circle, int iconBitmapNo, int iconColorNo, int parentIconColorNo, Rect bounds, float fillPercent, boolean limitGoal, Canvas canvas) {
 
-        if (_circle == null || pdfMode) {
+        if (_circle == null) {
             moved.set(bounds.centerX(), bounds.centerY());
             if (bounds.right < 0 || bounds.left > canvas.getWidth() ||
                     bounds.top > canvas.getHeight() || bounds.bottom < 0)
@@ -472,7 +481,7 @@ public class Graphics {
         }
 
         //TODO: make intervals for bounds.width() (increase quality by steps)
-        String newParams = _circle.picture + "," + _circle.color  + "," + fillPercent + "," + _circle.amount;
+        String newParams = _circle.name + "," + _circle.picture + "," + _circle.color  + "," + fillPercent + "," + _circle.amount;
 
         if (bounds.right < 0 || bounds.left > canvas.getWidth() ||
                 bounds.top > canvas.getHeight() || bounds.bottom < 0)
@@ -509,20 +518,20 @@ public class Graphics {
                     Shader.TileMode.CLAMP));
             gradientPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.40), gradientPaint);
+            //littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.40), gradientPaint);
             white.setAlpha(255);
             white.setAntiAlias(true);
-            int origColor = circleColor[parentIconColorNo % circleColor.length].getColor();
+            int origColor = circleColor[iconColorNo % circleColor.length].getColor();
             int darkerColor = Color.rgb(Math.max(Color.red(origColor)-70,5),
                     Math.max(Color.green(origColor)-70,5),
                     Math.max(Color.blue(origColor)-70,5));
             white.setShader(new LinearGradient(newBounds.centerX(),0, newBounds.centerX(), newBounds.bottom / 1.5f,
                     darkerColor, Color.WHITE, Shader.TileMode.CLAMP));
-            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.25), white);
+            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.1), white);
             white.setShader(null);
 
             gradientPaint.setShader(new LinearGradient(newBounds.centerX(),0, newBounds.centerX(), newBounds.bottom * 2,
-                    circleColor[parentIconColorNo % circleColor.length].getColor(), Color.WHITE,
+                    circleColor[iconColorNo % circleColor.length].getColor(), Color.WHITE,
                     Shader.TileMode.CLAMP));
 
             //rect0.set(0, 0, circleBitmap[iconBitmapNo % circleBitmap.length].getWidth(), circleBitmap[iconBitmapNo % circleBitmap.length].getHeight());
@@ -538,7 +547,7 @@ public class Graphics {
             drawableIcon[iconBitmapNo % drawableIcon.length].draw(littleCanvas);
 
             gradientPaint.setAlpha(150);
-            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.24), gradientPaint);
+            littleCanvas.drawCircle(moved.x, moved.y, (float) (radius * 1.2), gradientPaint);
             gradientPaint.setAlpha(255);
 
             if (_circle.photoString != null &&
@@ -622,7 +631,7 @@ public class Graphics {
                     //canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
                     float textSizeChange = (newBounds.width() * 0.7f /2 / maxAmountTextWidth);
                     if (acc.displayAmount.size() == 1 && !entry.getKey().equals(""))
-                        textSizeChange = (newBounds.width() * 1.2f /2 / maxAmountTextWidth);
+                        textSizeChange = (newBounds.width() * 1.1f /2 / maxAmountTextWidth);
                     nameFont.setTextSize(25 * textSizeChange);
                     nameFont.setFakeBoldText(true);
                     nameFont.setStrokeWidth(2);
@@ -634,6 +643,9 @@ public class Graphics {
 
             float nameTextWidth = _circle.nameTextWidth;
             float textSizeChange = (newBounds.width() * 0.8f / nameTextWidth);
+            if (nameTextWidth == 0) {
+                textSizeChange = (newBounds.width() * 0.8f / nameFont.measureText(_circle.name));
+            }
             nameFont.setTextSize(25 * textSizeChange);
             nameFont.setAntiAlias(true);
             littleCanvas.drawText(_circle.name, moved.x - nameFont.measureText(_circle.name) / 2, moved.y - 5 * gii.properties.scaleFactor, nameFont);
@@ -675,16 +687,22 @@ public class Graphics {
     static public Drawable calendarIcon;
     static public Drawable divideIcon;
     static public Drawable exchangeIcon;
+    static public Drawable fingerIcon;
+    static public Drawable fingerHoldIcon;
+    static public Drawable dollarCoinIcon;
     static Drawable noteIcon;
     static Bitmap checkMark;
     static Bitmap fill_with_red;
     static int[] drawableIconCategory;
-    public void loadResources(Context context, boolean loadNiceIcons) {
+    public void loadResources(Context context, boolean loadNiceIcons, boolean tutorial) {
         backspaceIcon = ContextCompat.getDrawable(context, R.drawable._ic_backspace_black_24dp);
         noteIcon = ContextCompat.getDrawable(context, R.drawable._ic_note_black_24dp1);
         calendarIcon = ContextCompat.getDrawable(context, R.drawable._ic_calendar_black_24);
         divideIcon = ContextCompat.getDrawable(context, R.drawable._ic_divide);
         exchangeIcon = ContextCompat.getDrawable(context, R.drawable._ic_exchange_money_black_24dp);
+        fingerIcon = ContextCompat.getDrawable(context, R.drawable.finger);
+        fingerHoldIcon = ContextCompat.getDrawable(context, R.drawable.finger_touch_hold);
+        dollarCoinIcon = ContextCompat.getDrawable(context, R.drawable.dollar_coin);
         GIIApplication.gii.abstractExchangeCircle.name = context.getString(R.string.circle_exchange);
         GIIApplication.gii.abstractExchangeCircle.id = "-2";
         GIIApplication.gii.abstractCorrectionCircle.id = "-2";
@@ -694,7 +712,10 @@ public class Graphics {
         checkMark = BitmapFactory.decodeResource(context.getResources(),R.drawable.checkmark_circled_my);
         fill_with_red = BitmapFactory.decodeResource( GIIApplication.gii.activity.getResources(),R.drawable.fill_with_red);
         //Typeface moneyTypeFace = Typeface.defaultFromStyle()
-        drawableIcon = new Drawable[58+14+46+2]; //0 - 71 normal, 72 - 117 - colour, 118 - normal
+        if (!tutorial)
+            drawableIcon = new Drawable[58+14+46+2]; //0 - 71 normal, 72 - 117 - colour, 118 - normal
+        else
+            drawableIcon = new Drawable[1];
         drawableIconCategory = new int[drawableIcon.length];
         int iconNo = 0;
         drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = new Drawable() {
@@ -718,83 +739,227 @@ public class Graphics {
                 return 0;
             }
         }; iconNo++;
-        drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_account_balance_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_airplanemode_active_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_alarm_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_assistant_photo_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_attachment_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_attach_file_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_attach_money_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_build_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_camera_alt_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_casino_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 4; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_child_friendly_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_color_lens_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_content_cut_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_create_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_credit_card_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_bike_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_bus_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_car_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_subway_black_24dp); iconNo++;
+        if (!tutorial) {
+            drawableIconCategory[iconNo] = 1;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_account_balance_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_airplanemode_active_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_alarm_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_assistant_photo_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_attachment_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_attach_file_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 1;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_attach_money_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_build_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_camera_alt_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_casino_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 4;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_child_friendly_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_color_lens_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_content_cut_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_create_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 1;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_credit_card_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_bike_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_bus_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_car_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_directions_subway_black_24dp);
+            iconNo++;
 
-        GIIApplication.gii.abstractCorrectionCircle.picture = iconNo;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_done_black_24dp); iconNo++;
+            GIIApplication.gii.abstractCorrectionCircle.picture = iconNo;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_done_black_24dp);
+            iconNo++;
 
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_favorite_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 4; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_fitness_center_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_flash_on_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_format_paint_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_grade_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_home_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_important_devices_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_language_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 2; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_bar_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 2; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_cafe_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_car_wash_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 2; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_dining_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_florist_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_gas_station_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_hospital_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_hotel_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_laundry_service_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 4; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_mall_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_movies_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_parking_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_shipping_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_taxi_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_mail_outline_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_motorcycle_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_music_note_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_notifications_black_24dp2); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_pets_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_phone_android_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_power_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_school_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_search_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_settings_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 4; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_shopping_cart_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 4; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_smoking_rooms_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 3; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_traffic_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_weekend_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_work_black_24dp); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_beach_access_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_child_care_white_24px); iconNo++;
-        //drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_child_friendly_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_filter_vintage_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_folder_open_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_folder_shared_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_headset_white_24px); iconNo++;
-        //drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_gas_station_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_library_white_24px); iconNo++;
-        //drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_mall_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_pool_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_security_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_speaker_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_toys_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_videogame_asset_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_watch_white_24px); iconNo++;
-        drawableIconCategory[iconNo] = 5; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_wb_incandescent_white_24px); iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_favorite_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 4;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_fitness_center_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_flash_on_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_format_paint_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_grade_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_home_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_important_devices_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_language_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 2;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_bar_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 2;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_cafe_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_car_wash_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 2;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_dining_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_florist_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_gas_station_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_hospital_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_hotel_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_laundry_service_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 4;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_mall_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_movies_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_parking_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_shipping_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_taxi_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_mail_outline_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_motorcycle_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_music_note_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_notifications_black_24dp2);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_pets_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_phone_android_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_power_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_school_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_search_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_settings_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 4;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_shopping_cart_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 4;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_smoking_rooms_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 3;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_traffic_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_weekend_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 1;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_work_black_24dp);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_beach_access_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_child_care_white_24px);
+            iconNo++;
+            //drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_child_friendly_white_24px); iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_filter_vintage_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_folder_open_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_folder_shared_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_headset_white_24px);
+            iconNo++;
+            //drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_gas_station_white_24px); iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_library_white_24px);
+            iconNo++;
+            //drawableIconCategory[iconNo] = 0; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_local_mall_white_24px); iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_pool_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_security_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_speaker_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_toys_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_videogame_asset_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 0;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_watch_white_24px);
+            iconNo++;
+            drawableIconCategory[iconNo] = 5;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_wb_incandescent_white_24px);
+            iconNo++;
+        }
         //Colorful:
         if (loadNiceIcons) {
             drawableIconCategory[iconNo] = -1;
@@ -937,11 +1102,17 @@ public class Graphics {
             iconNo++;
         }
         //this came from beginning of the list
-        drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_accessibility_black_24dp); iconNo++;
 
-        GIIApplication.gii.abstractExchangeCircle.picture = iconNo;
-        drawableIconCategory[iconNo] = 1; drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable._ic_exchange_money_black_24dp); iconNo++;
+        if (!tutorial) {
+            drawableIconCategory[iconNo] = 1;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable.ic_accessibility_black_24dp);
+            iconNo++;
 
+            GIIApplication.gii.abstractExchangeCircle.picture = iconNo;
+            drawableIconCategory[iconNo] = 1;
+            drawableIcon[iconNo] = ContextCompat.getDrawable(context, R.drawable._ic_exchange_money_black_24dp);
+            iconNo++;
+        }
 
         bgColor = new Paint();
         bgColor.setColor(Color.rgb(220,250,220));
@@ -971,6 +1142,7 @@ public class Graphics {
 
         nameFont = new Paint();
         nameFont.setStyle(Paint.Style.FILL);
+        nameFont.setColor(Color.rgb(255, 255, 255));
 
         totalFont = new Paint();
         totalFont.setColor(Color.rgb(255, 255, 255));
@@ -1238,8 +1410,10 @@ public class Graphics {
             drawConnection(moved.x, moved.y, moved1.x, moved1.y, circleColor[acc.color % circleColor.length], properties, canvas);
             canvas.drawCircle(x,y,acc.radius * properties.scaleFactor * 0.7f, circleColor[acc.color % circleColor.length]);
 
-            drawableIcon[acc.picture % drawableIcon.length].setBounds(rect1);
-            drawableIcon[acc.picture % drawableIcon.length].draw(canvas);
+            //drawableIcon[acc.picture % drawableIcon.length].setBounds(rect1);
+            //drawableIcon[acc.picture % drawableIcon.length].draw(canvas);
+            dollarCoinIcon.setBounds(rect1);
+            dollarCoinIcon.draw(canvas);
         }
 
         if (appState == GII.AppState.creating) {
@@ -1432,7 +1606,7 @@ public class Graphics {
             //float progress = (popupPosition - 10 * i);
             //if (progress > 0 && progress < 30) {
             //    float radius = (20 + 25 - (Math.abs(progress - 15))) * gii.properties.scaleFactor;
-            float radius = (95 - Math.abs(popupPosition - 45)) * gii.properties.scaleFactor / 2;
+            float radius = (95 - Math.abs(popupPosition - 20)) * gii.properties.scaleFactor / 2;
             mapToScreen(positionLittleCircle[i], gii.properties, moved);
             //moved.set(moved.x + (moved1.x - moved.x) * progress / 30,
             //        moved.y + (moved1.y - moved.y) * progress / 30);
@@ -1440,8 +1614,9 @@ public class Graphics {
                     (int) (moved.x + radius), (int) (moved.y + radius));
             canvas.save();
             canvas.rotate((popupPosition  + i * 10) * 20, moved.x, moved.y);
-            //TODO: here should be a coin, not the circle icon
-            drawIcon(null, acc1.picture, acc1.color, acc1.color, rect1, 0, false, canvas);
+            //drawIcon(null, acc1.picture, acc1.color, acc1.color, rect1, 0, false, canvas);
+            dollarCoinIcon.setBounds(rect1);
+            dollarCoinIcon.draw(canvas);
             canvas.restore();
             //}
         }
@@ -1517,8 +1692,12 @@ public class Graphics {
         float startAngle = (float)Math.PI/4;
         ArrayList<String> rightAgenda = new ArrayList<>();
         ArrayList<PointF> rightAgendaPoints = new ArrayList<>();
+        ArrayList<Path> rightAgendaPath = new ArrayList<>();
+        ArrayList<Integer> rightAgendaColor = new ArrayList<>();
         ArrayList<String> leftAgenda = new ArrayList<>();
         ArrayList<PointF> leftAgendaPoints = new ArrayList<>();
+        ArrayList<Path> leftAgendaPath = new ArrayList<>();
+        ArrayList<Integer> leftAgendaColor = new ArrayList<>();
         for (Map.Entry<String, Float> entry : statExpense.entrySet()) {
             piePaint.setColor(circleColor[gii.circleById(entry.getKey(),gii.circle).getColor() % circleColor.length].getColor());
 
@@ -1599,8 +1778,15 @@ public class Graphics {
             twoLines.lineTo((int)sidePoint.x,(int)sidePoint.y);
             piePaint.setStyle(Paint.Style.STROKE);
             piePaint.setStrokeWidth(rect.height()/120);
-            if (wideMode)
-                canvas.drawPath(twoLines,piePaint);
+            //if (wideMode)
+            //    canvas.drawPath(twoLines,piePaint);
+            if (moved.x < rect.centerX()) {
+                leftAgendaPath.add(twoLines);
+                leftAgendaColor.add(piePaint.getColor());
+            } else {
+                rightAgendaPath.add(twoLines);
+                rightAgendaColor.add(piePaint.getColor());
+            }
             piePaint.setStyle(Paint.Style.FILL_AND_STROKE);
             piePaint.setStrokeWidth(1);
             startAngle += length;
@@ -1610,18 +1796,48 @@ public class Graphics {
         textPaint.setStrokeWidth(1);
         textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         textPaint.setColor(Color.BLUE);
+        ArrayList<RectF> builtRects = new ArrayList<>();
+
+        piePaint.setStyle(Paint.Style.STROKE);
+        piePaint.setStrokeWidth(rect.height()/120);
         for (int i = 0; i < rightAgenda.size(); i++) {
             String text = rightAgenda.get(i);
             PointF textPoint = rightAgendaPoints.get(i);
-            if (wideMode)
-                canvas.drawText(text,textPoint.x + textPaint.getTextSize()/2,textPoint.y + textPaint.getTextSize()/2,textPaint);
+            RectF correspRect = new RectF(textPoint.x + textPaint.getTextSize() / 2, textPoint.y + textPaint.getTextSize() / 2,
+                    textPoint.x + textPaint.getTextSize() / 2 + textPaint.measureText(text),
+                    textPoint.y + textPaint.getTextSize() / 2 + textPaint.getTextSize());
+            boolean clear = true;
+            for (RectF builtRect : builtRects) {
+                if (builtRect.intersect(correspRect))
+                    clear = false;
+            }
+            if (wideMode && clear) {
+                canvas.drawText(text, textPoint.x + textPaint.getTextSize() / 2, textPoint.y + textPaint.getTextSize() / 2, textPaint);
+                builtRects.add(correspRect);
+                piePaint.setColor(rightAgendaColor.get(i));
+                canvas.drawPath(rightAgendaPath.get(i),piePaint);
+            }
         }
         for (int i = 0; i < leftAgenda.size(); i++) {
             String text = leftAgenda.get(i);
             PointF textPoint = new PointF(leftAgendaPoints.get(i).x - textPaint.measureText(text), leftAgendaPoints.get(i).y);
-            if (wideMode)
-                canvas.drawText(text,textPoint.x - textPaint.getTextSize()/2,textPoint.y + textPaint.getTextSize()/2,textPaint);
+            RectF correspRect = new RectF(textPoint.x - textPaint.getTextSize() / 2, textPoint.y + textPaint.getTextSize() / 2,
+                    textPoint.x - textPaint.getTextSize() / 2 + textPaint.measureText(text),
+                    textPoint.y + textPaint.getTextSize() / 2 + textPaint.getTextSize());
+            boolean clear = true;
+            for (RectF builtRect : builtRects) {
+                if (builtRect.intersect(correspRect))
+                    clear = false;
+            }
+            if (wideMode && clear) {
+                canvas.drawText(text, textPoint.x - textPaint.getTextSize() / 2, textPoint.y + textPaint.getTextSize() / 2, textPaint);
+                builtRects.add(correspRect);
+                piePaint.setColor(leftAgendaColor.get(i));
+                canvas.drawPath(leftAgendaPath.get(i),piePaint);
+            }
         }
+        piePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        piePaint.setStrokeWidth(1);
 
     }
     public void buildDinaPie(float statExpenseTotal, Map<String, Float> statExpense, Rect rect, Canvas canvas) {

@@ -384,7 +384,6 @@ public class GII extends View {
     }
 
     public void loadFile(String s) {
-
         loaded = 0;
         operationListWindow.monthName = monthName;
         graphics.monthName = monthName;
@@ -947,8 +946,14 @@ public class GII extends View {
         }
     }
 
-    public GII(Context context) {
+    Context context;
+    MainActivity mainActivity;
+
+    public GII(MainActivity context) {
         super(context);
+        this.context = context;
+        this.mainActivity = context;
+
         _scaleDetector = new ScaleGestureDetector(this.getContext(), new ScaleListener());
             monthName = new String[] {getContext().getString(R.string.january), getContext().getString(R.string.february), getContext().getString(R.string.march), getContext().getString(R.string.april), getContext().getString(R.string.may), getContext().getString(R.string.june), getContext().getString(R.string.july), getContext().getString(R.string.august), getContext().getString(R.string.september), getContext().getString(R.string.october), getContext().getString(R.string.november), getContext().getString(R.string.december)};
         if (prefs.getString("AndroidID","").equals("")) {
@@ -2417,7 +2422,7 @@ public class GII extends View {
 
         if (loaded < 4) {
             needToRedraw = true;
-        }
+        };
 
         if (fling) {
             updateFling();

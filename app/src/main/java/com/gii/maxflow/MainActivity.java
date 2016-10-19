@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.media.Ringtone;
@@ -374,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             //GIIApplication.gii.fabMenu = fabMenu;
             storage = new Storage(GIIApplication.gii);
             GIIApplication.gii.cloud = cloud;
-            GIIApplication.gii.graphics.loadResources(this.getApplicationContext(),true);
+            GIIApplication.gii.graphics.loadResources(this.getApplicationContext(),true, false);
             GIIApplication.gii.chart1.loadResouces(this.getApplicationContext());
         }
         canvas = (RelativeLayout) findViewById(R.id.canvas);
@@ -407,13 +408,46 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         if (monthDescription != null)
             GIIApplication.gii.recalculateAll();
 
-
         ViewGroup parent = (ViewGroup)GIIApplication.gii.getParent();
         if (parent != null) {
            parent.removeAllViews();
         }
         canvas.addView(GIIApplication.gii);
         grantCameraPermission();
+
+        showTutorial(false,0);
+
+
+    }
+
+    private void showTutorial(final boolean forced, final int step) {
+        final Tutorial tutorial = new Tutorial(this,GIIApplication.gii, step);
+        //TODO: if tutorial is not shown or forced
+        AlertDialog ad =
+            new AlertDialog.Builder(this)
+                .setView(tutorial)
+                .setTitle(Tutorial.stepTitles[step])
+                //.setView(pin)
+                .setPositiveButton(GIIApplication.gii.activity.getString(R.string.next), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (step < Tutorial.stepTitles.length - 1)
+                            showTutorial(true, step + 1);
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                tutorial.timer.cancel();
+            }
+        }).
+                create();
+        ad.show();
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        int t = Math.min(screenSize.x, screenSize.y);
+        t = (int)(t * 0.95);
+        ad.getWindow().setLayout(t,t);
     }
 
     private void updateColors() {
@@ -638,6 +672,10 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             help();
         }
 
+        if (id == R.id.action_tutorial) {
+            showTutorial(true,0);
+        }
+
         if (id == R.id.action_pdf) {
             exportPDF();
         }
@@ -690,7 +728,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         }
 
         new AlertDialog.Builder(GIIApplication.gii.activity)
-                //.setTitle(GIIApplication.gii.activity.getString(R.string.hint_description))
+                .setTitle(GIIApplication.gii.activity.getString(R.string.title_choose_currencies))
                 //.setView(pin)
                 .setMultiChoiceItems(allCurrencies,checked,new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -720,6 +758,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                                 first = false;
                             }
                         }
+                        //TODO: curencies are not saved :( fie: ggggg
                         GIIApplication.gii.properties.currency = newCurrencies;
                         GIIApplication.gii.properties.syncedWithCloud = false;
                         GIIApplication.gii.updateFile(true);
@@ -841,6 +880,9 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             }
         }
         GIIApplication.gii.updateFile(true);
+        for (Circle circle1 : GIIApplication.gii.circle) {
+            circle1.theIconParams = "fix";
+        }
         showMessage(GIIApplication.gii.activity.getString(R.string.done));
     }
 
@@ -890,7 +932,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             GIIApplication.gii.refreshUser();
             toolbar.setSubtitle(GIIApplication.gii.ref.getAuth().getProviderData().get("email").toString());
         }
-        GIIApplication.gii.graphics.loadResources(GIIApplication.gii.getContext(),true);
+        GIIApplication.gii.graphics.loadResources(GIIApplication.gii.getContext(),true, false);
         prepareBeep();
         invalidateOptionsMenu();
         if (monthDescription != null)

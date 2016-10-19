@@ -23,9 +23,10 @@ android {
         applicationId "com.gii.maxflow"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 68
-        versionName "18.2"
+        versionCode 69
+        versionName "18.3"
     }
+
     buildTypes {
         release {
             minifyEnabled false

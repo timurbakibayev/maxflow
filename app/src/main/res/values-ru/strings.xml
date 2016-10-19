@@ -56,6 +56,9 @@
     <string name="hint_current_amount">Текущая сумма</string>
     <string name="hint_pin">Введите пин-код</string>
     <string name="hint_description">Введите описание</string>
+    <string name="title_choose_currencies">Выберите валюты</string>
+    <string name="tutorial">Учебник</string>
+    <string name="next">Дальше</string>
     <string name="hint_description_exchange">Обмен валюты:</string>
     <string name="hint_start_amount">Начальная сумма</string>
     <string name="hint_correction_amount">Корректировка</string>
@@ -588,5 +591,10 @@
         <item>ZWL</item>
     </string-array>
 
+    <string name="step_salary">Получение зарплаты</string>
+    <string name="step_atm">Снятие наличных</string>
+    <string name="step_rent">Коммунальные</string>
+    <string name="step_other_spending">Другие расходы</string>
+    <string name="step_new_circle">Новые кружки</string>
 
 </resources>

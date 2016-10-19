@@ -108,6 +108,9 @@ public class Calculator {
     public Operation editOperation = null;
 
     public void init(Graphics graphics, Operation editOperation) {
+        if (GIIApplication.gii.properties.defaultCurrency.equals(""))
+                GIIApplication.gii.mainActivity.chooseCurrencies();
+
         this.editOperation = editOperation;
         if (editOperation == null) {
             this.calcCurrency = GIIApplication.gii.properties.defaultCurrency;

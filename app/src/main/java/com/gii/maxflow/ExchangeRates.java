@@ -177,7 +177,7 @@ public class ExchangeRates {
         float rate1 = currentRate.get(fromCurrency);
         float rate2 = currentRate.get(toCurrency);
         if (rate1 != 0) {
-            return convertAmount * rate2 / rate1;
+            return (float)(Math.round(convertAmount * rate2 / rate1 * 100.0) / 100.0);
         }
         return 0;
     }

@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">Anyway Wallet</string>
+    <string name="app_name">Money Fix</string>
     <string name="total_grand">Overall:</string>
     <string name="total_on_page">Total on this page:</string>
     <string name="total_on_page_converted">Total converted to default currency</string>
@@ -18,7 +18,10 @@
     <string name="hint_current_amount">Current Amount</string>
     <string name="hint_pin">ENTER PIN</string>
     <string name="hint_description">ENTER DESCRIPTION</string>
+    <string name="tutorial">Tutorial</string>
+    <string name="next">Next</string>
     <string name="hint_description_exchange">Currency Exchange:</string>
+    <string name="title_choose_currencies">Choose currencies</string>
     <string name="title_choose_default_currency">Choose default currency</string>
     <string name="title_choose_default_currency_fix">There are some operations without currencies. Do you want to set the default currency for these operations?</string>
     <string name="title_choose_direction">Choose direction</string>
@@ -85,7 +88,7 @@
     <string name="shareFileXML">Export to XML</string>
     <string name="shareFileOfflineForbidden">Only online files may be shared</string>
     <string name="enterEmails">Enter e-mails (test@gmail.com,test1@outlook.com,...)</string>
-    <string name="emailBodyXML">This file can be easily opened with Microsoft Excel, Internet Explorer, Microsoft Edge or any other XML Viewer. Thanks for using Anyway Wallet application!</string>
+    <string name="emailBodyXML">This file can be easily opened with Microsoft Excel, Internet Explorer, Microsoft Edge or any other XML Viewer. Thanks for using Money Fix application!</string>
     <string name="cloudLogin">Cloud…</string>
     <string name="settings">Settings…</string>
     <string name="userManual">User Manual</string>
@@ -136,7 +139,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_main" translatable="false">Anyway Wallet</string>
+    <string name="title_activity_main" translatable="false">Money Fix</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -269,7 +272,7 @@
     <string name="icons_Message">This functionality is available only when working in the cloud.\nPlease, log in first.</string>
     <string name="title_activity_help">User Manual</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_scrolling_help">Anyway Wallet</string>
+    <string name="title_activity_scrolling_help">Money Fix</string>
 
     <string name="circle_job">Job</string>
     <string name="circle_card">Card</string>
@@ -553,5 +556,11 @@
         <item>ZMW</item>
         <item>ZWL</item>
     </string-array>
+
+    <string name="step_salary">Receiving salary</string>
+    <string name="step_atm">Getting cash from ATM</string>
+    <string name="step_rent">Paying rent</string>
+    <string name="step_other_spending">Other spending</string>
+    <string name="step_new_circle">New circles</string>
 
 </resources>

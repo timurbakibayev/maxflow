@@ -186,7 +186,7 @@ public class Circle {
 
     public String lastChangeId = "";
     public float radius;
-    public String name;
+    public String name = "";
     public String id;
     public String parentId = "";
     public boolean deleted;

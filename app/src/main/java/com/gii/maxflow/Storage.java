@@ -218,6 +218,7 @@ public class Storage {
                         addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
+                                int i = 0;
                                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                     Properties post = postSnapshot.getValue(Properties.class);
                                     if (!post.lastChangeId.equals(gii.prefs.getString("AndroidID", "")) ||
@@ -232,6 +233,10 @@ public class Storage {
                                         }
                                         properties.loaded = true;
                                     }
+                                    i++;
+                                }
+                                if (i == 0) {
+                                    properties.loaded = true;
                                 }
                                 GIIApplication.gii.loaded++;
                             }
@@ -302,6 +307,8 @@ public class Storage {
                 }
             }
 
+            Log.e(TAG, "saveFile: properties = null?:" + (properties == null));
+            Log.e(TAG, "saveFile: properties loaded?:" + (properties.loaded));
             if (properties.loaded) {
                 properties.lastChangeId = gii.prefs.getString("AndroidID", "");
                 GII.ref.child(pathToFile + "/properties/0").
