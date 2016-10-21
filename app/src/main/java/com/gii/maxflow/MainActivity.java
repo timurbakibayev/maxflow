@@ -416,13 +416,18 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         grantCameraPermission();
 
         showTutorial(false,0);
-
-
     }
 
     private void showTutorial(final boolean forced, final int step) {
         final Tutorial tutorial = new Tutorial(this,GIIApplication.gii, step);
         //TODO: if tutorial is not shown or forced
+        if (!forced && prefs.getBoolean("tutorial_shown",false))
+            return;
+
+        SharedPreferences.Editor edit= prefs.edit();
+        edit.putBoolean("tutorial_shown", true);
+        edit.commit();
+
         AlertDialog ad =
             new AlertDialog.Builder(this)
                 .setView(tutorial)

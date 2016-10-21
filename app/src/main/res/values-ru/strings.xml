@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Anyway Wallet</string>
+    <string name="app_name">Money GO</string>
     <string name="action_change_password">Сменить пароль</string>
     <string name="action_piano">Пианино</string>
     <string name="action_rate">Оцените приложение...</string>
@@ -29,7 +29,7 @@
     <string name="description">Описание</string>
     <string name="edit">Редактировать</string>
     <string name="edit_operation">Реадктировать операцию</string>
-    <string name="emailBodyXML">Этот файл может быть открыт с помощью Microsoft Excel, Internet Explorer, Microsoft Edge или другим просмотрщиком XML. Спасибо за исползование Anyway Wallet!</string>
+    <string name="emailBodyXML">Этот файл может быть открыт с помощью Microsoft Excel, Internet Explorer, Microsoft Edge или другим просмотрщиком XML. Спасибо за исползование Money GO!</string>
     <string name="enterEmails">Введите адреса почты (test@gmail.com,test1@outlook.com,...)</string>
     <string name="enter_amount">Введите сумму</string>
     <string name="error_field_required">Это поле обязательно</string>
@@ -214,7 +214,7 @@
 
     <string name="title_activity_help">User Manual</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="title_activity_scrolling_help">Anyway Wallet</string>
+    <string name="title_activity_scrolling_help">Money GO</string>
 
     <string name="circle_job">Работа</string>
     <string name="circle_card">Кредитка</string>
@@ -277,7 +277,7 @@
 
 
         "Фильтры\n\n"
-        "Для удобства поиска и просмотра информации в Anyway Wallet реализованы фильтры. "
+        "Для удобства поиска и просмотра информации в Money GO реализованы фильтры. "
         "Для применения фильтров достаточно нажать на даты в меню инструментов (toolbar) "
         "вверху экрана. Можно отфильтровать транзакции по датам и по тексту. Если в текст "
         "набрать, например, “такси”, то будут показаны все записи, в описании которых "
@@ -291,7 +291,7 @@
 
 
         "Мои средства\n\n"
-        "Для того, чтобы Anyway Wallet мог отделить расходы от доходов, необходимо "
+        "Для того, чтобы Money GO мог отделить расходы от доходов, необходимо "
         "подсказать программе, в каких кружках хранятся Ваши средства. Для этого достаточно "
         "дважды нажать на кружок или последовательно нажать на кружок и плавающую кнопку в "
         "правом нижнем углу, а затем нажать на знак $ в меню. \n"

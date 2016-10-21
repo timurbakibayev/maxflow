@@ -464,6 +464,7 @@ public class Circle {
         if (currency.equals(""))
             currency = GIIApplication.gii.properties.defaultCurrency;
         displayAmount.put(currency,displayAmount.get(currency) == null?amount:displayAmount.get(currency) + amount);
+        setDisplayAmountTextWidth(GIIApplication.gii.graphics.dkBlue);
     }
 
     public void addDisplayAmountWidget(String currency, float amount) {

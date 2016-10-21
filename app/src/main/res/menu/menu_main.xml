@@ -32,6 +32,8 @@
             <item android:id="@+id/action_ShareFileXML" android:title="@string/shareFileXML"
                 android:orderInCategory="180" app:showAsAction="never"
                 />
+            <item android:id="@+id/action_pdf" android:title="@string/exportToPDF"
+                android:orderInCategory="180" app:showAsAction="never" />
         </menu>
     </item>
     </group>
@@ -44,8 +46,6 @@
         <item android:id="@+id/action_help" android:title="@string/userManual"
             android:orderInCategory="180" app:showAsAction="never" />
         <item android:id="@+id/action_tutorial" android:title="@string/tutorial"
-            android:orderInCategory="180" app:showAsAction="never" />
-        <item android:id="@+id/action_pdf" android:title="@string/exportToPDF"
             android:orderInCategory="180" app:showAsAction="never" />
         <item android:id="@+id/action_currency" android:title="@string/Currencies"
             android:orderInCategory="180" app:showAsAction="never" />

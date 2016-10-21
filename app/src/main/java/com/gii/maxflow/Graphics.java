@@ -644,9 +644,12 @@ public class Graphics {
             float nameTextWidth = _circle.nameTextWidth;
             float textSizeChange = (newBounds.width() * 0.8f / nameTextWidth);
             if (nameTextWidth == 0) {
+                nameFont.setTextSize(40);
                 textSizeChange = (newBounds.width() * 0.8f / nameFont.measureText(_circle.name));
+                nameFont.setTextSize(25 * textSizeChange);
+            } else {
+                nameFont.setTextSize(25 * textSizeChange);
             }
-            nameFont.setTextSize(25 * textSizeChange);
             nameFont.setAntiAlias(true);
             littleCanvas.drawText(_circle.name, moved.x - nameFont.measureText(_circle.name) / 2, moved.y - 5 * gii.properties.scaleFactor, nameFont);
         }
@@ -657,7 +660,7 @@ public class Graphics {
     }
 
 
-    private void drawConnection(float x, float y, float x1, float y1, Paint chain, Properties properties, Canvas canvas) {
+    public void drawConnection(float x, float y, float x1, float y1, Paint chain, Properties properties, Canvas canvas) {
         //canvas.drawLine(x,y,x1,y1,chain);
 
         int numberOfCircles = (int)(Math.sqrt((y1-y)*(y1-y) + (x1-x)*(x1-x)) / properties.scaleFactor / 25);
