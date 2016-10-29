@@ -157,7 +157,7 @@ public class Report {
 
         float currentExchangeRate = GIIApplication.gii.exchangeRates.getRate(GIIApplication.gii.properties.defaultCurrency);
 
-        for (Operation _operation: gii.operation) {
+        for (Operation _operation: gii.operations) {
             //Operation _operation = this.operation.get(i);
             if ((gii.selectedId.equals("none") ||
                     _operation.circlesWayIn.contains(gii.selectedId) ||

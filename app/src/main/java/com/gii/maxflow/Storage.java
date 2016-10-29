@@ -86,7 +86,7 @@ public class Storage {
         Intent intentShareFile = new Intent(Intent.ACTION_SEND);
         //File fileWithinMyDir = new File(myFilePath);
 
-        GIIApplication.gii.storage.saveNiceXML(GIIApplication.gii.properties,GIIApplication.gii.circle,GIIApplication.gii.operation);
+        GIIApplication.gii.storage.saveNiceXML(GIIApplication.gii.properties,GIIApplication.gii.circle,GIIApplication.gii.operations);
 
         String myFilePath = xmlDirectory(properties,"nice") + "/export_" + properties.fileName;
         File fileWithinMyDir = new File(myFilePath);

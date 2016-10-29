@@ -638,7 +638,7 @@ public class OperationListWindow {
             amount[i] = 0;
             amountTotal[i] = 0;
         }
-        for (Operation _operation : gii.operation) {
+        for (Operation _operation : gii.operations) {
             int i = -1;
             if (!_operation.deleted) {
                 String opCurrency = _operation.currency;
@@ -1110,6 +1110,7 @@ public class OperationListWindow {
 
             origRect[i].set(0, y, canvas.getWidth(), y + diameter);
             drawRect[i].set(0,0,0,0);
+            int standingHeight = (int)(textPaint.getTextSize() * 1.25f);
             if (origRect[i].bottom - (int) backgroundPosition.y > 0 && origRect[i].top - (int) backgroundPosition.y < canvas.getHeight()) {
                 //draw swiping
                 if (!(currentOperation.equals(_operation.id) || ((int) backgroundPosition.x < 0 && currentTransaction > 1 && _operation.transactionId == currentTransaction))) {
@@ -1120,11 +1121,18 @@ public class OperationListWindow {
                 }
                 //draw main rectangle
                 drawOperation(drawRect[i], _operation, canvas);
+                //draw the standings
+                canvas.drawText(GII.df.format(_operation.newStandingFrom) + " " + _operation.currency,10,y + diameter - (int) backgroundPosition.y + standingHeight - textPaint.getTextSize()*0.25f, textPaint);
+                String rightText = GII.df.format(_operation.newStandingTo) + " " + _operation.currency;
+                canvas.drawText(rightText, canvas.getWidth() - 10 - textPaint.measureText(rightText), y + diameter - (int) backgroundPosition.y + standingHeight - textPaint.getTextSize()*0.25f, textPaint);
+
                 //draw delimiter
-                canvas.drawLine(0, y + diameter - (int) backgroundPosition.y, canvasWidth, y + diameter - (int) backgroundPosition.y, gii.graphics.gray);
-                canvas.drawLine(0, y - (int) backgroundPosition.y, canvasWidth, y - (int) backgroundPosition.y, gii.graphics.gray);
+                canvas.drawLine(0, y + diameter - (int) backgroundPosition.y + standingHeight, canvasWidth,
+                        y + diameter - (int) backgroundPosition.y + standingHeight, gii.graphics.gray);
+                canvas.drawLine(0, y - (int) backgroundPosition.y, canvasWidth,
+                        y - (int) backgroundPosition.y, gii.graphics.gray);
             }
-            y += diameter;
+            y += diameter + standingHeight;
         }
 
         String totalOnPageTxt = gii.getContext().getString(R.string.total_on_page);

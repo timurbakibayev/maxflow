@@ -611,9 +611,9 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                     GIIApplication.gii.properties = new Properties();
                     Log.e("properties","new properties");
                     GIIApplication.gii.circle = new ArrayList<>();
-                    GIIApplication.gii.operation = new ArrayList<>();
+                    GIIApplication.gii.operations = new ArrayList<>();
                     GIIApplication.gii.properties.fileName = filenameXML;
-                    storage.loadXML(GIIApplication.gii.properties, GIIApplication.gii.circle, GIIApplication.gii.operation);
+                    storage.loadXML(GIIApplication.gii.properties, GIIApplication.gii.circle, GIIApplication.gii.operations);
                     GIIApplication.gii.properties.fileName = filename;
                     GIIApplication.gii.properties.owner = "";
                     GIIApplication.gii.updateFile(true);
@@ -845,7 +845,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
         boolean thereAreNonCurrencyOperations = false;
 
-        for (Operation _operation : GIIApplication.gii.operation) {
+        for (Operation _operation : GIIApplication.gii.operations) {
             if (_operation.currency.equals(""))
                 thereAreNonCurrencyOperations = true;
         }
@@ -877,7 +877,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
     private void fixOperationsCurrencies() {
         showMessage(GIIApplication.gii.activity.getString(R.string.fixing_operations));
-        for (Operation _opeation : GIIApplication.gii.operation) {
+        for (Operation _opeation : GIIApplication.gii.operations) {
             if (_opeation.currency.equals("")) {
                 _opeation.currency = GIIApplication.gii.properties.defaultCurrency;
                 _opeation.exchangeRate = GIIApplication.gii.exchangeRates.getRate(GIIApplication.gii.properties.defaultCurrency);

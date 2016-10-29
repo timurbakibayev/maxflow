@@ -48,6 +48,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
@@ -122,7 +123,7 @@ public class GII extends View {
     //Circle abstractTotalCircleWidget = new Circle();
 
     public java.util.ArrayList<Circle> circle = new ArrayList<>(); //the circles, loaded and saved to XML
-    public java.util.ArrayList<Operation> operation = new ArrayList<>(); //the operations, loaded and saved to XML
+    public java.util.ArrayList<Operation> operations = new ArrayList<>(); //the operations, loaded and saved to XML
     //public java.util.ArrayList<Circle> displayedCircle = new ArrayList<>(); //circles, always changing,
                     //used only for displaying circles on screen! never saved to XML!
     public java.util.ArrayList<Operation> displayedOperation = new ArrayList<>(); //operations, always changing,
@@ -178,7 +179,7 @@ public class GII extends View {
             //chart1.plot(canvas, appState, properties, circle, operation, selectedCircle, graphics);   //added by Dima
             chart1.currLayoutProp.screenW=(int)graphics.canvasWidth;                //added by Dima
             chart1.currLayoutProp.screenH=(int)graphics.canvasHeight;               //added by Dima
-            chart1.plot(canvas, appState, properties, circle, operation, selectedCircle, graphics);
+            chart1.plot(canvas, appState, properties, circle, operations, selectedCircle, graphics);
             //chart1.plot(canvas, appState, properties, circle, operation,selectedCircle,graphics,properties.filterFrom,properties.filterTo); //added by Dima
             return;
         }
@@ -235,10 +236,10 @@ public class GII extends View {
         chart1.toDrawPortion=0; //added by Dima
         properties.currentPageNo += i;
         //updateFile();
-        if (operation.size() > 0) {
+        if (operations.size() > 0) {
             int minPage = 100000;
             int maxPage = -100000;
-            for (Operation _operation : operation) {
+            for (Operation _operation : operations) {
                 if (!_operation.deleted) {
                     if (_operation.pageNo < minPage)
                         minPage = _operation.pageNo;
@@ -329,7 +330,7 @@ public class GII extends View {
             //if (!selectedId.equals("none")) {
             //    showMessage("Total of selected: " + df.format(circleById(selectedId).amountTotal));
                 appState = AppState.showOperations;
-                operationListWindow.init(graphics,this.getContext(),circle,operation,selectedId,properties.currentPageNo,monthName,false);
+                operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
             //}
         }
 
@@ -388,12 +389,12 @@ public class GII extends View {
         operationListWindow.monthName = monthName;
         graphics.monthName = monthName;
         if (appState == AppState.showOperations)
-            graphics.operationListWindow.init(graphics,this.getContext(),circle,operation,selectedId,0,monthName,true);
+            graphics.operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,0,monthName,true);
         //String rememberParseUser = properties.firebaseUserEmail;
         properties = new Properties();
         Log.e("properties","new properties");
         circle = new ArrayList<>();
-        operation = new ArrayList<>();
+        operations = new ArrayList<>();
 
         properties.fileName = s;
         //properties.firebaseUserEmail = rememberParseUser;
@@ -403,7 +404,7 @@ public class GII extends View {
         if (properties.fileName.equals("any")) {
             properties.fileName = storage.getAnyFile(properties);
         }
-        storage.loadFile(properties, circle, operation);
+        storage.loadFile(properties, circle, operations);
 
         showMessage(properties.fileName);
         emailOrOffline = getContext().getString(R.string.offline);
@@ -427,11 +428,11 @@ public class GII extends View {
         loaded = 0;
         operationListWindow.monthName = monthName;
         graphics.monthName = monthName;
-        graphics.operationListWindow.init(graphics,this.getContext(),circle,operation,selectedId,0,monthName,true);
+        graphics.operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,0,monthName,true);
         //String rememberParseUser = properties.firebaseUserEmail;
         properties = new Properties();
         circle = new ArrayList<>();
-        operation = new ArrayList<>();
+        operations = new ArrayList<>();
 
         properties.fileName = s;
         properties.owner = owner;
@@ -442,7 +443,7 @@ public class GII extends View {
         //if (properties.fileName.equals("any")) {
         //    properties.fileName = storage.getAnyFile(properties);
         //}
-        storage.loadFile(properties, circle, operation);
+        storage.loadFile(properties, circle, operations);
 
         showMessage(properties.fileName);
         emailOrOffline = getContext().getString(R.string.offline);
@@ -530,10 +531,17 @@ public class GII extends View {
 
         numberOfRecalculations++;
 
-        for (com.gii.maxflow.Operation _operation : operation) {
+        for (com.gii.maxflow.Operation _operation : operations) {
             _operation.calculatePath(circle);
 
         }
+
+        Collections.sort(operations, new Comparator<Operation>() {
+            @Override
+            public int compare(Operation lhs, Operation rhs) {
+                return (lhs.date.before(rhs.date)?-1:rhs.date.after(lhs.date)?1:0);
+            }
+        });
 
         Log.e("RecalculateAll","Step 1");
         String newTextStangings = "";
@@ -546,7 +554,7 @@ public class GII extends View {
             float amount = 0;
             Calendar tempCalendar = Calendar.getInstance();
             if (!_circle.deleted) {
-                for (Operation _operation : operation) {
+                for (Operation _operation : operations) {
                     if (properties.filtered) {
                         _operation.inFilter = (_operation.date.compareTo(properties.filterFrom) >= 0 &&
                                 _operation.date.compareTo(properties.filterTo) <= 0);
@@ -571,9 +579,11 @@ public class GII extends View {
                                 (!(!_circle.myMoney || properties.filtered) && _operation.pageNo <= properties.currentPageNo)) {
                             if (_operation.fromCircle.equals(_circle.id)) {
                                 _circle.addDisplayAmount(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, -_operation.amount);
+                                _operation.newStandingFrom = _circle.displayAmount.get(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency);
                             }
                             if (_operation.toCircle.equals(_circle.id)) {
                                 _circle.addDisplayAmount(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, +_operation.amount);
+                                _operation.newStandingTo = _circle.displayAmount.get(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency);
                             }
                         }
                         if (_circle.myMoney) {
@@ -745,7 +755,7 @@ public class GII extends View {
 
 
         Log.e("RecalculateAll","Step 3");
-        for (Operation _operation : operation) {
+        for (Operation _operation : operations) {
             if (!_operation.deleted) {
                 Circle fromCircle = circleById(_operation.circlesWayOut.get(_operation.circlesWayOut.size()-1));
                 Circle toCircle = circleById(_operation.circlesWayIn.get(_operation.circlesWayIn.size()-1));
@@ -791,7 +801,7 @@ public class GII extends View {
             Date date0 = displayedOperation.get(0).date;
             Date date1 = displayedOperation.get(0).date;
             if (!properties.filtered) {
-                for (Operation _operation : operation) {
+                for (Operation _operation : operations) {
                     if (_operation.pageNo == properties.currentPageNo) {
                         if (_operation.date.before(date0))
                             date0 = _operation.date;
@@ -1017,7 +1027,7 @@ public class GII extends View {
                             selectedId = graphics.popupOperation.toCircle;
                             selectedCircle = circleById(selectedId);
                             appState = AppState.showOperations;
-                            operationListWindow.init(graphics,this.getContext(),circle,operation,selectedId,properties.currentPageNo,monthName,false);
+                            operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
                             return true;
                         }
                     gesture = new ArrayList<>();
@@ -1167,7 +1177,7 @@ public class GII extends View {
             //}
             //if (appState == AppState.idle || appState == AppState.circleSelected) {
                 appState = AppState.showOperations;
-                operationListWindow.init(graphics, activity, circle, operation, selectedId, properties.currentPageNo, monthName, false);
+                operationListWindow.init(graphics, activity, circle, operations, selectedId, properties.currentPageNo, monthName, false);
             //    return;
             //}
             //if (appState == AppState.iconChoose) {
@@ -1212,8 +1222,8 @@ public class GII extends View {
                     calendarTo = Calendar.getInstance();
                     if (_i == 4)
                         calendarTo.add(Calendar.YEAR,50);
-                    if (_i == 4 && operation.size() > 0)
-                        calendarTo.setTime(Collections.min(operation).date);
+                    if (_i == 4 && operations.size() > 0)
+                        calendarTo.setTime(Collections.min(operations).date);
                     calendarTo.set(Calendar.HOUR_OF_DAY, 23);
                     calendarTo.set(Calendar.MINUTE, 59);
                     calendarTo.set(Calendar.SECOND, 59);
@@ -1229,8 +1239,8 @@ public class GII extends View {
                         calendarFrom.add(Calendar.YEAR,-1);
                     if (_i == 4)
                         calendarFrom.add(Calendar.YEAR,-100);
-                    if (_i == 4 && operation.size() > 0)
-                        calendarFrom.setTime(Collections.max(operation).date);
+                    if (_i == 4 && operations.size() > 0)
+                        calendarFrom.setTime(Collections.max(operations).date);
                     if (_i > 0 && _i != 4)
                         calendarFrom.add(Calendar.DAY_OF_MONTH,1);
                     calendarFrom.set(Calendar.HOUR_OF_DAY, 0);
@@ -1255,7 +1265,7 @@ public class GII extends View {
             calendarFrom.set(Calendar.MINUTE, 0);
             calendarFrom.set(Calendar.SECOND, 0);
             calendarFrom.set(Calendar.MILLISECOND, 0);
-            for (Operation _oper : operation) {
+            for (Operation _oper : operations) {
                 if (!_oper.deleted && _oper.pageNo == properties.currentPageNo) {
                     if (calendarFrom.after(_oper.date))
                         calendarFrom.setTime(_oper.date);
@@ -1357,7 +1367,7 @@ public class GII extends View {
                         rightArrow.setVisible(false);
                         updateFile(true);
                         if (appState.equals(AppState.showOperations))
-                            operationListWindow.init(graphics,GIIApplication.gii.getContext(),circle,operation,selectedId,properties.currentPageNo,monthName,false);
+                            operationListWindow.init(graphics,GIIApplication.gii.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
                         if (appState.equals(AppState.reporting))
                             reportWindow.init();
                         postInvalidate();
@@ -1382,7 +1392,7 @@ public class GII extends View {
                         rightArrow.setVisible(true);
                         updateFile(true);
                         if (appState.equals(AppState.showOperations))
-                            operationListWindow.init(graphics,GIIApplication.gii.getContext(),circle,operation,selectedId,properties.currentPageNo,monthName,false);
+                            operationListWindow.init(graphics,GIIApplication.gii.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
                         postInvalidate();
                         properties.syncedWithCloud = false;
                         layout.removeAllViews();
@@ -1506,7 +1516,7 @@ public class GII extends View {
             circleById(selectedId).setColor(iconWindow.color);
             circleById(selectedId).setSyncedWithCloud(false);
             updateFile(true);
-            operationListWindow.init(graphics,activity,circle,operation,selectedId,properties.currentPageNo,monthName,false);
+            operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
             appState = iconWindow.returnAppState;
         }
     }
@@ -1520,7 +1530,7 @@ public class GII extends View {
         //cloud.downloadOperations(operation, properties);
         //Log.e("Dir problem","GII.updateFile()");
 
-        storage.saveFile(properties, circle, operation);
+        storage.saveFile(properties, circle, operations);
         if (recalculate) {
             recalculateAll();
             Log.e("RecalculateAll", "initiate gii 1301");
@@ -1577,7 +1587,7 @@ public class GII extends View {
             if (lastUpCircle.equals(selectedId) &&
                     (rightNow.getTimeInMillis() - lastUpTime.getTimeInMillis()) < 500) {
                 appState = AppState.showOperations;
-                operationListWindow.init(graphics,activity,circle,operation,selectedId,properties.currentPageNo,monthName,false);
+                operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
                 return;
             }
             lastUpCircle = selectedId;
@@ -1603,7 +1613,7 @@ public class GII extends View {
             if (lastUpCircle.equals(selectedId) &&
                     (rightNow.getTimeInMillis() - lastUpTime.getTimeInMillis()) < 500) {
                 appState = AppState.showOperations;
-                operationListWindow.init(graphics,activity,circle,operation,selectedId,properties.currentPageNo,monthName,false);
+                operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
                 return;
             }
             lastUpCircle = selectedId;
@@ -1721,7 +1731,7 @@ public class GII extends View {
                 appState = AppState.idle;
                 newOperation(newOperationFromCircle, newOperationToCircle, calcWindow.calcDescription, calcWindow.calcResult, calcWindow.calcCurrency);
             } else { //eidting operation
-                for (Operation operation1 : operation) {
+                for (Operation operation1 : operations) {
                     if (operation1.id.equals(calcWindow.editOperation.id)) {
                         operation1.setDate(calendarTo.getTime());
                         operation1.setCurrency(calcWindow.calcCurrency);
@@ -1751,7 +1761,7 @@ public class GII extends View {
 
         //if (prefs.getBoolean("autofill_amount", false) && operation.size() > 0) {
         Date maxDate = new Date(0L);
-        for (Operation _operation : operation)
+        for (Operation _operation : operations)
             if (_operation.toCircle.equals(newOperationToCircle) &&
                     (maxDate == null || _operation.date.after(maxDate))) {
                 //calcWindow.calcDisplay = (GII.df.format(_operation.amount));
@@ -1763,7 +1773,7 @@ public class GII extends View {
             }
 
         maxDate = new Date(0L);
-        for (Operation _operation : operation)
+        for (Operation _operation : operations)
             if (_operation.fromCircle.equals(newOperationFromCircle) &&
                     _operation.toCircle.equals(newOperationToCircle) &&
                     (maxDate == null || _operation.date.after(maxDate))) {
@@ -1874,7 +1884,7 @@ public class GII extends View {
 
             // Initialize frequency table from command line
             if (prepFirst.equals(last)) {
-                for (Operation _oper : operation) {
+                for (Operation _oper : operations) {
                     if (_oper.toCircle.equals(last)) {
                         //Integer freq = m.get(_oper.fromCircle);
                         mFromCircle.put(_oper.fromCircle, (mFromCircle.get(_oper.fromCircle) == null) ? 1 : mFromCircle.get(_oper.fromCircle) + 1);
@@ -2142,12 +2152,12 @@ public class GII extends View {
     }
 
     public int correspondingPage(Date date, int defaultPage) {
-        Log.e("GII", "correspondingPage: start with " + operation.size() + " operations");
+        Log.e("GII", "correspondingPage: start with " + operations.size() + " operations");
         int t = defaultPage;
         //check if we need to go to the right
         //and find the borders of the pages
         Map<Integer, Date> dateFrom = new HashMap<Integer, Date>();
-        for (Operation _operation : operation) {
+        for (Operation _operation : operations) {
             if (!_operation.deleted) {
                 if (_operation.pageNo > t &&
                         _operation.date.compareTo(date) <= 0)
@@ -2193,6 +2203,15 @@ public class GII extends View {
 
 
     public void addOperation(Operation _operation) {
+
+        if (_operation.transactionId == 0) {
+            if (operations.size() == 0) {
+                _operation.transactionId = 1;
+            } else {
+                _operation.transactionId = operations.get(operations.size()-1).transactionId + 1;
+            }
+        }
+        String exchange = "Exchange";
             if (!_operation.fromCircle.equals("Correction") &&
                     !_operation.toCircle.equals("Correction")) {
                 _operation.setPageNo(correspondingPage(_operation.date, properties.currentPageNo));
@@ -2203,15 +2222,38 @@ public class GII extends View {
         if (ref.getAuth() != null) {
             ref.child("maxflow/" + findOwner() + "/" + properties.computeFileNameWithoutXML() + "/operations/" + _operation.id).
                     setValue(_operation);
-            operation.add(_operation); //to fetch it faster, it will not be duplicated
+            operations.add(_operation); //to fetch it faster, it will not be duplicated
         } else
-            operation.add(_operation);
-        graphics.showPopUpOperation(_operation, circle);
+            operations.add(_operation);
+        if (!_operation.fromCircle.equals(exchange) &&
+                !_operation.toCircle.equals(exchange))
+            graphics.showPopUpOperation(_operation, circle);
 
+        //convert currency, if needed
+        Circle circleFrom = circleById(_operation.fromCircle);
+        //Circle circleTo = circleById(_operation.toCircle);
+        if (!_operation.fromCircle.equals(exchange) &&
+                !_operation.toCircle.equals(exchange))
+            if (!_operation.currency.equals("") && (
+                    circleFrom.displayAmount.get(_operation.currency) == null ||
+                    circleFrom.displayAmount.get(_operation.currency) == 0)) {
+                int k = 0;
+                String currency = "";
+                for (Map.Entry<String, Float> entry : circleFrom.displayAmount.entrySet()) {
+                    if (entry.getValue() > 0) {
+                        k++;
+                        currency = entry.getKey();
+                    }
+                }
+                if (k == 1) {
+                    float amount2 = exchangeRates.convert(_operation.amount, _operation.currency, currency);
+                    Date littleEarlier = new Date(_operation.date.getTime() - 10000);
+                    addOperation(new Operation(generateNewId(), _operation.fromCircle, exchange, amount2, currency, 0,littleEarlier, _operation.transactionId, _operation.pageNo, false, false, "", "Auto-Currency-Exchange", false));
+                    addOperation(new Operation(generateNewId(), exchange, _operation.fromCircle, _operation.amount, _operation.currency, 0, littleEarlier, _operation.transactionId, _operation.pageNo, false, false, "", "Auto-Currency-Exchange", false));
+                }
+            }
         operationListWindow.needToUpdate = true;
         operationListWindow.needToUpdateFile = true;
-        //recalculateAll();
-        //Log.e("RecalculateAll","initiate gii 1869");
     }
 
     //long lastTime = System.currentTimeMillis();
@@ -2259,7 +2301,7 @@ public class GII extends View {
 
 
         if (lastPageNo != properties.currentPageNo && appState.equals(AppState.showOperations))
-            operationListWindow.init(graphics,activity,circle,operation,selectedId,properties.currentPageNo,monthName,false);
+            operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
 
         //if we have touched the screen in empty space, not some circle,
 
@@ -2381,7 +2423,7 @@ public class GII extends View {
             if (operationListWindow.needToUpdateFile) {
                 operationListWindow.needToUpdateFile = false;
                 updateFile(true);
-                operationListWindow.init(graphics,activity,circle,operation,selectedId,properties.currentPageNo,monthName,true);
+                operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,true);
             }
         }
 

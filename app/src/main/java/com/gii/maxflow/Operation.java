@@ -162,6 +162,9 @@ public class Operation implements Comparable<Operation>{
     public ArrayList<String> circlesWayOut = new ArrayList<>();
     @JsonIgnore
     public ArrayList<String> circlesWayIn = new ArrayList<>();
+    @JsonIgnore
+    public float newStandingFrom = 0;
+    public float newStandingTo = 0;
     public String id;
     public int transactionId;
     public String description = "";

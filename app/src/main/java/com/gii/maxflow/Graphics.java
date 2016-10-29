@@ -629,9 +629,11 @@ public class Graphics {
                     //movedX = (moved.x + (acc.radius * properties.scaleFactor * 0.7f));
                     movedX = movedX + txtWidth;
                     //canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
-                    float textSizeChange = (newBounds.width() * 0.7f /2 / maxAmountTextWidth);
+                    float textSizeChange = (newBounds.width() * 0.8f /2 / maxAmountTextWidth);
                     if (acc.displayAmount.size() == 1 && !entry.getKey().equals(""))
-                        textSizeChange = (newBounds.width() * 1.1f /2 / maxAmountTextWidth);
+                        textSizeChange = (newBounds.width() * 1.1f / 2 / maxAmountTextWidth / 1.3f);
+                    if (acc.displayAmount.size() == 1 && entry.getKey().equals(""))
+                        textSizeChange = (newBounds.width() * 0.9f / 2 / maxAmountTextWidth / 1.5f);
                     nameFont.setTextSize(25 * textSizeChange);
                     nameFont.setFakeBoldText(true);
                     nameFont.setStrokeWidth(2);
