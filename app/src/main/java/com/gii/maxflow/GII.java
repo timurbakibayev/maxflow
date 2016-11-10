@@ -255,7 +255,7 @@ public class GII extends View {
             properties.currentPageNo = 0;
         properties.syncedWithCloud = false;
         //recalculateAll();
-        Log.e("RecalculateAll","initiate gii 235");
+        Log.w("RecalculateAll","initiate gii 235");
         if (appState == AppState.reporting) {
             reportWindow.init();
             reportWindow.needToUpdate = true;
@@ -360,7 +360,7 @@ public class GII extends View {
 
 
     public void syncFiles() {
-        Log.e("syncFiles","downloading...");
+        Log.w("syncFiles","downloading...");
         //cloud.downloadFiles(filesInCloud, storage, properties);
     }
 
@@ -392,7 +392,7 @@ public class GII extends View {
             graphics.operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,0,monthName,true);
         //String rememberParseUser = properties.firebaseUserEmail;
         properties = new Properties();
-        Log.e("properties","new properties");
+        Log.w("properties","new properties");
         circle = new ArrayList<>();
         operations = new ArrayList<>();
 
@@ -522,12 +522,12 @@ public class GII extends View {
     String textStandings;
 
     public void recalculateAll() {
-        Log.e("RecalculateAll","Calculation started...");
+        Log.w("RecalculateAll","Calculation started...");
         abstractTotalCircle.resetDisplayAmount();
         abstractTotalCircle.resetDisplayAmountWidget();
 
         graphics.dkBlue.setTextSize(20);
-        graphics.nameFont.setTextSize(40);
+        graphics.mainFont.setTextSize(40);
 
         numberOfRecalculations++;
 
@@ -543,7 +543,7 @@ public class GII extends View {
             }
         });
 
-        Log.e("RecalculateAll","Step 1");
+        Log.w("RecalculateAll","Step 1");
         String newTextStangings = "";
         int maxStandingsLength = 0;
         int maxStandingsWordLength = 0;
@@ -608,7 +608,7 @@ public class GII extends View {
             //    _circle.setAmountText(df.format(_circle.amountTotal));
 
             _circle.setDisplayAmountTextWidth(graphics.dkBlue);
-            _circle.setNameTextWidth(graphics.nameFont.measureText(_circle.name));
+            _circle.setNameTextWidth(graphics.mainFont.measureText(_circle.name));
             _circle.setVisible(true);
             if (_circle.coordinates.x != _circle.coordinates.x ||
                     _circle.coordinates.y != _circle.coordinates.y) {
@@ -637,10 +637,10 @@ public class GII extends View {
             }
         }
 
-        Log.e(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
+        Log.w(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
         if (maxStandingsWordLength < 5 ) // 5 is the length of "Total"
             maxStandingsLength += (5 - maxStandingsWordLength);
-        Log.e(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
+        Log.w(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
 
         for (Circle _circle : circle) {
             if (_circle.myMoney) {
@@ -687,7 +687,7 @@ public class GII extends View {
             StandingsWidgetProvider myWidget = new StandingsWidgetProvider();
             myWidget.onUpdate(activity, AppWidgetManager.getInstance(activity),ids);
         }
-        Log.e("RecalculateAll","Step 2");
+        Log.w("RecalculateAll","Step 2");
         for (Circle _circle : circle)
             if (_circle.childrenId.size() > 0 && (!_circle.showChildren)) {
                 //Log.e("Hiding",_circle.name + " has children");
@@ -730,9 +730,9 @@ public class GII extends View {
                 }
 
                 _circle.setAmountTextWidth(graphics.dkBlue.measureText(_circle.amountText));
-                _circle.setNameTextWidth(graphics.nameFont.measureText(_circle.name));*/
+                _circle.setNameTextWidth(graphics.mainFont.measureText(_circle.name));*/
                 _circle.setDisplayAmountTextWidth(graphics.dkBlue);
-                //_circle.setNameTextWidth(graphics.nameFont.measureText(_circle.name));
+                //_circle.setNameTextWidth(graphics.mainFont.measureText(_circle.name));
             }
 
         if (prefs.getBoolean("circle_size_auto", false)) {
@@ -754,7 +754,7 @@ public class GII extends View {
         displayedOperation = new ArrayList<>();
 
 
-        Log.e("RecalculateAll","Step 3");
+        Log.w("RecalculateAll","Step 3");
         for (Operation _operation : operations) {
             if (!_operation.deleted) {
                 Circle fromCircle = circleById(_operation.circlesWayOut.get(_operation.circlesWayOut.size()-1));
@@ -795,7 +795,7 @@ public class GII extends View {
             }
         }
 
-        Log.e("RecalculateAll","Step 4");
+        Log.w("RecalculateAll","Step 4");
         maxDisplayedAmount = 0;
         if (displayedOperation.size() > 0) {
             Date date0 = displayedOperation.get(0).date;
@@ -848,7 +848,7 @@ public class GII extends View {
 
         needToRedraw = true;
 
-        Log.e("RecalculateAll","Step 5");
+        Log.w("RecalculateAll","Step 5");
         if (menu != null) {
             final MenuItem leftArrow = menu.findItem(R.id.action_prevMonth);
             final MenuItem rightArrow = menu.findItem(R.id.action_nextMonth);
@@ -857,16 +857,16 @@ public class GII extends View {
             if (rightArrow != null)
                 rightArrow.setVisible(!properties.filtered);
         }
-        Log.e("RecalculateAll","Step 6");
+        Log.w("RecalculateAll","Step 6");
         if (!properties.syncedWithCloud && properties.loaded) {
             properties.lastChangeId = prefs.getString("AndroidID","");
             properties.syncedWithCloud = true;
             if (ref.getAuth() != null)
                 ref.child("maxflow/" + findOwner() + "/" + properties.computeFileNameWithoutXML() + "/properties/0").
                         setValue(properties);
-            Log.e("properties","pushing to cloud:" +properties.fileName + "," + properties.currentPageNo);
+            Log.w("properties","pushing to cloud:" +properties.fileName + "," + properties.currentPageNo);
         }
-        Log.e("RecalculateAll","Calculation end");
+        Log.w("RecalculateAll","Calculation end");
     }
 
     private boolean lessOrGreater(String text, float amount) {
@@ -1108,7 +1108,7 @@ public class GII extends View {
                         moveIntoId = selectedId;
                         if (selectedCircle.childrenId.size() > 0) {
                             needToRecalculate = true;
-                            Log.e("RecalculateAll","initiate gii 904");
+                            Log.w("RecalculateAll","initiate gii 904");
                         }
                     }
                     checkBorderFinger(new PointF(event.getX(), event.getY()));
@@ -1533,7 +1533,7 @@ public class GII extends View {
         storage.saveFile(properties, circle, operations);
         if (recalculate) {
             recalculateAll();
-            Log.e("RecalculateAll", "initiate gii 1301");
+            Log.w("RecalculateAll", "initiate gii 1301");
         }
     }
 
@@ -1598,7 +1598,7 @@ public class GII extends View {
                 if (selectedCircle.childrenId.size() > 0) {
                     //recalculateAll();
                     needToRecalculate = true;
-                    Log.e("RecalculateAll","initiate gii 1366");
+                    Log.w("RecalculateAll","initiate gii 1366");
                 }
             }
             if (appState != AppState.editMode) {
@@ -1873,7 +1873,6 @@ public class GII extends View {
 
             if (parent != null) {
                 parent.removeAllViews();
-                Log.e("Yahoo!", "Avoided crashing!");
             }
 
             layout.addView(datePickerTo);
@@ -2152,7 +2151,7 @@ public class GII extends View {
     }
 
     public int correspondingPage(Date date, int defaultPage) {
-        Log.e("GII", "correspondingPage: start with " + operations.size() + " operations");
+        Log.w("GII", "correspondingPage: start with " + operations.size() + " operations");
         int t = defaultPage;
         //check if we need to go to the right
         //and find the borders of the pages
@@ -2449,7 +2448,7 @@ public class GII extends View {
             if (interval > 1000 || lastPageNo != properties.currentPageNo) {
                 recalculateAll();
                 lastPageNo = properties.currentPageNo;
-                Log.e("RecalculateAll", "initiate gii 2023");
+                Log.w("RecalculateAll", "initiate gii 2023");
                 needToRecalculate = false;
                 lastRecalculateInitiative = timerCal.getTimeInMillis();
             }

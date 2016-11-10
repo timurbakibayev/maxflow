@@ -162,7 +162,7 @@ public class Properties {
         this.currency = post.currency;
         this.defaultCurrency = post.defaultCurrency;
         this.sharedWith = post.sharedWith;
-        Log.e("properties","set,"+post.fileName+","+currentPageNo);
+        Log.w("properties","set,"+post.fileName+","+currentPageNo);
     }
 
     public boolean differentFrom(Properties lastProperties) {

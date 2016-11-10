@@ -23,8 +23,8 @@ android {
         applicationId "com.gii.maxflow"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 71
-        versionName "19.1"
+        versionCode 74
+        versionName "19.4"
     }
 
     buildTypes {
@@ -53,8 +53,10 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.5.2'
     compile 'com.android.support:support-v4:23.2.1'
     //compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'com.batch.android:batch-sdk:1.5.+'
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.batch.android:batch-sdk:1.6.+'
+    compile 'com.google.android.gms:play-services-base:8.4.0'
+    //compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    //compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.rarepebble:colorpicker:2.0.0'
 }
 //apply plugin: 'application'

@@ -56,6 +56,25 @@
         app:colorpicker_selectNoneButtonText = "RESET"
         />
 
+
+    <com.rarepebble.colorpicker.ColorPreference
+        android:key="backColorArrow"
+        android:title="@string/pref_color_arrow"
+        android:defaultValue="#0066FF"
+        app:colorpicker_showAlpha = "false"
+        app:colorpicker_selectNoneButtonText = "RESET"
+        />
+
+
+    <com.rarepebble.colorpicker.ColorPreference
+        android:key="backColorFont"
+        android:title="@string/pref_color_font"
+        android:defaultValue="#FFFFFF"
+        app:colorpicker_showAlpha = "false"
+        app:colorpicker_selectNoneButtonText = "RESET"
+        />
+
+
     <SwitchPreference
         android:defaultValue="true"
         android:key="show_operation_arrow"

@@ -128,19 +128,20 @@ public class Storage {
         dir = new File(level1 + userDir);
         if (dir.exists()) {
             File[] file = dir.listFiles();
-            for (int i = 0; i < file.length; i++) {
-                String k = file[i].getName();
-                if (k.length() >= extension.length())
-                    if (k.substring(k.length()-extension.length(),k.length()).equals(extension))
-                        forout.add(file[i].getName());
-            }
+            if (file != null)
+                for (int i = 0; i < file.length; i++) {
+                    String k = file[i].getName();
+                    if (k.length() >= extension.length())
+                        if (k.substring(k.length()-extension.length(),k.length()).equals(extension))
+                            forout.add(file[i].getName());
+                }
         }
         return(forout);
     }
 
     String lastPathToFile = "";
     public void loadFile(final Properties properties, final ArrayList<Circle> circle, final ArrayList<Operation> operation) {
-        Log.e("RecalculateAll","loading file...");
+        Log.w("RecalculateAll","loading file...");
         if (gii.ref.getAuth() != null) {
             String pathToFile = "maxflow/" + GII.ref.getAuth().getUid() + "/" + properties.computeFileNameWithoutXML();
             if (!properties.owner.equals(""))
@@ -160,7 +161,7 @@ public class Storage {
                                             if (!post.lastChangeId.equals(gii.prefs.getString("AndroidID", ""))) {
                                                 circle.set(i, post);
                                                 GII.needToRecalculate = true;
-                                                Log.e("RecalculateAll", "initiate Storage 157");
+                                                Log.w("RecalculateAll", "initiate Storage 157");
                                             }
                                             added = true;
                                         }
@@ -168,12 +169,12 @@ public class Storage {
                                     if (!added) {
                                         circle.add(post);
                                         GII.needToRecalculate = true;
-                                        Log.e("RecalculateAll", "initiate Storage 165");
+                                        Log.w("RecalculateAll", "initiate Storage 165");
 
                                     }
                                     //Log.e("Firebase change:", "circle " + post.name);
                                 }
-                                Log.e("Firebase change:", "got some changes (may be not)");
+                                Log.w("Firebase change:", "got some changes (may be not)");
                                 if (circle.size() == 0 &&
                                         properties.fileName.equals("default.xml"))
                                     fromTemplate(circle);
@@ -182,7 +183,7 @@ public class Storage {
 
                             @Override
                             public void onCancelled(FirebaseError firebaseError) {
-                                Log.e("Firebase", "The read failed 4: " + firebaseError.getMessage());
+                                Log.w("Firebase", "The read failed 4: " + firebaseError.getMessage());
                             }
                         });
                 GII.ref.child(pathToFile + "/operations/").
@@ -211,7 +212,7 @@ public class Storage {
 
                             @Override
                             public void onCancelled(FirebaseError firebaseError) {
-                                Log.e("Firebase", "The read failed 5: " + firebaseError.getMessage());
+                                Log.w("Firebase", "The read failed 5: " + firebaseError.getMessage());
                             }
                         });
                 GII.ref.child(pathToFile + "/properties/").
@@ -224,12 +225,12 @@ public class Storage {
                                     if (!post.lastChangeId.equals(gii.prefs.getString("AndroidID", "")) ||
                                             !properties.loaded) { //|| true
                                         properties.set(post);
-                                        Log.e("Storage.java", "onDataChange: got new properties, because " +
+                                        Log.w("Storage.java", "onDataChange: got new properties, because " +
                                                 !post.lastChangeId.equals(gii.prefs.getString("AndroidID", "")) + " || " +
                                                 !properties.loaded);
                                         if (properties.loaded) {
                                             GII.needToRecalculate = true;
-                                            Log.e("RecalculateAll", "initiate Storage 212");
+                                            Log.w("RecalculateAll", "initiate Storage 212");
                                         }
                                         properties.loaded = true;
                                     }
@@ -283,7 +284,7 @@ public class Storage {
 
     private static final String TAG = "Storage.java";
     public void saveFile(Properties properties, java.util.ArrayList<Circle> circle, java.util.ArrayList<Operation> operation) {
-        Log.e(TAG, "saveFile: started");
+        Log.w(TAG, "saveFile: started");
         if (gii.ref.getAuth() != null) {
             String pathToFile = "maxflow/" + GII.ref.getAuth().getUid() + "/" + properties.computeFileNameWithoutXML();
             if (!properties.owner.equals(""))
@@ -307,8 +308,8 @@ public class Storage {
                 }
             }
 
-            Log.e(TAG, "saveFile: properties = null?:" + (properties == null));
-            Log.e(TAG, "saveFile: properties loaded?:" + (properties.loaded));
+            Log.w(TAG, "saveFile: properties = null?:" + (properties == null));
+            Log.w(TAG, "saveFile: properties loaded?:" + (properties.loaded));
             if (properties.loaded) {
                 properties.lastChangeId = gii.prefs.getString("AndroidID", "");
                 GII.ref.child(pathToFile + "/properties/0").
@@ -316,7 +317,7 @@ public class Storage {
             }
         } else
             saveXML(properties, circle, operation);
-        Log.e(TAG, "saveFile: complete!");
+        Log.w(TAG, "saveFile: complete!");
     }
 
     public void createDir(File dir) {
@@ -324,7 +325,7 @@ public class Storage {
             try {
                 dir.mkdirs();
             }
-            catch (IllegalStateException e) {  Log.e("storage",e.getMessage()) ;  }
+            catch (IllegalStateException e) {  Log.w("storage",e.getMessage()) ;  }
         }
     }
 
@@ -408,10 +409,10 @@ public class Storage {
 
         Calendar c = Calendar.getInstance();
         String dateRef = c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
-        Log.e(TAG, "copy: dateref" + dateRef);
+        Log.w(TAG, "copy: dateref" + dateRef);
         prefs = PreferenceManager.getDefaultSharedPreferences(GIIApplication.gii.activity);
         if (prefs.getString(properties.fileName + "/Backup","").equals(dateRef)) {
-            Log.e(TAG, "Backup not needed");
+            Log.w(TAG, "Backup not needed");
             return;
         }
         SharedPreferences.Editor edit = prefs.edit();
@@ -788,6 +789,9 @@ public class Storage {
             GIIApplication.gii.activity.showMessage("Failed to open file: \n" + e.getMessage());
         }
 
+        if (circle.size() == 0)
+            if (properties.fileName.equals("default.xml"))
+                fromTemplate(circle);
     }
 
     public void fromTemplate(ArrayList<Circle> circle) {
@@ -1073,7 +1077,7 @@ public class Storage {
             for (String email:emails.split(",")) {
                 email = email.trim();
                 final String finalEmail = email;
-                Log.e("share","trying to get email: " + email);
+                Log.w("share","trying to get email: " + email);
                 GII.ref.child("users").orderByChild("email")
                         .equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1081,7 +1085,7 @@ public class Storage {
                         if (dataSnapshot.hasChildren()) {
                             Map<String, String> map = new HashMap<String, String>();
                             DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
-                            Log.e("share","Found user id by email:" + firstChild.getKey().toString());
+                            Log.w("share","Found user id by email:" + firstChild.getKey().toString());
                             map.put("owner", GII.ref.getAuth().getUid());
                             map.put("ownerEmail",GII.ref.getAuth().getProviderData().get("email").toString());
                             map.put("permitTo", firstChild.getKey().toString());
@@ -1108,23 +1112,23 @@ public class Storage {
                 email = email.trim();
                 if (!skipEmails.contains(email)) {
                     final String finalEmail = email;
-                    Log.e("share", "unshare: trying to get email: " + email);
+                    Log.w("share", "unshare: trying to get email: " + email);
                     GII.ref.child("users").orderByChild("email")
                             .equalTo(email)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.hasChildren()) {
                                         DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
-                                        Log.e("share", "Found user id by email to unshare:" + firstChild.getKey().toString());
+                                        Log.w("share", "Found user id by email to unshare:" + firstChild.getKey().toString());
                                         GII.ref.child("maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML() + "/shared/" + firstChild.getKey().toString()).setValue(null);
                                         GII.ref.child("shared/" + firstChild.getKey().toString() + "/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML()).setValue(null);
                                     } else
-                                        Log.e("Nothing found; ", dataSnapshot.toString());
+                                        Log.w("Nothing found; ", dataSnapshot.toString());
                                 }
 
                                 @Override
                                 public void onCancelled(FirebaseError firebaseError) {
-                                    Log.e("Firebase", "The read failed 3: " + firebaseError.getMessage());
+                                    Log.w("Firebase", "The read failed 3: " + firebaseError.getMessage());
                                 }
                             });
 

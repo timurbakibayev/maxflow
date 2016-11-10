@@ -360,7 +360,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
         //GII.ref.child("subscriptions/" + GII.ref.getAuth().getUid() + "/").
         //        push().setValue(newSubscription);
         // <------------ This is needed if paid!!! xxxxxxxxx
-        Log.e("purchase","initiating purchase");
+        Log.w("purchase","initiating purchase");
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             GII.ref.child("subscriptions/" + GII.ref.getAuth().getUid() + "/").
@@ -371,7 +371,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
         }
 
         if (cloud1mPrice.equals("") || cloud1yPrice.equals("")) {
-            Log.e("purchase","no prices aquired :(");
+            Log.w("purchase","no prices aquired :(");
             return;
         }
 
@@ -439,11 +439,11 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                         });
                     }
                 }, 0, 3000);*/
-                Log.e("purchase","trying to consume " + purchase.getDeveloperPayload());
+                Log.w("purchase","trying to consume " + purchase.getDeveloperPayload());
                 mHelper.consumeAsync(purchase,
                         mConsumeFinishedListener);
                 String hashed = purchase.getDeveloperPayload();
-                Log.e("purchase","finishing: " + hashed);
+                Log.w("purchase","finishing: " + hashed);
                 Calendar c = Calendar.getInstance();
                 c.setTime(Subscription.unHash(hashed));
                 intentSubscription = new Subscription();
@@ -452,7 +452,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                 intentSubscription.sign();
                 GII.ref.child("subscriptions/" + GII.ref.getAuth().getUid() + "/").
                         push().setValue(intentSubscription);
-                Log.e("purchase","Pushing the intentSubscription");
+                Log.w("purchase","Pushing the intentSubscription");
                 try {
                     Toast.makeText(getApplicationContext(),getBaseContext().getString(R.string.thank_you)
                             , Toast.LENGTH_LONG).show();
@@ -470,10 +470,10 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
         public void onQueryInventoryFinished(IabResult result,
                                              Inventory inventory) {
 
-            Log.e("purchase","mGotInventoryListener");
+            Log.w("purchase","mGotInventoryListener");
             if (result.isFailure()) {
                 // handle error here
-                Log.e("purchase","mGotInventoryListener - result failed");
+                Log.w("purchase","mGotInventoryListener - result failed");
             }
             else {
                 // does the user have the premium upgrade?
@@ -496,7 +496,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                 public void onConsumeFinished(Purchase purchase, IabResult result) {
                     if (result.isSuccess()) {
                         String hashed = purchase.getDeveloperPayload();
-                        Log.e("purchase","finishing: " + hashed);
+                        Log.w("purchase","finishing: " + hashed);
                         Calendar c = Calendar.getInstance();
                         c.setTime(Subscription.unHash(hashed));
                         intentSubscription = new Subscription();
@@ -505,7 +505,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                         intentSubscription.sign();
                         GII.ref.child("subscriptions/" + GII.ref.getAuth().getUid() + "/").
                                 push().setValue(intentSubscription);
-                        Log.e("purchase","Pushing the intentSubscription");
+                        Log.w("purchase","Pushing the intentSubscription");
                         final TextView licenseTextView = (TextView) findViewById(R.id.licenseTextView);
                         licenseTextView.setText(getBaseContext().getString(R.string.licence_expires) + " " + GII.dateText(c.getTime()));
                     }
@@ -518,7 +518,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("purchase", "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+        Log.w("purchase", "onActivityResult(" + requestCode + "," + resultCode + "," + data);
         finish();
         startActivity(getIntent());
         /*
@@ -868,13 +868,13 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
     }
 
     private void signUp(final String email, final String password) {
-        Log.e("Firebase","Registered user:" + " trying to sign up");
+        Log.w("Firebase","Registered user:" + " trying to sign up");
         GII.ref.createUser(email,password, new Firebase.ValueResultHandler<Map<String, Object>>() {
                     @Override
                     public void onSuccess(Map<String, Object> result) {
                         Toast.makeText(getApplicationContext(), getString(R.string.successfully_registered),
                                 Toast.LENGTH_LONG).show();
-                        Log.e("Firebase","Registered user:" + result.get("uid") + ", giving free license");
+                        Log.w("Firebase","Registered user:" + result.get("uid") + ", giving free license");
                     }
 
                     @Override
@@ -882,7 +882,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                         // there was an error]
                         Toast.makeText(getApplicationContext(), getString(R.string.register_failed),
                                 Toast.LENGTH_LONG).show();
-                        Log.e("Firebase","Registering user ERROR: " + firebaseError.toString());
+                        Log.w("Firebase","Registering user ERROR: " + firebaseError.toString());
                     }
                 }
             );

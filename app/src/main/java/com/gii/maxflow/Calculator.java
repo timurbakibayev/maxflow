@@ -11,7 +11,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.DatePicker;
@@ -460,7 +459,7 @@ public class Calculator {
                 calcDisplay = calcDisplay.substring(0, calcDisplay.length() - 1);
             if (lastIsDigit())
                 calcDisplay = calcDisplay + "/";
-            Log.e("calc", "/*=-".contains("-") + " contains -");
+            //Log.e("calc", "/*=-".contains("-") + " contains -");
             return;
         }
 

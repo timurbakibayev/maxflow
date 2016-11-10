@@ -138,7 +138,7 @@ public class OperationListWindow {
         deleteOperation = ContextCompat.getDrawable(context, R.drawable._ic_delete_black_24dp);
         editOperation = ContextCompat.getDrawable(context, R.drawable._ic_mode_edit_black_24dp);
 
-        textPaint.setColor(gii.graphics.nameFont.getColor());
+        textPaint.setColor(gii.graphics.mainFont.getColor());
         textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         bigTextPaint.setColor(textPaint.getColor());
         bigTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -370,7 +370,7 @@ public class OperationListWindow {
     private void exchange() {
         //here we should open the convert program
         GIIApplication.gii.exchangeRates.readRatesFromInternet();
-        Log.e(TAG, "convert: read complete" );
+        Log.w(TAG, "convert: read complete" );
 
         String[] currentCurrencies = GIIApplication.gii.exchangeRates.currencyArray();
 
@@ -557,7 +557,7 @@ public class OperationListWindow {
                             gii.addOperation(new Operation(gii.generateNewId(), selectedId, last, amount1, fromCurrency, 0, gii.calendarTo.getTime(), transactionId + 1, gii.properties.currentPageNo, false, false, "", descriptionBox.getText().toString(), false));
                             gii.addOperation(new Operation(gii.generateNewId(), last, selectedId, amount2, toCurrency, 0, gii.calendarTo.getTime(), transactionId + 1, gii.properties.currentPageNo, false, false, "", descriptionBox.getText().toString(), false));
 
-                            Log.e(TAG, "converting from " + amount1 + fromCurrency + " to " + amount2 + toCurrency);
+                            Log.w(TAG, "converting from " + amount1 + fromCurrency + " to " + amount2 + toCurrency);
                             needToUpdateFile = true;
                         }
                         layout.removeAllViews();
@@ -878,7 +878,7 @@ public class OperationListWindow {
                     }
                 }).show();
 
-                Log.e("swipe","deleted operation ".concat(_operation.id));
+                Log.w("swipe","deleted operation ".concat(_operation.id));
                 //needToUpdateFile = true;
             }
         }

@@ -85,6 +85,7 @@ public class Graphics {
     Paint bgColor = new Paint();
     Paint gray = new Paint();
 
+    Paint mainFont = new Paint();
     Paint nameFont = new Paint();
     Paint totalFont = new Paint();
     Paint dkBlueCircle = new Paint();
@@ -143,7 +144,7 @@ public class Graphics {
         if (selectedId.equals("-1")) {
             pdfMode = true;
             Rect bounds = new Rect(-1,-1,1,1);
-            //nameFont.setColor(Color.BLUE);
+            //mainFont.setColor(Color.BLUE);
             //detect bounds to rescale;
             for (Circle _circle : circle) {
                 if (!_circle.deleted && _circle.visible) {
@@ -358,9 +359,9 @@ public class Graphics {
                     if (gii.prefs.getBoolean("show_circle_name",true)) { //was < 5
                         float nameTextWidth = _circle.nameTextWidth * properties.scaleFactor;
                         //float textSizeChange = (_circle.radius * 1.5f * properties.scaleFactor / nameTextWidth);
-                        //nameFont.setTextSize(25 * properties.scaleFactor * textSizeChange);
-                        nameFont.setTextSize(40 * properties.scaleFactor);
-                        canvas.drawText(_circle.name, moved.x - nameTextWidth / 2, moved.y + nameFont.getTextSize() + _circle.radius * properties.scaleFactor, nameFont);
+                        //mainFont.setTextSize(25 * properties.scaleFactor * textSizeChange);
+                        mainFont.setTextSize(40 * properties.scaleFactor);
+                        canvas.drawText(_circle.name, moved.x - nameTextWidth / 2, moved.y + mainFont.getTextSize() + _circle.radius * properties.scaleFactor, mainFont);
                     }
             }
         }
@@ -463,7 +464,7 @@ public class Graphics {
     Rect srcRect = new Rect(0,0,0,0);
     Rect destRect = new Rect(0,0,0,0);
     public  void drawIcon(Circle _circle, int iconBitmapNo, int iconColorNo, int parentIconColorNo, Rect bounds, float fillPercent, boolean limitGoal, Canvas canvas) {
-
+        nameFont.setTextSize(mainFont.getTextSize());
         if (_circle == null) {
             moved.set(bounds.centerX(), bounds.centerY());
             if (bounds.right < 0 || bounds.left > canvas.getWidth() ||
@@ -625,7 +626,7 @@ public class Graphics {
                     //movedX = moved.x  - txtWidth;
                     movedYOffset++;
                     //canvas.drawText(gii.df.format(entry.getValue()), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
-                    //nameFont.setTextSize(20 * gii.properties.scaleFactor);
+                    //mainFont.setTextSize(20 * gii.properties.scaleFactor);
                     //movedX = (moved.x + (acc.radius * properties.scaleFactor * 0.7f));
                     movedX = movedX + txtWidth;
                     //canvas.drawText(entry.getKey(), movedX, movedY + dkBlue.getTextSize() * movedYOffset, whiteUnder);
@@ -647,7 +648,7 @@ public class Graphics {
             float textSizeChange = (newBounds.width() * 0.8f / nameTextWidth);
             if (nameTextWidth == 0) {
                 nameFont.setTextSize(40);
-                textSizeChange = (newBounds.width() * 0.8f / nameFont.measureText(_circle.name));
+                textSizeChange = (newBounds.width() * 0.8f / mainFont.measureText(_circle.name));
                 nameFont.setTextSize(25 * textSizeChange);
             } else {
                 nameFont.setTextSize(25 * textSizeChange);
@@ -1145,9 +1146,13 @@ public class Graphics {
         green.setStyle(Paint.Style.FILL_AND_STROKE);
         green.setStrokeWidth(3);
 
+        mainFont = new Paint();
+        mainFont.setStyle(Paint.Style.FILL);
+        mainFont.setColor(gii.activity.backgroundColorFont);
+
         nameFont = new Paint();
         nameFont.setStyle(Paint.Style.FILL);
-        nameFont.setColor(Color.rgb(255, 255, 255));
+        nameFont.setColor(Color.WHITE);
 
         totalFont = new Paint();
         totalFont.setColor(Color.rgb(255, 255, 255));
@@ -1228,8 +1233,7 @@ public class Graphics {
         //white.setAlpha(255);
 
         arrowPaint = new Paint();
-        //arrowPaint.setColor(Color.rgb(47, 96, 96));
-        arrowPaint.setColor(Color.rgb(16, 16, 156));
+        arrowPaint.setColor(gii.activity.backgroundColorArrow);
         arrowPaint.setStyle(Paint.Style.STROKE);
         arrowPaint.setAlpha(120);
 
@@ -1344,7 +1348,7 @@ public class Graphics {
         //myPath.moveTo(pointA.x, pointA.y);
         //myPath.quadTo(center.x, center.y, pointB.x, pointB.y);
         //myPath.lineTo(pointB.x, pointB.y);
-        paint.setShader(new LinearGradient(point0.x, point0.y, centerText.x, centerText.y, Color.TRANSPARENT, Color.rgb(16, 16, 196), Shader.TileMode.CLAMP));
+        paint.setShader(new LinearGradient(point0.x, point0.y, centerText.x, centerText.y, Color.TRANSPARENT, gii.activity.backgroundColorArrow, Shader.TileMode.CLAMP));
         myPath.reset();
         myPath.moveTo(point0.x,point0.y);
         myPath.lineTo(point11.x,point11.y);
@@ -1669,7 +1673,7 @@ public class Graphics {
             canvas.drawRect(mainRect,white);
         }
 
-        Log.e("Report","Drawing pie, wideMode = " + wideMode);
+        Log.w("Report","Drawing pie, wideMode = " + wideMode);
 
         float fraction = 0;
         if (gii.selectedCircle.goalAmount != 0) {
@@ -1873,7 +1877,7 @@ public class Graphics {
             canvas.drawRect(mainRect,white);
         }
 
-        Log.e("Report","Drawing pie, wideMode = " + wideMode);
+        Log.w("Report","Drawing pie, wideMode = " + wideMode);
 
 
 
@@ -1906,7 +1910,7 @@ public class Graphics {
             i++;
             circleId[i] = entry.getKey();
             circleAmount[i] = entry.getValue();
-            Log.e("Report","Dinara Pie: " + circleAmount[i]);
+            Log.w("Report","Dinara Pie: " + circleAmount[i]);
         }
         for (int k1 = 0; k1 < statExpense.size(); k1++)
             for (int k2 = k1; k2 < statExpense.size(); k2++)
@@ -2031,7 +2035,7 @@ public class Graphics {
         long startingMillis = cal.getTimeInMillis();
         cal.setTime(Collections.min(graphOperation).date);
         long endingMillis = cal.getTimeInMillis();
-        Log.e("Report","starting: " + startingMillis + ", ending: " + endingMillis);
+        Log.w("Report","starting: " + startingMillis + ", ending: " + endingMillis);
         endingMillis -= startingMillis;
         //float
 
@@ -2039,7 +2043,7 @@ public class Graphics {
         long intervalMillis = endingMillis / n;
         for (Operation operation : graphOperation) {
             float amount = operation.amount;
-            Log.e("Report","Circles in: " + operation.circlesWayIn);
+            Log.w("Report","Circles in: " + operation.circlesWayIn);
             if (!gii.selectedId.equals("none")) {
                 if (!operation.circlesWayIn.contains(selectedId))
                     amount *= -1;
@@ -2051,7 +2055,7 @@ public class Graphics {
             currentMillis = cal.getTimeInMillis() - startingMillis;
             int position = (int)(((float)currentMillis / (float)endingMillis) * (n-1));
             data[position] += amount;
-            Log.e("Report","Line Graph: adding " + amount + " to " + position + ", id=" + operation.id + " Income/Expense: " + operation.isIncome + "/" + operation.isExpense);
+            Log.w("Report","Line Graph: adding " + amount + " to " + position + ", id=" + operation.id + " Income/Expense: " + operation.isIncome + "/" + operation.isExpense);
         }
 
         for (int i = 0; i < n; i++)
@@ -2205,7 +2209,7 @@ public class Graphics {
         long startingMillis = cal.getTimeInMillis();
         cal.setTime(Collections.min(graphOperation).date);
         long endingMillis = cal.getTimeInMillis();
-        Log.e("Report","bubble starting: " + startingMillis + ", ending: " + endingMillis + " operations: " + graphOperation.size());
+        Log.w("Report","bubble starting: " + startingMillis + ", ending: " + endingMillis + " operations: " + graphOperation.size());
         endingMillis -= startingMillis;
         //float
 
@@ -2216,7 +2220,7 @@ public class Graphics {
         for (Operation operation : graphOperation) {
 
             float amount = operation.amount;
-            Log.e("Report", "Bubble Circles in: " + operation.circlesWayIn);
+            Log.w("Report", "Bubble Circles in: " + operation.circlesWayIn);
             //if (!operation.circlesWayIn.contains(selectedId) && !selectedId.equals("none"))
             //    amount *= -1;
 
@@ -2228,7 +2232,7 @@ public class Graphics {
                 min = operation.amount;
             if (max < operation.amount)
                 max = operation.amount;
-            Log.e("Report","adding " + amount + " to " + position);
+            Log.w("Report","adding " + amount + " to " + position);
         }
 
         for (int i = 0; i < n; i++)
@@ -2313,9 +2317,9 @@ public class Graphics {
         }
 
         for (Operation operation : scaledOperations) {
-            Log.e("Report","Bubble going to draw " + operation.amount +
+            Log.w("Report","Bubble going to draw " + operation.amount +
                     " from "+ operation.fromCircle + " to " + operation.toCircle);
-            Log.e("Report","Bubble income/expense: " + operation.isIncome + "/" + operation.isExpense);
+            Log.w("Report","Bubble income/expense: " + operation.isIncome + "/" + operation.isExpense);
             Circle currentCircle;
             if (operation.isIncome)
                 currentCircle = gii.circleById(operation.fromCircle);
@@ -2326,7 +2330,7 @@ public class Graphics {
                 currentMillis = cal.getTimeInMillis() - startingMillis;
                 int position = (int)(((float)currentMillis / (float)endingMillis) * chart.width());
                 int diameter = chart.width()/25;
-                Log.e("Report","Bubble drawing " + position + "," + operation.amount);
+                Log.w("Report","Bubble drawing " + position + "," + operation.amount);
                 rect1.set(chart.left + position - diameter, chart.bottom - (int)operation.amount - diameter,
                         chart.left + position + diameter, chart.bottom - (int)operation.amount + diameter);
                 //drawIcon(currentCircle.picture, currentCircle.color, currentCircle.color, rect1 , canvas);
@@ -2454,7 +2458,7 @@ public class Graphics {
         for (Float segment : segments) {
             scaledSegments.add((int) ((segment - min) * scale));
             sum += segment;
-            Log.e("Report","adding scaled segment " + (int) ((segment - min) * scale));
+            Log.w("Report","adding scaled segment " + (int) ((segment - min) * scale));
         }
 
         Path linePath = new Path();

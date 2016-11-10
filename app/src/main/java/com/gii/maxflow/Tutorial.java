@@ -251,10 +251,10 @@ public class Tutorial extends View {
         gii.graphics.drawBackground(canvas);
 
         //circles:
-        gii.graphics.nameFont.setTextSize(40);
+        gii.graphics.mainFont.setTextSize(40);
         if (circleLeft != null && !circleLeft.name.equals(""))
             gii.graphics.drawIcon(circleLeft,0,3,3,rectangleLeft,0,false,canvas);
-        gii.graphics.nameFont.setTextSize(40);
+        gii.graphics.mainFont.setTextSize(40);
         if (circleRight != null && !circleRight.name.equals(""))
             gii.graphics.drawIcon(circleRight,0,3,3,rectangleRight,0,false,canvas);
 

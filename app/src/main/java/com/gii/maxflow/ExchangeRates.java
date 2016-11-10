@@ -29,7 +29,7 @@ public class ExchangeRates {
     public ExchangeRates(Context context) {
         Calendar c = Calendar.getInstance();
         dateRef = c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
-        Log.e(TAG, "ExchangeRates: init");
+        Log.w(TAG, "ExchangeRates: init");
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         if (prefs.getString("LastExchangeRates", "").equals(dateRef)) {
             rates = prefs.getString("rates", "");
@@ -42,9 +42,9 @@ public class ExchangeRates {
             @Override
             public void run() {
                 try {
-                    Log.e(TAG, "run: reading data from internet");
+                    Log.w(TAG, "run: reading data from internet");
                     readRatesFromInternet();
-                    Log.e(TAG, "run: finished reading");
+                    Log.w(TAG, "run: finished reading");
                 } catch (Exception e) {
                     Log.e(TAG, "problem: " + e.getMessage());
                     e.printStackTrace();
@@ -114,7 +114,7 @@ public class ExchangeRates {
             rates = getJSON("https://openexchangerates.org/api/latest.json?app_id=c8275a08520641bbb78f53fea64c2a49", 5000);
             if (rates == null) {
                 Log.e(TAG, "readRatesFromInternet: i understand that there's no data");
-                Log.e(TAG, "readRatesFromInternet: getting previous data, if possible");
+                Log.w(TAG, "readRatesFromInternet: getting previous data, if possible");
                 rates = prefs.getString("rates", "");
             } else {
                 alreadyRead = true;
@@ -126,16 +126,16 @@ public class ExchangeRates {
                 edit.commit();
             }
         } else {
-            Log.e(TAG, "readRatesFromInternet: using previous data");
+            Log.w(TAG, "readRatesFromInternet: using previous data");
             //return;
         }
         //AuthMsg msg = new Gson().fromJson(rates, AuthMsg.class);
         String[] g = rates.split(",");
-        Log.e(TAG, "readRatesFromInternet:");
+        Log.w(TAG, "readRatesFromInternet:");
 
         for (int i = 0; i < g.length; i++) {
             g[i] = g[i].trim();
-            Log.e(TAG, "--" + g[i] + "--");
+            Log.w(TAG, "--" + g[i] + "--");
             if (g[i].length() >= 7)
             if ("0123456789".contains(g[i].substring(7, 8))) {
                 try {
@@ -145,15 +145,10 @@ public class ExchangeRates {
                 }
             }
         }
-        Log.e(TAG, "readRatesFromInternet: parse complete");
+        Log.w(TAG, "readRatesFromInternet: parse complete");
         for (Map.Entry<String, Float> entry : currentRate.entrySet()) {
-            Log.e(TAG, "readRatesFromInternet: currency: -" + entry.getKey() + "- rate: " + entry.getValue() );
+            Log.w(TAG, "readRatesFromInternet: currency: -" + entry.getKey() + "- rate: " + entry.getValue() );
         }
-        /*
-        Log.e(TAG, "readRatesFromInternet: KZT: " + currentRate.get("KZT"));
-        Log.e(TAG, "readRatesFromInternet: USD: " + currentRate.get("USD"));
-        Log.e(TAG, "readRatesFromInternet: RUB: " + currentRate.get("RUB"));
-        */
     }
 
     public float getRate(String currency) {

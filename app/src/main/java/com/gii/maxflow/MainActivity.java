@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     public int backgroundColorTop = 2;
     public int backgroundColorBottom = 2;
     public int backgroundColorAccent = 2;
+    public int backgroundColorArrow = 2;
+    public int backgroundColorFont = 2;
 
     ImageButton bottom_filter;
     ImageButton bottom_map;
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     protected void onResume() {
         super.onResume();
         updateColors();
-        Log.e("RC","Resume");
+        Log.w("RC","Resume");
         active = true;
         GIIApplication.gii.updateTitle();
     }
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     @Override
     protected void onPause() {
         super.onPause();
-        Log.e("RC", "Pause");
+        Log.w("RC", "Pause");
         active = false;
     }
 
@@ -258,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 
 
-        Log.e("RC","CREATE");
+        Log.w("RC","CREATE");
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
 
         //DONE: REMOVE!
@@ -369,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
 
         if (GIIApplication.gii == null) {
-            Log.e("RC", "Creating GIIApplication.gii");
+            Log.w("RC", "Creating GIIApplication.gii");
             GIIApplication.gii = new GII(this);
             GIIApplication.gii.fab = fab;
             //GIIApplication.gii.fabMenu = fabMenu;
@@ -416,6 +418,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         grantCameraPermission();
 
         showTutorial(false,0);
+        showMyAppFree();
     }
 
     private void showTutorial(final boolean forced, final int step) {
@@ -428,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         edit.putBoolean("tutorial_shown", true);
         edit.commit();
 
+
         AlertDialog ad =
             new AlertDialog.Builder(this)
                 .setView(tutorial)
@@ -436,8 +440,9 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                 .setPositiveButton(GIIApplication.gii.activity.getString(R.string.next), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (step < Tutorial.stepTitles.length - 1)
+                        if (step < Tutorial.stepTitles.length - 1) {
                             showTutorial(true, step + 1);
+                        }
                     }
                 })
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -455,11 +460,46 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         ad.getWindow().setLayout(t,t);
     }
 
+    private void showMyAppFree() {
+        return;
+        /*
+        if (!prefs.getBoolean("myAppFree031116", false)) {
+            Calendar cal = Calendar.getInstance();
+            if (cal.get(Calendar.DAY_OF_MONTH) >= 2 &&
+                    cal.get(Calendar.DAY_OF_MONTH) <= 4 &&
+                    cal.get(Calendar.MONTH) == 10 && //november
+                cal.get(Calendar.YEAR) == 2016 ) {
+
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putBoolean("myAppFree1", true);
+                edit.putBoolean("myAppFree031116", true);
+                edit.commit();
+
+                Log.e(TAG, "showMyAppFree: :)");
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(this.getString(R.string.myAppFree_Title))
+                        .setMessage(this.getString(R.string.myAppFree_Message))
+                        .setPositiveButton(this.getString(R.string.myAppFree_ThankYou), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                //nothing here, just a button
+                            }
+                        }).show();
+            }
+        }*/
+    }
+
     private void updateColors() {
         backgroundColorBar = prefs.getInt("backColorBar",Color.parseColor("#00B9FF"));
         backgroundColorTop = prefs.getInt("backColorTop",Color.parseColor("#00B9FF"));
         backgroundColorBottom = prefs.getInt("backColorBottom",Color.parseColor("#CB429D"));
         backgroundColorAccent = prefs.getInt("backColorAccent",Color.parseColor("#CB429D"));
+        backgroundColorArrow = prefs.getInt("backColorArrow",Color.parseColor("#0066FF"));
+        backgroundColorFont = prefs.getInt("backColorFont",Color.parseColor("#FFFFFF"));
+
+        if (GIIApplication.gii != null) {
+            GIIApplication.gii.graphics.mainFont.setColor(backgroundColorFont);
+            GIIApplication.gii.graphics.arrowPaint.setColor(backgroundColorArrow);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -609,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                 //GIIApplication.gii.loadFile(filenameXML);
                 try {
                     GIIApplication.gii.properties = new Properties();
-                    Log.e("properties","new properties");
+                    Log.w("properties","new properties");
                     GIIApplication.gii.circle = new ArrayList<>();
                     GIIApplication.gii.operations = new ArrayList<>();
                     GIIApplication.gii.properties.fileName = filenameXML;
@@ -781,14 +821,14 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     private void chooseDefaultCurrency() {
         final String[] currencyArray = GIIApplication.gii.properties.currency.replace(" ",",").split(",");
         if (GIIApplication.gii.properties.currency.equals("")) {
-            Log.e(TAG, "chooseDefaultCurrency: no currencies");
+            Log.w(TAG, "chooseDefaultCurrency: no currencies");
             GIIApplication.gii.properties.defaultCurrency = "";
             GIIApplication.gii.properties.syncedWithCloud = false;
             GIIApplication.gii.updateFile(true);
             return;
         }
         if (currencyArray.length == 1) {
-            Log.e(TAG, "chooseDefaultCurrency: only one currency");
+            Log.w(TAG, "chooseDefaultCurrency: only one currency");
             GIIApplication.gii.properties.defaultCurrency = GIIApplication.gii.properties.currency.toUpperCase();
             GIIApplication.gii.properties.syncedWithCloud = false;
             GIIApplication.gii.updateFile(true);
@@ -1147,22 +1187,13 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     @Override
     public void onRedeemAutomaticOffer(Offer offer)
     {
-        // Give resources & features contained in the campaign to the user
-        //showMessage("Hey! you've got it!");
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //final AlertDialog dialog = builder.create();
-
         SharedPreferences.Editor edit= prefs.edit();
         edit.putBoolean("myAppFree1", true);
         edit.commit();
 
-        builder.setTitle(this.getString(R.string.myAppFree_Title))
-                .setMessage(this.getString(R.string.myAppFree_Message))
-                .setPositiveButton(this.getString(R.string.myAppFree_ThankYou), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //nothing here, just a button
-                    }
-                }).show();
+        Log.e(TAG, "onRedeemAutomaticOffer: BATCH! BAM! " + offer.getItems().size() + " item(s)");
+
+        showMyAppFree();
     }
 
 }

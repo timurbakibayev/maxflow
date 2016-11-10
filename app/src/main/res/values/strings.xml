@@ -171,6 +171,8 @@
     <string name="pref_color_bar">Bar color</string>
     <string name="pref_color_bottom">Background bottom color</string>
     <string name="pref_color_accent">Accent color</string>
+    <string name="pref_color_arrow">Arrows color</string>
+    <string name="pref_color_font">Font color</string>
     <string name="pref_title_prevent_move">Prevent circles moving</string>
     <string name="pref_autofill_amount">Fill in the last amount and description for new operations</string>
     <string name="pref_title_autofill_amount">Autofill amount and description</string>

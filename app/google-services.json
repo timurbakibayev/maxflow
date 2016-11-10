@@ -1,43 +1,167 @@
 {
   "project_info": {
-    "project_id": "anyway-wallet",
-    "project_number": "276787617041",
-    "name": "Anyway Wallet"
+    "project_number": "696759372546",
+    "firebase_url": "https://maxflow.firebaseio.com",
+    "project_id": "project-7889298654603008532",
+    "storage_bucket": "project-7889298654603008532.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:276787617041:android:7ab937d804296429",
-        "client_id": "android:com.gii.maxflow",
-        "client_type": 1,
+        "mobilesdk_app_id": "1:696759372546:android:b953e7ec322c68ef",
         "android_client_info": {
-          "package_name": "com.gii.maxflow",
-          "certificate_hash": []
+          "package_name": "com.gii.easydraw"
         }
       },
-      "oauth_client": [],
-      "api_key": [],
+      "oauth_client": [
+        {
+          "client_id": "696759372546-emj1kbrbkp24k610ekrj2u2im3bg65cs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFz2Li_mT4UHEHBKxM9VuNxQDNxd3Wu5k"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
-        },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696759372546:android:638f9a723f18fdef",
+        "android_client_info": {
+          "package_name": "com.gii.youfix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696759372546-emj1kbrbkp24k610ekrj2u2im3bg65cs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFz2Li_mT4UHEHBKxM9VuNxQDNxd3Wu5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
           "status": 1
         },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
         "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696759372546:android:84a61b6baaae9b29",
+        "android_client_info": {
+          "package_name": "com.gii.anima"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696759372546-emj1kbrbkp24k610ekrj2u2im3bg65cs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFz2Li_mT4UHEHBKxM9VuNxQDNxd3Wu5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696759372546:android:b3dbf35fad0468a0",
+        "android_client_info": {
+          "package_name": "com.gii.insreport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696759372546-emj1kbrbkp24k610ekrj2u2im3bg65cs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFz2Li_mT4UHEHBKxM9VuNxQDNxd3Wu5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696759372546:android:7ab937d804296429",
+        "android_client_info": {
+          "package_name": "com.gii.maxflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696759372546-emj1kbrbkp24k610ekrj2u2im3bg65cs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARFWVIYK1e64zV_Fob9e4j_vZRc8QOZ6s"
+
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
         }
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }

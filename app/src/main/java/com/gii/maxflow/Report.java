@@ -119,7 +119,7 @@ public class Report {
 
         context = gii.getContext();
 
-        Log.e("Report", "init: (" + gii.selectedId + ")" + gii.selectedCircle.name);
+        Log.w("Report", "init: (" + gii.selectedId + ")" + gii.selectedCircle.name);
 
         canvasUnit = (int)Math.min(gii.graphics.canvasHeight,gii.graphics.canvasWidth);
 
@@ -130,7 +130,7 @@ public class Report {
         fabPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         this.context = context;
 
-        //textPaint.setColor(gii.graphics.nameFont.getColor());
+        //textPaint.setColor(gii.graphics.mainFont.getColor());
         textPaint.setColor(Color.DKGRAY);
         textPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         bigTextPaint.setColor(textPaint.getColor());

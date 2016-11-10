@@ -61,8 +61,8 @@ public class Subscription {
         }
         String result = dom + "-" + month + "-" + c.get(Calendar.YEAR) + userId + (c.get(Calendar.MONTH)*c.get(Calendar.YEAR)+c.get(Calendar.DAY_OF_MONTH) + checkSum);
 
-        Log.e("Subscription","code: " + result);
-        Log.e("Subscription","try decode: " + unHash(result));
+        Log.w("Subscription","code: " + result);
+        Log.w("Subscription","try decode: " + unHash(result));
         return (result);
     }
 
@@ -78,10 +78,10 @@ public class Subscription {
             c.set(Calendar.YEAR, 2017);
         }
 
-        Log.e("Subscription",hased);
-        Log.e("Subscription","day" + c.get(Calendar.DAY_OF_MONTH));
-        Log.e("Subscription","month" + c.get(Calendar.MONTH));
-        Log.e("Subscription","year" + c.get(Calendar.YEAR));
+        Log.w("Subscription",hased);
+        Log.w("Subscription","day" + c.get(Calendar.DAY_OF_MONTH));
+        Log.w("Subscription","month" + c.get(Calendar.MONTH));
+        Log.w("Subscription","year" + c.get(Calendar.YEAR));
         return c.getTime();
     }
 

@@ -115,6 +115,8 @@
     <string name="pref_color_top">Цвет верхней части фона</string>
     <string name="pref_color_bottom">Цвет нижней части фона</string>
     <string name="pref_color_accent">Цвет выделения</string>
+    <string name="pref_color_arrow">Цвет стрелок</string>
+    <string name="pref_color_font">Цвет шрифта</string>
 
     <string name="pref_color_bar">Цвет шапки (меню)</string>
     <string name="pref_title_prevent_move">Запретить перемещение кружков</string>

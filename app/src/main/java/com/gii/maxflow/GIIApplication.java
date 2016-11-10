@@ -24,18 +24,16 @@ public class GIIApplication extends Application  {
         Firebase.setAndroidContext(this);
         Firebase.getDefaultConfig().setPersistenceEnabled(true);
 
-        Batch.Push.setGCMSenderId("276787617041");
+        //Batch.Push.setGCMSenderId("696759372546");
+        Batch.Push.setGCMSenderId("696759372546");
+        //Batch.Push.setGCMSenderId("276787617041");
 
         //
         //Batch.setConfig(new Config("DEV570225D7B338472CD5D48455441"));
-        Batch.setConfig(new Config("570225D7B1ED30DAE43639B9922AC7"));
+        //Batch.setConfig(new Config("570225D7B1ED30DAE43639B9922AC7"));
+        //Batch.setConfig(new Config("DEV58188E798F39FD4C35861D25991")); //<- new dev
+        Batch.setConfig(new Config("58188E798EFC85FFADAD506D7A9149"));
 
-        //Parse.initialize(this, "LA6xyNMRinpKE1DZFioX4dre1ASgmoUYEEyCtnbo", "bh4xk7MVuQwEHDAXguzxqSBFDv4Vj4MGhAQyyz6x");
-        //ParseInstallation.getCurrentInstallation().saveInBackground();
-        //Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
-        //Parse.initialize(this, "LA6xyNMRinpKE1DZFioX4dre1ASgmoUYEEyCtnbo", "bh4xk7MVuQwEHDAXguzxqSBFDv4Vj4MGhAQyyz6x");
-        //ParseInstallation.getCurrentInstallation().saveInBackground();
-        //PushService.setDefaultPushCallback(this, MainActivity.class);
     }
 
     public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
