@@ -378,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             storage = new Storage(GIIApplication.gii);
             GIIApplication.gii.cloud = cloud;
             GIIApplication.gii.graphics.loadResources(this.getApplicationContext(),true, false);
-            GIIApplication.gii.chart1.loadResouces(this.getApplicationContext());
         }
         canvas = (RelativeLayout) findViewById(R.id.canvas);
         GIIApplication.gii.bindActivity(this);

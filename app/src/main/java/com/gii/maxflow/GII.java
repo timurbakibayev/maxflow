@@ -109,7 +109,6 @@ public class GII extends View {
 
     public Graphics graphics = new Graphics(this);
 
-    public PlotChart chart1=new PlotChart(); //added by Dima
     public Icons iconWindow =new Icons();
     public Calculator calcWindow = new Calculator();
 
@@ -175,17 +174,6 @@ public class GII extends View {
             reportWindow.onDraw(canvas, null, null);
             return;
         }
-        if (appState == AppState.chartPlotting) {
-            //chart1.plot(canvas, appState, properties, circle, operation, selectedCircle, graphics);   //added by Dima
-            chart1.currLayoutProp.screenW=(int)graphics.canvasWidth;                //added by Dima
-            chart1.currLayoutProp.screenH=(int)graphics.canvasHeight;               //added by Dima
-            chart1.plot(canvas, appState, properties, circle, operations, selectedCircle, graphics);
-            //chart1.plot(canvas, appState, properties, circle, operation,selectedCircle,graphics,properties.filterFrom,properties.filterTo); //added by Dima
-            return;
-        }
-
-        if(appState!=AppState.chartPlotting)
-            chart1.newPlotChartCall=true; //Added by Dima
 
         if (appState == AppState.iconChoose) {
             iconWindow.onDraw(canvas);
@@ -233,7 +221,6 @@ public class GII extends View {
 
     public void switchPage(int i) {
         boolean wasEmpty = displayedOperation.size() == 0;
-        chart1.toDrawPortion=0; //added by Dima
         properties.currentPageNo += i;
         //updateFile();
         if (operations.size() > 0) {
@@ -1463,13 +1450,6 @@ public class GII extends View {
         else if (!scaling) {
                 if (appState == AppState.showOperations) {
                     if (operationListWindow.onTouchEvent(event, appState, activity)) {
-                        //checkIconWindow();
-                        postInvalidate();
-                        return (true);
-                    }
-                }
-                if (appState == AppState.chartPlotting) {
-                    if (chart1.onTouchEventChartMode(event, appState)) {
                         //checkIconWindow();
                         postInvalidate();
                         return (true);
