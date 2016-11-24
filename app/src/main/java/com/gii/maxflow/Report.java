@@ -155,7 +155,7 @@ public class Report {
         statInputTotal = 0;
         statOutputTotal = 0;
 
-        float currentExchangeRate = GIIApplication.gii.exchangeRates.getRate(GIIApplication.gii.properties.defaultCurrency);
+        //float currentExchangeRate = GIIApplication.gii.exchangeRates.getRate(GIIApplication.gii.properties.defaultCurrency);
 
         for (Operation _operation: gii.operations) {
             //Operation _operation = this.operation.get(i);
@@ -166,12 +166,13 @@ public class Report {
 
                 float _operationAmount = _operation.amount;
 
-                if (GIIApplication.gii.exchangeRates.alreadyRead) {
-                    if (_operation.exchangeRate != 0)
-                        _operationAmount = _operation.amount / _operation.exchangeRate * currentExchangeRate;
-                    else
-                        _operationAmount = _operation.amount / GIIApplication.gii.exchangeRates.getRate(_operation.currency) * currentExchangeRate;
-                }
+                _operationAmount = gii.exchangeRates.convert(_operation.amount,_operation.currency,gii.properties.defaultCurrency);
+//                if (GIIApplication.gii.exchangeRates.alreadyRead) {
+//                    if (_operation.exchangeRate != 0)
+//                        _operationAmount = _operation.amount / _operation.exchangeRate * currentExchangeRate;
+//                    else
+//                        _operationAmount = _operation.amount / GIIApplication.gii.exchangeRates.getRate(_operation.currency) * currentExchangeRate;
+//                }
 
 
                 graphOperation.add(_operation);
@@ -180,8 +181,10 @@ public class Report {
                 _operation.isExpense = false;
                 if (!gii.selectedId.equals("none")) {
                     if (!(_operation.fromCircle.equals(gii.selectedId))) {
+                        Log.w("Report", "statInputTotal: " + statInputTotal + " + ");
                         statInput.put(_operation.fromCircle, (statInput.get(_operation.fromCircle) == null) ? _operationAmount : statInput.get(_operation.fromCircle) + _operationAmount);
                         statInputTotal += _operationAmount;
+                        Log.w("Report", "statInputTotal:                " + _operationAmount + " = " + statInputTotal);
                         _operation.isIncome = true;
                     }
                     if (!(_operation.toCircle.equals(gii.selectedId))) {
@@ -236,22 +239,22 @@ public class Report {
             final Canvas canvasDinaPieOutput = new Canvas(dinaPieOutput);
             final Canvas canvasLineGraph = new Canvas(lineGraph);
             final Canvas canvasBubbleGraph = new Canvas(bubbleGraph);
-            final Graphics graphicsInstance = gii.graphics;
+            final Graphics graphics = gii.graphics;
             if (statInput.size() > 0)
-                graphicsInstance.buildBarGraph(statInputTotal, statInput, rect1, canvasBarInput);
+                graphics.buildBarGraph(statInputTotal, statInput, rect1, canvasBarInput);
             if (statOutput.size() > 0)
-                graphicsInstance.buildBarGraph(statOutputTotal, statOutput, rect1, canvasBarOutput);
+                graphics.buildBarGraph(statOutputTotal, statOutput, rect1, canvasBarOutput);
             if (statInput.size() > 0) {
-                graphicsInstance.buildPie(statInputTotal, statInput, rect1, canvasPieInput);
-                graphicsInstance.buildDinaPie(statInputTotal, statInput, rect1, canvasDinaPieInput);
+                graphics.buildPie(statInputTotal, statInput, rect1, canvasPieInput);
+                graphics.buildDinaPie(statInputTotal, statInput, rect1, canvasDinaPieInput);
             }
             if (statOutput.size() > 0) {
-                graphicsInstance.buildPie(statOutputTotal, statOutput, rect1, canvasPieOutput);
-                graphicsInstance.buildDinaPie(statOutputTotal, statOutput, rect1, canvasDinaPieOutput);
+                graphics.buildPie(statOutputTotal, statOutput, rect1, canvasPieOutput);
+                graphics.buildDinaPie(statOutputTotal, statOutput, rect1, canvasDinaPieOutput);
             }
             if (graphOperation.size() > 0) {
-                graphicsInstance.buildLineGraph(gii.selectedId, graphOperation, rect1, canvasLineGraph);
-                graphicsInstance.buildBubbleGraph(gii.selectedId, graphOperation, rect1, canvasBubbleGraph);
+                graphics.buildLineGraph(gii.selectedId, graphOperation, rect1, canvasLineGraph);
+                graphics.buildBubbleGraph(gii.selectedId, graphOperation, rect1, canvasBubbleGraph);
             }
         }
 
