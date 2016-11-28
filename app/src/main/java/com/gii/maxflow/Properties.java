@@ -16,6 +16,8 @@ public class Properties {
         return fields;
     }
 
+    @JsonIgnore
+    public AccessRights accessRights = new AccessRights();
     //@JsonIgnore
     public boolean filtered = false;
     //@JsonIgnore
