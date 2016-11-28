@@ -11,7 +11,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -35,10 +36,9 @@
                     android:id="@+id/accessFilter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="<15 taxi otherfilter"
+                    android:text="less than 15 taxi otherfilter"
                     android:textSize="14dp"
                     android:textAlignment="center"/>
-
 
                 <TextView
                     android:id="@+id/accessCircles"

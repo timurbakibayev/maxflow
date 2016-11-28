@@ -6,7 +6,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class ShareFile extends AppCompatActivity {
 
@@ -20,6 +23,7 @@ public class ShareFile extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -27,8 +31,24 @@ public class ShareFile extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        shareListView = (ListView)findViewById(R.id.sharingListView);
 
+
+        ArrayList<AccessRights> accessRightses = new ArrayList<>();
+        shareListView = (ListView)findViewById(R.id.sharingListView);
+        {
+            AccessRights accessRights = new AccessRights();
+            accessRights.permitToEmail = "ttt@ggg.com";
+            accessRights.filter = "Taxi,Maxi";
+            accessRights.circles.add(new Circle("0","Circle1"));
+            accessRights.circles.add(new Circle("0","Circle2"));
+            accessRights.circles.add(new Circle("0","Circle3"));
+            accessRightses.add(accessRights);
+        }
+
+
+        BaseAdapter shareListViewAdapter = new ShareListViewAdapter(this, accessRightses);
+
+        shareListView.setAdapter(shareListViewAdapter);
     }
 
 }

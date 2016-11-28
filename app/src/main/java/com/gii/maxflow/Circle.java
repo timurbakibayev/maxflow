@@ -368,6 +368,11 @@ public class Circle {
         this.myMoney =crc.myMoney;
     }
 
+    public Circle(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Circle(String id, String parentId, PointF point, float radius,
                   String name, boolean deleted, int picture, int color, boolean sentToCloud,
                   boolean syncedWithCloud, String cloudId, boolean myMoney, boolean goal, float goalAmount) {

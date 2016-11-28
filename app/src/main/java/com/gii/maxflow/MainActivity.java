@@ -693,7 +693,10 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         }
 
         if (id == R.id.action_ShareFile) {
-            storage.shareFile(GIIApplication.gii.properties,this);
+            //storage.shareFile(GIIApplication.gii.properties,this);
+            Intent shareFileActivity = new Intent(this, ShareFile.class);
+            startActivity(shareFileActivity);
+
         }
 
         if (id == R.id.action_DeleteFile) {

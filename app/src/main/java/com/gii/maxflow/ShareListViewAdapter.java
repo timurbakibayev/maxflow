@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -45,6 +46,22 @@ public class ShareListViewAdapter extends BaseAdapter {
         }
 
         final AccessRights p = getItem(position);
+
+        ((TextView)view.findViewById(R.id.userEmail)).setText(p.permitToEmail);
+        ((TextView)view.findViewById(R.id.accessFilter)).setText(p.filter);
+        String circles = "";
+        int i = 0;
+        for (Circle circle : p.circles) {
+            i++;
+            circles += circle.name;
+            if (i < p.circles.size())
+                circles += ", ";
+        }
+        if (i == 0) {
+            circles = "";
+        }
+
+        ((TextView)view.findViewById(R.id.accessCircles)).setText(circles);
 
         return null;
     }
