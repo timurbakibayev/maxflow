@@ -44,6 +44,12 @@ public class ShareFile extends AppCompatActivity {
             accessRights.circles.add(new Circle("0","Circle3"));
             accessRightses.add(accessRights);
         }
+        {
+            AccessRights accessRights = new AccessRights();
+            accessRights.permitToEmail = "shashlik@google.com";
+            accessRights.filter = "Shashlik,Mashlik";
+            accessRightses.add(accessRights);
+        }
 
 
         BaseAdapter shareListViewAdapter = new ShareListViewAdapter(this, accessRightses);

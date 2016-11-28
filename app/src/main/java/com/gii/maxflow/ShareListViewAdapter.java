@@ -58,11 +58,11 @@ public class ShareListViewAdapter extends BaseAdapter {
                 circles += ", ";
         }
         if (i == 0) {
-            circles = "";
+            circles = view.getContext().getString(R.string.share_all_circles).toString();
         }
 
         ((TextView)view.findViewById(R.id.accessCircles)).setText(circles);
 
-        return null;
+        return view;
     }
 }
