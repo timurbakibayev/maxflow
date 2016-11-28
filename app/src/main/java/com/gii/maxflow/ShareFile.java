@@ -6,8 +6,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ListView;
 
 public class ShareFile extends AppCompatActivity {
+
+    ListView shareListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,8 @@ public class ShareFile extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        shareListView = (ListView)findViewById(R.id.sharingListView);
+
     }
 
 }

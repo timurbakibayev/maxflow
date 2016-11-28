@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_weight="0.8"
+                >
+
+                <TextView
+                    android:id="@+id/userEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="timurbakibayev@gmail.com"
+                    android:textSize="18dp"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    />
+
+                <TextView
+                    android:id="@+id/accessFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="<15 taxi otherfilter"
+                    android:textSize="14dp"
+                    android:textAlignment="center"/>
+
+
+                <TextView
+                    android:id="@+id/accessCircles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cash,Credit Card,Procurement,and more,and more,and more"
+                    android:textSize="14dp"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <ImageButton
+                android:layout_gravity="center_vertical"
+                android:id="@+id/edit_button"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:tint="@color/pink"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_edit"/>
+
+            <ImageButton
+                android:layout_gravity="center"
+                android:id="@+id/delete_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:tint="@color/pink"
+                android:background="@android:color/transparent"
+                android:src="@android:drawable/ic_menu_delete"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#FFBABABA" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

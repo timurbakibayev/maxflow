@@ -866,12 +866,6 @@ public class Storage {
     PdfDocument.Page page;
     PdfDocument.PageInfo pageInfo;
     PdfDocument document;
-    public void startNewPDFPage() {
-        pageInfo = new PdfDocument.PageInfo.Builder
-                (595, 842, page.getInfo().getPageNumber() + 1).create();
-        document.finishPage(page);
-        page = document.startPage(pageInfo);
-    }
 
     public void exportToPDF(Properties properties) {
 
@@ -1106,6 +1100,66 @@ public class Storage {
             }
         }
     }
+
+
+    private void unShareWith(AccessRights accessRights) {
+        if (GIIApplication.gii.ref.getAuth() != null) {
+                    final String finalEmail = accessRights.permitToEmail;
+                    Log.w("share", "unshare: trying to restrict access to: " + accessRights.permitToEmail);
+                    GII.ref.child("users").orderByChild("email")
+                            .equalTo(accessRights.permitToEmail)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChildren()) {
+                                        DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                                        Log.w("share", "Found user id by email to unshare:" + firstChild.getKey().toString());
+                                        GII.ref.child("maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML() + "/shared/" + firstChild.getKey().toString()).setValue(null);
+                                        GII.ref.child("shared/" + firstChild.getKey().toString() + "/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML()).setValue(null);
+                                    } else
+                                        Log.w("User not found x access", dataSnapshot.toString());
+                                }
+
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+                                    Log.w("Firebase", "The read failed 3_2: " + firebaseError.getMessage());
+                                }
+                            });
+
+                }
+    }
+
+
+    private void shareWith(final AccessRights accessRights) {
+        if (GIIApplication.gii.ref.getAuth() != null) {
+                final String finalEmail = accessRights.permitToEmail;
+                Log.w("share","sharing access with: " + finalEmail);
+                GII.ref.child("users").orderByChild("email")
+                        .equalTo(finalEmail)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChildren()) {
+                                    DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                                    Log.w("share","Found user id by email:" + firstChild.getKey().toString());
+                                    accessRights.owner = GII.ref.getAuth().getUid();
+                                    accessRights.ownerEmail = GII.ref.getAuth().getProviderData().get("email").toString();
+                                    accessRights.permitTo = firstChild.getKey().toString();
+                                    accessRights.permitToEmail = finalEmail;
+                                    accessRights.filename = gii.properties.computeFileNameWithoutXML();
+                                    GII.ref.child("maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML() + "/shared/" + firstChild.getKey().toString()).setValue(accessRights);
+                                    GII.ref.child("shared/" + firstChild.getKey().toString() + "/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML()).setValue(accessRights);
+                                } else
+                                    Log.e("Nothing found; ", dataSnapshot.toString());
+                            }
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+                                Log.e("Firebase","The read failed 3_1: " + firebaseError.getMessage());
+                            }
+                        });
+            }
+    }
+
+
+
     private void unShareWith(String emails,String skipEmails) {
         if (GIIApplication.gii.ref.getAuth() != null) {
             for (String email:emails.split(",")) {
@@ -1132,7 +1186,6 @@ public class Storage {
                                 }
                             });
 
-                    //GII.ref.child("maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML() + "/shared/" + email).setValue(GIIApplication.gii.properties);//or null in setValue
                 }
             }
         }

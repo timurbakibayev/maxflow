@@ -188,6 +188,7 @@
     <string name="pref_default_display_name">$</string>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string name="share_add_new_user">Add new user</string>
     <string-array name="pref_example_list_titles">
         <item>Always</item>
         <item>When possible</item>

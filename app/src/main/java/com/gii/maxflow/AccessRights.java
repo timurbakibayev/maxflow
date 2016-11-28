@@ -1,5 +1,7 @@
 package com.gii.maxflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.ArrayList;
 
 /**
@@ -12,6 +14,9 @@ public class AccessRights {
     String permitTo = "";
     String permitToEmail = "";
     String filter = "";
+
+    @JsonIgnore
+    Boolean sentOk = false;
     ArrayList<Circle> circles = new ArrayList<>();
 
     public AccessRights() {
