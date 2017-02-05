@@ -604,5 +604,6 @@
     <string name="step_rent">Коммунальные</string>
     <string name="step_other_spending">Другие расходы</string>
     <string name="step_new_circle">Новые кружки</string>
+    <string name="title_activity_share_file">Управление доступом</string>
 
 </resources>

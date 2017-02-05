@@ -147,7 +147,7 @@ public class Graphics {
             //mainFont.setColor(Color.BLUE);
             //detect bounds to rescale;
             for (Circle _circle : circle) {
-                if (!_circle.deleted && _circle.visible) {
+                if (!_circle.deleted && _circle.visible && _circle.inFiler) {
                     float radius = _circle.radius;
                     mapToScreen(_circle.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && _circle.id.equals(selectedId), moveXY), properties, moved);
                     rect0.set((int) (moved.x - (radius * properties.scaleFactor)), (int) (moved.y - radius * properties.scaleFactor),
@@ -172,7 +172,7 @@ public class Graphics {
 
             bounds = new Rect(-1,-1,1,1);
             for (Circle _circle : circle) {
-                if (!_circle.deleted && _circle.visible) {
+                if (!_circle.deleted && _circle.visible && _circle.inFiler) {
                     float radius = _circle.radius;
                     mapToScreen(_circle.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && _circle.id.equals(selectedId), moveXY), properties, moved);
                     rect0.set((int) (moved.x - (radius * properties.scaleFactor)), (int) (moved.y - radius * properties.scaleFactor),
@@ -251,7 +251,7 @@ public class Graphics {
 
         //Draw connections to parents
         for (Circle acc : circle)
-            if (acc.visible && !acc.parentId.equals("") && !acc.deleted) {
+            if (acc.visible && !acc.parentId.equals("") && !acc.deleted && acc.inFiler) {
                 chain.setStrokeWidth(properties.scaleFactor * 7);
                 mapToScreen(acc.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId), moveXY), properties, moved);
                 mapToScreen(acc.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId), moveXY), properties, moved1);
@@ -272,7 +272,7 @@ public class Graphics {
                 Circle fromCircle = gii.circleById(myOperation.fromCircle, circle);
                 Circle toCircle =gii.circleById(myOperation.toCircle, circle);
 
-                if (fromCircle.visible && toCircle.visible)
+                if (fromCircle.visible && toCircle.visible && fromCircle.inFiler && toCircle.inFiler)
                     //if (!fromCircle.parentId.equals(toCircle.id) && !toCircle.parentId.equals(fromCircle.id))
                     drawArrow(canvas, fromCircle, toCircle, myOperation, arrowPaint, properties, appState, selectedId, moveXY);
             }
@@ -282,7 +282,7 @@ public class Graphics {
 
         //Draw a circle bitmap, draw circles, show circles
         for (Circle _circle : circle) {
-            if (!_circle.deleted && _circle.visible) {
+            if (!_circle.deleted && _circle.visible && _circle.inFiler) {
                 float radius = _circle.radius;
                 if ((appState == GII.AppState.editMode ||
                         appState == GII.AppState.circleTouched) && _circle.id.equals(moveIntoId))
@@ -371,7 +371,7 @@ public class Graphics {
         //white.setAlpha(130);
         if (pdfMode && 2 ==3 )
             for (Circle acc : circle) {
-                if (!acc.deleted && acc.visible) {
+                if (!acc.deleted && acc.visible && acc.inFiler) {
                     mapToScreen(acc.getCoordinates(!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId), moveXY), properties,moved);
                     if (!gii.doNotMove && appState == GII.AppState.editMode && acc.id.equals(selectedId)) {
                         mapToScreen(moveXY,properties,moved);
@@ -443,7 +443,7 @@ public class Graphics {
                 i++;
             }
             //dkBlue.setColor(Color.WHITE);
-            if (acc.displayAmount.size() > 0)
+            if (acc.displayAmount.size() > 0 && gii.properties.owner.equals(""))
                 canvas.drawText(toDisplayTotal, 10, totalFont.getTextSize()*1.5f, totalFont);
         }
     }

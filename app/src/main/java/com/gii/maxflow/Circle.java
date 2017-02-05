@@ -28,6 +28,9 @@ public class Circle {
 
     public String photoString;
 
+    @JsonIgnore
+    public boolean inFiler = true;
+
     public String getPhotoString() {
         return photoString;
     }

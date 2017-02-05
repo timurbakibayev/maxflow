@@ -106,6 +106,7 @@ public class GII extends View {
     public Cloud cloud;
 
     public Properties properties = new Properties();
+    public ArrayList<AccessRight> accessRights = new ArrayList<>();
 
     public Graphics graphics = new Graphics(this);
 
@@ -201,7 +202,8 @@ public class GII extends View {
         //canvas.save();
         //canvas.translate(properties.backgroundPosition.x,properties.backgroundPosition.y);
         //canvas.scale(rememberScale,rememberScale);
-        graphics.drawTheStuff(canvas, appState, properties, circle, displayedOperation, selectedId, moveIntoId, moveXY);
+        if (properties.owner.equals("") || accessRights!=null)
+            graphics.drawTheStuff(canvas, appState, properties, circle, displayedOperation, selectedId, moveIntoId, moveXY);
         //properties.scaleFactor = rememberScale;
         //canvas.restore();
 
@@ -213,7 +215,7 @@ public class GII extends View {
             graphics.drawGestures(canvas, appState, circle, properties, firstGestureCircleId, gesture,
                     counter, timeToCreate);
 
-        if (loaded < 4) {
+        if (loaded < 4 || !(properties.owner.equals("") || accessRights!=null)) {
             graphics.showLoading(canvas);
         }
 
@@ -509,6 +511,9 @@ public class GII extends View {
     String textStandings;
 
     public void recalculateAll() {
+        if (!properties.owner.equals("") && accessRights==null)
+            return;
+
         Log.w("RecalculateAll","Calculation started...");
         abstractTotalCircle.resetDisplayAmount();
         abstractTotalCircle.resetDisplayAmountWidget();
@@ -541,6 +546,20 @@ public class GII extends View {
             float amount = 0;
             Calendar tempCalendar = Calendar.getInstance();
             if (!_circle.deleted) {
+
+                if (!properties.owner.equals("")) {
+                    _circle.inFiler = false;
+                    for (AccessRight accessRight : accessRights) {
+                        if (accessRight.permitTo.equals(GIIApplication.gii.ref.getAuth().getUid())) {
+                            if (accessRight.circleIds.size() == 0 ||
+                                    (accessRight.circleIds.contains(_circle.id)))
+                                _circle.inFiler = true;
+                        }
+                    }
+                    //if (!_circle.inFiler)
+                        //_circle.visible = false;
+                }
+
                 for (Operation _operation : operations) {
                     if (properties.filtered) {
                         _operation.inFilter = (_operation.date.compareTo(properties.filterFrom) >= 0 &&
@@ -560,10 +579,35 @@ public class GII extends View {
                         _operation.inFilter = (_operation.pageNo == properties.currentPageNo);
                     }
 
+                    if (!properties.owner.equals("") && _operation.inFilter) {
+                        boolean circleAccess = false;
+                        boolean operationAccess = true;
+                        for (AccessRight accessRight : accessRights) {
+                            if (accessRight.permitTo.equals(GIIApplication.gii.ref.getAuth().getUid())) {
+                                if (accessRight.circleIds.size() == 0 ||
+                                        (accessRight.circleIds.contains(_operation.fromCircle) && accessRight.circleIds.contains(_operation.toCircle)))
+                                    circleAccess = true;
+                                if (!accessRight.filter.trim().equals("")) {
+                                    for (String nextTxt : accessRight.filter.trim().split(" ")) {
+                                        if (!(nextTxt.equals("") ||
+                                                _operation.forSearch.contains(nextTxt.toUpperCase().trim()) ||
+                                                nextTxt.trim().equals(GII.df.format(_operation.amount).trim()) ||
+                                                lessOrGreater(nextTxt.trim(), _operation.amount)
+                                        ))
+                                            operationAccess = false;
+                                    }
+                                }
+                            }
+                        }
+                        _operation.inFilter = circleAccess && operationAccess;
+                    }
+
+
                     if (!_operation.deleted) {
                         //for this page
-                        if (((!_circle.myMoney || properties.filtered) && _operation.inFilter) ||
-                                (!(!_circle.myMoney || properties.filtered) && _operation.pageNo <= properties.currentPageNo)) {
+                        if ((((!_circle.myMoney || properties.filtered) && _operation.inFilter) ||
+                                (!(!_circle.myMoney || properties.filtered) && _operation.pageNo <= properties.currentPageNo)) &&
+                                (_operation.inFilter || properties.owner.equals(""))) {
                             if (_operation.fromCircle.equals(_circle.id)) {
                                 _circle.addDisplayAmount(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, -_operation.amount);
                                 _operation.newStandingFrom = _circle.displayAmount.get(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency);
@@ -573,7 +617,7 @@ public class GII extends View {
                                 _operation.newStandingTo = _circle.displayAmount.get(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency);
                             }
                         }
-                        if (_circle.myMoney) {
+                        if (_circle.myMoney && (_operation.inFilter || properties.owner.equals(""))) {
                             if (_operation.fromCircle.equals(_circle.id)) {
                                 _circle.addDisplayAmountWidget(_operation.currency.equals("") ? properties.defaultCurrency : _operation.currency, -_operation.amount);
                             }
@@ -1991,7 +2035,7 @@ public class GII extends View {
     private String pointInCircle(PointF point) {
         ArrayList<String> inCircles = new ArrayList<>();
         for (Circle acc : circle) {
-            if (!acc.deleted && acc.visible)
+            if (!acc.deleted && acc.visible && acc.inFiler)
                 if (geometry.distance(point, acc.coordinates) < acc.radius)
                     return (acc.id);
         }

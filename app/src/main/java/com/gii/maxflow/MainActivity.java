@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     //com.getbase.floatingactionbutton.FloatingActionButton fabOperations;
 
     ArrayList<String> owner = new ArrayList<String>();
-    ArrayList<AccessRight> accessRightses  = new ArrayList<AccessRight>();
+    ArrayList<AccessRight> accessRights = new ArrayList<AccessRight>();
 
     public SharedPreferences prefs;
 
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             n10 = 0;
             n11 = 0;
             owner.clear();
-            accessRightses.clear();
+            accessRights.clear();
             submenu.clear();
             //TODO: shallow query (get only keys, no values)
             GII.ref.child("maxflow/" + GII.ref.getAuth().getUid()).
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
                             owner.clear();
-                            accessRightses.clear();
+                            accessRights.clear();
                             submenuShared.clear();
                             for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                 for (DataSnapshot inPostSnapshot : postSnapshot.getChildren()) {
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                                         email = email.substring(0, 8) + "..";
                                     submenuShared.add(11, n11, n11, email + "/" + inPostSnapshot.getKey());
                                     owner.add(postSnapshot.getKey());
-                                    accessRightses.add(accessRight);
+                                    accessRights.add(accessRight);
                                     n11++;
                                 }
                             }
@@ -642,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         if (item.getGroupId() == 11) {
             String filename = caption.split("/")[1];
             GIIApplication.gii.loadFileShared(filename,owner.get(item.getItemId()));
-            GIIApplication.gii.properties.accessRight = accessRightses.get(item.getItemId());
+            GIIApplication.gii.properties.accessRight = accessRights.get(item.getItemId());
             if (monthDescription != null)
                 GIIApplication.gii.recalculateAll();
         }
@@ -693,10 +693,17 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         }
 
         if (id == R.id.action_ShareFile) {
+            if (GII.ref.getAuth() == null) {
+                Toast.makeText(MainActivity.this, getString(R.string.shareFileOfflineForbidden), Toast.LENGTH_SHORT).show();
+                return (true);
+            }
+            if (!GIIApplication.gii.properties.owner.equals("")) {
+                Toast.makeText(MainActivity.this, getString(R.string.share_no_access), Toast.LENGTH_SHORT).show();
+                return (true);
+            }
             //storage.shareFile(GIIApplication.gii.properties,this);
             Intent shareFileActivity = new Intent(this, ShareFile.class);
             startActivity(shareFileActivity);
-
         }
 
         if (id == R.id.action_DeleteFile) {

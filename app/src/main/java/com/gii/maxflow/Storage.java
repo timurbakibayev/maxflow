@@ -142,6 +142,7 @@ public class Storage {
     String lastPathToFile = "";
     public void loadFile(final Properties properties, final ArrayList<Circle> circle, final ArrayList<Operation> operation) {
         Log.w("RecalculateAll","loading file...");
+        gii.accessRights = null;
         if (gii.ref.getAuth() != null) {
             String pathToFile = "maxflow/" + GII.ref.getAuth().getUid() + "/" + properties.computeFileNameWithoutXML();
             if (!properties.owner.equals(""))
@@ -240,6 +241,7 @@ public class Storage {
                                     properties.loaded = true;
                                 }
                                 GIIApplication.gii.loaded++;
+                                ShareFile.getAccessRights();
                             }
 
                             @Override

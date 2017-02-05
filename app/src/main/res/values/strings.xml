@@ -569,6 +569,6 @@
     <string name="step_rent">Paying rent</string>
     <string name="step_other_spending">Other spending</string>
     <string name="step_new_circle">Hold to create new circles</string>
-    <string name="title_activity_share_file">ShareFile</string>
+    <string name="title_activity_share_file">Share File</string>
 
 </resources>

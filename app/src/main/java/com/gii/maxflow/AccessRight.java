@@ -15,7 +15,6 @@ public class AccessRight {
     String permitToEmail = "";
     String filter = "";
 
-    @JsonIgnore
     Boolean sentOk = false;
 
     @JsonIgnore
@@ -45,5 +44,17 @@ public class AccessRight {
 
     public String getPermitToEmail() {
         return permitToEmail;
+    }
+
+    public Boolean getSentOk() {
+        return sentOk;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public ArrayList<String> getCircleIds() {
+        return circleIds;
     }
 }

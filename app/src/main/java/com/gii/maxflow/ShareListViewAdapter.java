@@ -86,6 +86,7 @@ public class ShareListViewAdapter extends BaseAdapter {
     }
     private void deleteShare(AccessRight p) {
         p.delete = !p.delete;
+        p.sentOk = false;
         notifyDataSetChanged();
         refreshData();
         return;
@@ -124,7 +125,10 @@ public class ShareListViewAdapter extends BaseAdapter {
         (lookUpDialogMulti.findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                p.filter = ((EditText)lookUpDialogMulti.findViewById(R.id.filterEditText)).getText().toString();
+                if (!(p.filter == ((EditText)lookUpDialogMulti.findViewById(R.id.filterEditText)).getText().toString())) {
+                    p.filter = ((EditText) lookUpDialogMulti.findViewById(R.id.filterEditText)).getText().toString();
+                    p.sentOk = false;
+                }
                 refreshData();
                 notifyDataSetChanged();
                 lookUpDialogMulti.dismiss();
