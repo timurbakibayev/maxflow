@@ -13,14 +13,15 @@
     tools:showIn="@layout/activity_share_file"
     android:orientation="vertical">
     <Button
+        android:id="@+id/buttonAddNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/share_add_new_user"/>
-        <ListView
-            android:id="@+id/sharingListView"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_weight="1">
-        </ListView>
+    <ListView
+        android:id="@+id/sharingListView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="1">
+    </ListView>
 
 </LinearLayout>

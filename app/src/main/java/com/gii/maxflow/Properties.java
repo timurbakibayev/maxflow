@@ -17,7 +17,7 @@ public class Properties {
     }
 
     @JsonIgnore
-    public AccessRights accessRights = new AccessRights();
+    public AccessRight accessRight = new AccessRight();
     //@JsonIgnore
     public boolean filtered = false;
     //@JsonIgnore

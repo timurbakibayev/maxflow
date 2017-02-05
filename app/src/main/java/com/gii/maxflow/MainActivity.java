@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
     //com.getbase.floatingactionbutton.FloatingActionButton fabOperations;
 
     ArrayList<String> owner = new ArrayList<String>();
-    ArrayList<AccessRights> accessRightses  = new ArrayList<AccessRights>();
+    ArrayList<AccessRight> accessRightses  = new ArrayList<AccessRight>();
 
     public SharedPreferences prefs;
 
@@ -220,13 +220,13 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                             submenuShared.clear();
                             for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                                 for (DataSnapshot inPostSnapshot : postSnapshot.getChildren()) {
-                                    AccessRights accessRights = inPostSnapshot.getValue(AccessRights.class);
+                                    AccessRight accessRight = inPostSnapshot.getValue(AccessRight.class);
                                     String email = inPostSnapshot.child("ownerEmail").getValue().toString();
                                     if (email.length() > 10)
                                         email = email.substring(0, 8) + "..";
                                     submenuShared.add(11, n11, n11, email + "/" + inPostSnapshot.getKey());
                                     owner.add(postSnapshot.getKey());
-                                    accessRightses.add(accessRights);
+                                    accessRightses.add(accessRight);
                                     n11++;
                                 }
                             }
@@ -642,7 +642,7 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         if (item.getGroupId() == 11) {
             String filename = caption.split("/")[1];
             GIIApplication.gii.loadFileShared(filename,owner.get(item.getItemId()));
-            GIIApplication.gii.properties.accessRights = accessRightses.get(item.getItemId());
+            GIIApplication.gii.properties.accessRight = accessRightses.get(item.getItemId());
             if (monthDescription != null)
                 GIIApplication.gii.recalculateAll();
         }

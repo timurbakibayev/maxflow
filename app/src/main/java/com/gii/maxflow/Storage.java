@@ -1102,12 +1102,12 @@ public class Storage {
     }
 
 
-    private void unShareWith(AccessRights accessRights) {
+    private void unShareWith(AccessRight accessRight) {
         if (GIIApplication.gii.ref.getAuth() != null) {
-                    final String finalEmail = accessRights.permitToEmail;
-                    Log.w("share", "unshare: trying to restrict access to: " + accessRights.permitToEmail);
+                    final String finalEmail = accessRight.permitToEmail;
+                    Log.w("share", "unshare: trying to restrict access to: " + accessRight.permitToEmail);
                     GII.ref.child("users").orderByChild("email")
-                            .equalTo(accessRights.permitToEmail)
+                            .equalTo(accessRight.permitToEmail)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.hasChildren()) {
@@ -1129,9 +1129,9 @@ public class Storage {
     }
 
 
-    private void shareWith(final AccessRights accessRights) {
+    private void shareWith(final AccessRight accessRight) {
         if (GIIApplication.gii.ref.getAuth() != null) {
-                final String finalEmail = accessRights.permitToEmail;
+                final String finalEmail = accessRight.permitToEmail;
                 Log.w("share","sharing access with: " + finalEmail);
                 GII.ref.child("users").orderByChild("email")
                         .equalTo(finalEmail)
@@ -1140,13 +1140,13 @@ public class Storage {
                                 if (dataSnapshot.hasChildren()) {
                                     DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
                                     Log.w("share","Found user id by email:" + firstChild.getKey().toString());
-                                    accessRights.owner = GII.ref.getAuth().getUid();
-                                    accessRights.ownerEmail = GII.ref.getAuth().getProviderData().get("email").toString();
-                                    accessRights.permitTo = firstChild.getKey().toString();
-                                    accessRights.permitToEmail = finalEmail;
-                                    accessRights.filename = gii.properties.computeFileNameWithoutXML();
-                                    GII.ref.child("maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML() + "/shared/" + firstChild.getKey().toString()).setValue(accessRights);
-                                    GII.ref.child("shared/" + firstChild.getKey().toString() + "/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML()).setValue(accessRights);
+                                    accessRight.owner = GII.ref.getAuth().getUid();
+                                    accessRight.ownerEmail = GII.ref.getAuth().getProviderData().get("email").toString();
+                                    accessRight.permitTo = firstChild.getKey().toString();
+                                    accessRight.permitToEmail = finalEmail;
+                                    accessRight.filename = gii.properties.computeFileNameWithoutXML();
+                                    GII.ref.child("maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML() + "/shared/" + firstChild.getKey().toString()).setValue(accessRight);
+                                    GII.ref.child("shared/" + firstChild.getKey().toString() + "/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML()).setValue(accessRight);
                                 } else
                                     Log.e("Nothing found; ", dataSnapshot.toString());
                             }

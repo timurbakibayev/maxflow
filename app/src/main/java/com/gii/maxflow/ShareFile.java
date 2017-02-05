@@ -1,12 +1,15 @@
 package com.gii.maxflow;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 public class ShareFile extends AppCompatActivity {
 
     ListView shareListView;
+    ArrayList<AccessRight> accessRights = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,29 +36,64 @@ public class ShareFile extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.buttonAddNew).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewRule();
+            }
+        });
 
-        ArrayList<AccessRights> accessRightses = new ArrayList<>();
         shareListView = (ListView)findViewById(R.id.sharingListView);
         {
-            AccessRights accessRights = new AccessRights();
-            accessRights.permitToEmail = "ttt@ggg.com";
-            accessRights.filter = "Taxi,Maxi";
-            accessRights.circles.add(new Circle("0","Circle1"));
-            accessRights.circles.add(new Circle("0","Circle2"));
-            accessRights.circles.add(new Circle("0","Circle3"));
-            accessRightses.add(accessRights);
+            AccessRight accessRight = new AccessRight();
+            accessRight.permitToEmail = "ttt@ggg.com";
+            accessRight.filter = "Taxi,Maxi";
+            accessRight.circleIds.add(GIIApplication.gii.circle.get(0).id);
+            accessRight.circleIds.add(GIIApplication.gii.circle.get(1).id);
+            accessRight.circleIds.add(GIIApplication.gii.circle.get(2).id);
+            accessRights.add(accessRight);
         }
         {
-            AccessRights accessRights = new AccessRights();
-            accessRights.permitToEmail = "shashlik@google.com";
-            accessRights.filter = "Shashlik,Mashlik";
-            accessRightses.add(accessRights);
+            AccessRight accessRight = new AccessRight();
+            accessRight.permitToEmail = "shashlik@google.com";
+            accessRight.filter = "Shashlik,Mashlik";
+            accessRights.add(accessRight);
         }
 
 
-        BaseAdapter shareListViewAdapter = new ShareListViewAdapter(this, accessRightses);
+        BaseAdapter shareListViewAdapter = new ShareListViewAdapter(this, accessRights);
 
         shareListView.setAdapter(shareListViewAdapter);
     }
+
+    private void addNewRule() {
+        final Dialog newRuleDialog = new Dialog(this);
+        newRuleDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        newRuleDialog.setContentView(this.getLayoutInflater().inflate(R.layout.add_new_rule_share_dialog
+                , null));
+        //((EditText)lookUpDialogMulti.findViewById(R.id.filterEditText)).setHint();
+        (newRuleDialog.findViewById(R.id.addNewRuleButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = ((EditText)newRuleDialog.findViewById(R.id.emailEditText)).getText().toString();
+                if (email.indexOf("@") > 0) {
+                    AccessRight accessRight = new AccessRight();
+                    accessRight.permitToEmail = email;
+                    accessRights.add(accessRight);
+                    refreshData();
+                    ((BaseAdapter) shareListView.getAdapter()).notifyDataSetChanged();
+                    newRuleDialog.dismiss();
+                } else
+                    ((EditText)newRuleDialog.findViewById(R.id.emailEditText)).setError("Email");
+            }
+        });
+        newRuleDialog.show();
+
+    }
+
+    public void refreshData() {
+        //todo:save all data, share what's needed
+    }
+
 
 }

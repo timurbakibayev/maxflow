@@ -14,41 +14,54 @@
             android:layout_height="match_parent"
             android:baselineAligned="false">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:padding="16dp"
                 android:layout_weight="0.8"
-                >
-
-                <TextView
-                    android:id="@+id/userEmail"
+                android:layout_height="wrap_content">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="timurbakibayev@gmail.com"
-                    android:textSize="18dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:textStyle=""
+                        android:id="@+id/userEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="timurbakibayev@gmail.com"
+                        android:textSize="18dp"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black"
+                        />
+
+                    <TextView
+                        android:id="@+id/accessFilter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="less than 15 taxi otherfilter"
+                        android:textSize="14dp"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:id="@+id/accessCircles"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cash,Credit Card,Procurement,and more,and more,and more"
+                        android:textSize="14dp"
+                        android:textAlignment="center"/>
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/noAccessTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NO ACCESS"
+                    android:textSize="40dp"
                     android:textAlignment="center"
-                    android:textColor="@android:color/black"
-                    />
-
-                <TextView
-                    android:id="@+id/accessFilter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="less than 15 taxi otherfilter"
-                    android:textSize="14dp"
-                    android:textAlignment="center"/>
-
-                <TextView
-                    android:id="@+id/accessCircles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Cash,Credit Card,Procurement,and more,and more,and more"
-                    android:textSize="14dp"
-                    android:textAlignment="center"/>
-
-            </LinearLayout>
+                    android:textColor="@android:color/holo_red_dark"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:orientation="vertical"

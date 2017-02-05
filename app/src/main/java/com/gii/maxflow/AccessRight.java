@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Timur_hnimdvi on 28-Nov-16.
  */
-public class AccessRights {
+public class AccessRight {
     String filename = "";
     String owner = "";
     String ownerEmail = "";
@@ -17,9 +17,13 @@ public class AccessRights {
 
     @JsonIgnore
     Boolean sentOk = false;
-    ArrayList<Circle> circles = new ArrayList<>();
 
-    public AccessRights() {
+    @JsonIgnore
+    Boolean delete = false;
+
+    ArrayList<String> circleIds = new ArrayList<>();
+
+    public AccessRight() {
         //For Firebsae
     }
 

@@ -64,6 +64,7 @@
     <string name="filter">Filter</string>
     <string name="transfer">Transfer</string>
     <string name="save">Save</string>
+    <string name="add">Add</string>
     <string name="convert">Convert</string>
     <string name="enter_amount">Enter amount</string>
     <string name="new_operation">New operation</string>
@@ -190,6 +191,7 @@
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string name="share_add_new_user">Add new user</string>
     <string name="share_all_circles">Full access to all circles</string>
+    <string name="share_no_access">NO ACCESS</string>
     <string-array name="pref_example_list_titles">
         <item>Always</item>
         <item>When possible</item>
@@ -244,6 +246,7 @@
     <string name="page">Page</string>
     <string name="edit_circle">Edit circle</string>
     <string name="delete_circle">Delete circle</string>
+    <string name="delete_user">Delete user</string>
     <string name="delete_operation">Delete operation</string>
     <string name="are_you_sure">Are you sure?</string>
 
