@@ -2527,7 +2527,6 @@ public class GII extends View {
 
 //TODO: show goal amount in Calculator, if any
 
-//TODO: a parent of b, make b parent of a and app crashes :(
 
 
 //Changes: Backup for offline files, new create circle, performance/bugs, faster saving file, doubleClick on free space,

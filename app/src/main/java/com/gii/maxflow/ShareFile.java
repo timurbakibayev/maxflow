@@ -154,6 +154,8 @@ public class ShareFile extends AppCompatActivity {
         });
     }
 
+    //TODO: Double opening a shared file causes infinite loading
+
     public void refreshData() {
         if (!GIIApplication.gii.properties.owner.equals(""))
             return;

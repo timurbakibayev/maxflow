@@ -142,12 +142,12 @@ public class Storage {
     String lastPathToFile = "";
     public void loadFile(final Properties properties, final ArrayList<Circle> circle, final ArrayList<Operation> operation) {
         Log.w("RecalculateAll","loading file...");
-        gii.accessRights = null;
         if (gii.ref.getAuth() != null) {
             String pathToFile = "maxflow/" + GII.ref.getAuth().getUid() + "/" + properties.computeFileNameWithoutXML();
             if (!properties.owner.equals(""))
                 pathToFile = "maxflow/" + properties.owner + "/" + properties.computeFileNameWithoutXML();
             if (!pathToFile.equals(lastPathToFile)) {
+                gii.accessRights = null;
                 GII.ref.child(pathToFile + "/circles/").
                         addValueEventListener(new ValueEventListener() {
                             @Override
@@ -303,7 +303,6 @@ public class Storage {
 
             for (Operation _operation: operation) {
                 if (!_operation.syncedWithCloud) {
-                    //TODO: check this part! xxxxx
                     _operation.setSyncedWithCloud(true);
                     GII.ref.child(pathToFile + "/operations/" + _operation.id).
                             setValue(_operation);

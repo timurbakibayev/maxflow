@@ -427,7 +427,6 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
     private void showTutorial(final boolean forced, final int step) {
         final Tutorial tutorial = new Tutorial(this,GIIApplication.gii, step);
-        //TODO: if tutorial is not shown or forced
         if (!forced && prefs.getBoolean("tutorial_shown",false))
             return;
 
@@ -818,7 +817,6 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
                                 first = false;
                             }
                         }
-                        //TODO: curencies are not saved :( fie: ggggg
                         GIIApplication.gii.properties.currency = newCurrencies;
                         GIIApplication.gii.properties.syncedWithCloud = false;
                         GIIApplication.gii.updateFile(true);

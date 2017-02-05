@@ -481,7 +481,6 @@ public class Graphics {
             return;
         }
 
-        //TODO: make intervals for bounds.width() (increase quality by steps)
         String newParams = _circle.name + "," + _circle.picture + "," + _circle.color  + "," + fillPercent + "," + _circle.amount;
 
         if (bounds.right < 0 || bounds.left > canvas.getWidth() ||
