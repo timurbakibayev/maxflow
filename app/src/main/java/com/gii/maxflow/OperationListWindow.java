@@ -711,7 +711,7 @@ public class OperationListWindow {
 
         //layoutButtons.addView(button_goal);
         layoutButtons.addView(button_limit);
-        layoutButtons.addView(button_photo);
+        //layoutButtons.addView(button_photo);
         if (GIIApplication.gii.circleById(GIIApplication.gii.selectedId).photoString != null &&
                 !GIIApplication.gii.circleById(GIIApplication.gii.selectedId).photoString.equals("") )
             layoutButtons.addView(button_remove_photo);

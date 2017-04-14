@@ -432,6 +432,7 @@ public class Circle {
             currentCoordinates = coordinates;
         }
     }
+    
     public void recalculateChildren(ArrayList<Circle> circle) {
         this.childrenId = new ArrayList<>();
         int[] a = new int[circle.size()];

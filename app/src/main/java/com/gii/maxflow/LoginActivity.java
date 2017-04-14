@@ -176,7 +176,12 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
         final Button mResetPasswordButton = (Button) findViewById(R.id.reset_password_button);
         final Button buy_1mButton = (Button) findViewById(R.id.buy_1m);
         final Button buy_1yButton = (Button) findViewById(R.id.buy_1y);
+        //TODO: consider removing next two lines to make paid.
+        buy_1mButton.setVisibility(View.GONE);
+        buy_1yButton.setVisibility(View.GONE);
         final TextView licenseTextView = (TextView) findViewById(R.id.licenseTextView);
+        //TODO: consider removing next line to make paid.
+        licenseTextView.setVisibility(View.GONE);
         final Button mChangePasswordButton = (Button) findViewById(R.id.change_password_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -228,8 +233,9 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
 
 
         if (GII.ref.getAuth() != null) {
-            buy_1mButton.setEnabled(true);
-            buy_1yButton.setEnabled(true);
+            //TODO: Enable?
+//            buy_1mButton.setEnabled(true);
+//            buy_1yButton.setEnabled(true);
             Calendar c = Calendar.getInstance();
             if (GIIApplication.gii.prefs.getBoolean("myAppFree1",false)) {
 
@@ -237,7 +243,9 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                     c.setTime(MainActivity.subscription.endingDate);
                     licenseTextView.setText(getBaseContext().getString(R.string.licence_expires) + " " + GII.dateText(c.getTime()));
                 }
-                buy_1mButton.setText(getBaseContext().getString(R.string.claim_3m));
+                //buy_1mButton.setText(getBaseContext().getString(R.string.claim_3m));
+                //TODO: Remove next line to enable 1mButton
+                buy_1mButton.setVisibility(View.GONE);
                 buy_1yButton.setVisibility(View.GONE);
                 buy_1mButton.setOnClickListener(new OnClickListener() {
                     @Override
@@ -610,6 +618,11 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
+        //this will always fire, so no contacts are requested ever!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return false;
+        }
+
         if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }

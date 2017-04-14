@@ -833,7 +833,8 @@ public class GII extends View {
             Date date1 = displayedOperation.get(0).date;
             if (!properties.filtered) {
                 for (Operation _operation : operations) {
-                    if (_operation.pageNo == properties.currentPageNo) {
+                    if (_operation.pageNo == properties.currentPageNo &&
+                            !_operation.deleted) {
                         if (_operation.date.before(date0))
                             date0 = _operation.date;
                         if (_operation.date.after(date1))
@@ -1719,6 +1720,9 @@ public class GII extends View {
 
     private boolean checkIfPaid() {
         if (prefs.getBoolean("iddqd",false))
+            return true;
+        //TODO: remove to make paid again
+        if (!(prefs.getBoolean("iddqd",false)))
             return true;
         Date today = new Date();
         if (ref.getAuth() != null) {
