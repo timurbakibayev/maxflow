@@ -4,6 +4,7 @@
     <string name="action_change_password">Сменить пароль</string>
     <string name="action_piano">Пианино</string>
     <string name="action_rate">Оцените приложение...</string>
+    <string name="action_share_app">Рекомендовать...</string>
     <string name="action_reset_password">Сбросить пароль</string>
     <string name="action_settings">Настройки</string>
     <string name="action_sign_in">Войти или зарегистрироваться</string>

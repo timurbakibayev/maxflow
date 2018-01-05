@@ -23,8 +23,8 @@ android {
         applicationId "com.gii.maxflow"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 83
-        versionName "23f"
+        versionCode 84
+        versionName "25"
     }
 
     buildTypes {

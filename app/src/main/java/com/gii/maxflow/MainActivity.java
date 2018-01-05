@@ -688,6 +688,11 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
             rateApp();
         }
 
+        if (id == R.id.action_share_app) {
+            Log.e(TAG, "onOptionsItemSelected: share_app");
+            shareApp();
+        }
+
         if (id == R.id.action_ShareFileXML) {
             storage.sendFile(GIIApplication.gii.properties);
         }
@@ -763,6 +768,35 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
 
     //On click event for rate this app button
     public void rateApp() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        //Try Google play
+        intent.setData(Uri.parse("market://details?id=com.gii.maxflow"));
+        if (!MyStartActivity(intent)) {
+            //Market (Google play) app seems not installed, let's try to open a webbrowser
+            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.gii.maxflow"));
+            if (!MyStartActivity(intent)) {
+                //Well if this also fails, we have run out of options, inform the user.
+                Toast.makeText(this, "Could not open Android market, please install the market app.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void shareApp() {
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Money GO");
+            String sAux = "\nLet me recommend you this application. It is awesome for tracking your expenses!\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.gii.maxflow \n\n";
+            sAux = sAux + "\n\nОтличное приложение для учета расходов! Ссылка:\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=com.gii.maxflow \n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, ""));
+        } catch(Exception e) {
+            //e.toString();
+        }
+
+
         Intent intent = new Intent(Intent.ACTION_VIEW);
         //Try Google play
         intent.setData(Uri.parse("market://details?id=com.gii.maxflow"));

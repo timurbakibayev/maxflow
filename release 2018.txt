@@ -1,0 +1,4 @@
+changes in apk release:
+1. Recommend app
+2. Fix with cloud sign out
+3. iddqd, idkfa for everyone

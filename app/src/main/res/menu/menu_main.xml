@@ -53,6 +53,8 @@
     <group android:id="@+id/promotion">
         <item android:id="@+id/action_rate" android:title="@string/action_rate" android:orderInCategory="180"
             app:showAsAction="never" />
+        <item android:id="@+id/action_share_app" android:title="@string/action_share_app" android:orderInCategory="180"
+            app:showAsAction="never" />
     </group>
     <item
         android:title="Previous Month"

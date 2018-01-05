@@ -125,33 +125,37 @@ public class ShareFile extends AppCompatActivity {
     }
 
     public static void getAccessRights() {
-        String pathToFile = "maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML();
-        if (!GIIApplication.gii.properties.owner.equals(""))
-            pathToFile = "maxflow/" + GIIApplication.gii.properties.owner + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML();
-        GII.ref.child(pathToFile + "/shared/").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GIIApplication.gii.accessRights = new ArrayList<>();
-                if (dataSnapshot.hasChildren())
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        try {
-                            AccessRight a = snapshot.getValue(AccessRight.class);
-                            GIIApplication.gii.accessRights.add(a);
-                        } catch (Exception e) {
-                            Log.e(TAG, "onDataChange: ERROR");
-                            e.printStackTrace();
+        try {
+            String pathToFile = "maxflow/" + GII.ref.getAuth().getUid() + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML();
+            if (!GIIApplication.gii.properties.owner.equals(""))
+                pathToFile = "maxflow/" + GIIApplication.gii.properties.owner + "/" + GIIApplication.gii.properties.computeFileNameWithoutXML();
+            GII.ref.child(pathToFile + "/shared/").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    GIIApplication.gii.accessRights = new ArrayList<>();
+                    if (dataSnapshot.hasChildren())
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            try {
+                                AccessRight a = snapshot.getValue(AccessRight.class);
+                                GIIApplication.gii.accessRights.add(a);
+                            } catch (Exception e) {
+                                Log.e(TAG, "onDataChange: ERROR");
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                if (shareListView != null && shareListView.getAdapter() != null)
-                    ((BaseAdapter) shareListView.getAdapter()).notifyDataSetChanged();
-                GIIApplication.gii.recalculateAll();
-            }
+                    if (shareListView != null && shareListView.getAdapter() != null)
+                        ((BaseAdapter) shareListView.getAdapter()).notifyDataSetChanged();
+                    GIIApplication.gii.recalculateAll();
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.e(TAG, "onCancelled: " + firebaseError.getMessage());
-            }
-        });
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.e(TAG, "onCancelled: " + firebaseError.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "getAccessRights: " + e.toString());
+        }
     }
 
     //TODO: Double opening a shared file causes infinite loading
