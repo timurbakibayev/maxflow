@@ -7,14 +7,18 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.net.Uri;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.AttributeSet;
@@ -73,7 +77,7 @@ import java.util.Map;
 public class GII extends View {
 
 
-    private static final String TAG = "GII" ;
+    private static final String TAG = "GII";
     final public SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
     public ExchangeRates exchangeRates = new ExchangeRates(getContext());
@@ -85,6 +89,7 @@ public class GII extends View {
     public enum AppState {
         idle, circleTouched, creating, circleSelected, editMode, canvasMoving, reporting, iconChoose, showOperations, chartPlotting, calculator, unreal
     }
+
     public AppState appState = AppState.idle;
 
     public static boolean needToRecalculate = false;
@@ -97,8 +102,10 @@ public class GII extends View {
 
     Calendar calendarTo = Calendar.getInstance();
     Calendar calendarFrom = Calendar.getInstance();
-    final EditText datePickerTo = new EditText(this.getContext());;
-    final EditText datePickerFrom = new EditText(this.getContext());;
+    final EditText datePickerTo = new EditText(this.getContext());
+    ;
+    final EditText datePickerFrom = new EditText(this.getContext());
+    ;
 
     public Date pageDateFrom = new Date();
     public Date pageDateTo = new Date();
@@ -110,7 +117,7 @@ public class GII extends View {
 
     public Graphics graphics = new Graphics(this);
 
-    public Icons iconWindow =new Icons();
+    public Icons iconWindow = new Icons();
     public Calculator calcWindow = new Calculator();
 
     public Charts charts = new Charts();
@@ -125,14 +132,14 @@ public class GII extends View {
     public java.util.ArrayList<Circle> circle = new ArrayList<>(); //the circles, loaded and saved to XML
     public java.util.ArrayList<Operation> operations = new ArrayList<>(); //the operations, loaded and saved to XML
     //public java.util.ArrayList<Circle> displayedCircle = new ArrayList<>(); //circles, always changing,
-                    //used only for displaying circles on screen! never saved to XML!
+    //used only for displaying circles on screen! never saved to XML!
     public java.util.ArrayList<Operation> displayedOperation = new ArrayList<>(); //operations, always changing,
-                    //used only for displaying operations on screen! never saved to XML!
+    //used only for displaying operations on screen! never saved to XML!
 
     public Geometry geometry = new Geometry(); //a class with geometry functions
 
     int timeToCreate = 1000; //how many timer ticks needed to create a new circle when you
-                            // touch the screen
+    // touch the screen
 
 
     ScaleGestureDetector _scaleDetector; //detects the "scale gesture" (two fingers)
@@ -141,7 +148,7 @@ public class GII extends View {
     public PointF canvasMovingStartingPoint = new PointF(0, 0); //where was the canvas before scrolling
 
     ArrayList<PointF> gesture = new ArrayList<>(); //list of all points in Map Coordinates
-                            // when we move a finger on screen
+    // when we move a finger on screen
     String firstGestureCircleId = "none";
     boolean doNotMove = false;
 
@@ -149,16 +156,16 @@ public class GII extends View {
     Circle selectedCircle = new Circle("none"); //the currently selected circle
     String moveIntoId = "none"; //an Id to group into while edit mode
 
-    PointF moveXY = new PointF(0,0);
+    PointF moveXY = new PointF(0, 0);
 
-    PointF inCircleDiff = new PointF(0,0);
+    PointF inCircleDiff = new PointF(0, 0);
 
 
     Vibrator vibe = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE); //Vibrator :)
 
     long counter = 0; //how many timer ticks passed after a click.
     long lastRecalculateInitiative = 0; //Last "2023" initiative
-            //needed for creating new circles of going to "edit Mode"
+    //needed for creating new circles of going to "edit Mode"
 
 
     PointF point0 = new PointF();
@@ -202,20 +209,20 @@ public class GII extends View {
         //canvas.save();
         //canvas.translate(properties.backgroundPosition.x,properties.backgroundPosition.y);
         //canvas.scale(rememberScale,rememberScale);
-        if (properties.owner.equals("") || accessRights!=null)
+        if (properties.owner.equals("") || accessRights != null)
             graphics.drawTheStuff(canvas, appState, properties, circle, displayedOperation, selectedId, moveIntoId, moveXY);
         //properties.scaleFactor = rememberScale;
         //canvas.restore();
 
         graphics.animateBottomMenu(appState == AppState.circleSelected);
         if (!selectedId.equals("none"))
-            graphics.drawBottomMenu(canvas,appState);
+            graphics.drawBottomMenu(canvas, appState);
         if (appState == AppState.circleTouched ||
                 appState == AppState.creating)
             graphics.drawGestures(canvas, appState, circle, properties, firstGestureCircleId, gesture,
                     counter, timeToCreate);
 
-        if (loaded < 4 || !(properties.owner.equals("") || accessRights!=null)) {
+        if (loaded < 4 || !(properties.owner.equals("") || accessRights != null)) {
             graphics.showLoading(canvas);
         }
 
@@ -244,7 +251,7 @@ public class GII extends View {
             properties.currentPageNo = 0;
         properties.syncedWithCloud = false;
         //recalculateAll();
-        Log.w("RecalculateAll","initiate gii 235");
+        Log.w("RecalculateAll", "initiate gii 235");
         if (appState == AppState.reporting) {
             reportWindow.init();
             reportWindow.needToUpdate = true;
@@ -253,6 +260,7 @@ public class GII extends View {
     }
 
     String lastEmailLogin = "";
+
     public void refreshUser() {
         String newName = "offline";
         if (ref.getAuth() != null)
@@ -286,7 +294,6 @@ public class GII extends View {
     }
 
 
-
     /**
      * What happens if we press a button of bottom menu (for a selected circle)
      * @param button - the button pressed
@@ -309,17 +316,17 @@ public class GII extends View {
 
         if (button.type == CanvasButton.ButtonType.branch) {
             if (!selectedId.equals("none")) {
-                showMessage("Total of selected: " + currency(selectedCircle.amountTotal,""));
+                showMessage("Total of selected: " + currency(selectedCircle.amountTotal, ""));
                 reportWindow.init();
-                appState=AppState.reporting; //added by Dima
+                appState = AppState.reporting; //added by Dima
             }
         }
 
         if (button.type == CanvasButton.ButtonType.operations) {
             //if (!selectedId.equals("none")) {
             //    showMessage("Total of selected: " + df.format(circleById(selectedId).amountTotal));
-                appState = AppState.showOperations;
-                operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
+            appState = AppState.showOperations;
+            operationListWindow.init(graphics, this.getContext(), circle, operations, selectedId, properties.currentPageNo, monthName, false);
             //}
         }
 
@@ -347,9 +354,8 @@ public class GII extends View {
     }
 
 
-
     public void syncFiles() {
-        Log.w("syncFiles","downloading...");
+        Log.w("syncFiles", "downloading...");
         //cloud.downloadFiles(filesInCloud, storage, properties);
     }
 
@@ -378,10 +384,10 @@ public class GII extends View {
         operationListWindow.monthName = monthName;
         graphics.monthName = monthName;
         if (appState == AppState.showOperations)
-            graphics.operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,0,monthName,true);
+            graphics.operationListWindow.init(graphics, this.getContext(), circle, operations, selectedId, 0, monthName, true);
         //String rememberParseUser = properties.firebaseUserEmail;
         properties = new Properties();
-        Log.w("properties","new properties");
+        Log.w("properties", "new properties");
         circle = new ArrayList<>();
         operations = new ArrayList<>();
 
@@ -417,7 +423,7 @@ public class GII extends View {
         loaded = 0;
         operationListWindow.monthName = monthName;
         graphics.monthName = monthName;
-        graphics.operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,0,monthName,true);
+        graphics.operationListWindow.init(graphics, this.getContext(), circle, operations, selectedId, 0, monthName, true);
         //String rememberParseUser = properties.firebaseUserEmail;
         properties = new Properties();
         circle = new ArrayList<>();
@@ -445,9 +451,10 @@ public class GII extends View {
         appState = AppState.idle;
     }
 
-    public MainActivity activity = (MainActivity)getContext();
+    public MainActivity activity = (MainActivity) getContext();
 
     public EditText editText;
+
     public void bindActivity(MainActivity activity) {
         this.activity = activity;
         editText = new EditText(activity);
@@ -456,6 +463,7 @@ public class GII extends View {
 
         //datePickerTo = new EditText(activity);
     }
+
     public void updateTitle() {
         activity.setTitle(properties.computeFileNameWithoutXML());
     }
@@ -499,22 +507,22 @@ public class GII extends View {
      */
     int numberOfRecalculations = 0;
     String actionBarDates = "";
-    TextView actionBarDateText = (TextView)findViewById(R.id.action_bar_date_text);
+    TextView actionBarDateText = (TextView) findViewById(R.id.action_bar_date_text);
 
 
-            /*setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            GIIApplication.gii.pressFloatingButton();
-        }
-    });(*/
+    /*setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+    GIIApplication.gii.pressFloatingButton();
+}
+});(*/
     String textStandings;
 
     public void recalculateAll() {
-        if (!properties.owner.equals("") && accessRights==null)
+        if (!properties.owner.equals("") && accessRights == null)
             return;
 
-        Log.w("RecalculateAll","Calculation started...");
+        Log.w("RecalculateAll", "Calculation started...");
         abstractTotalCircle.resetDisplayAmount();
         abstractTotalCircle.resetDisplayAmountWidget();
 
@@ -531,11 +539,11 @@ public class GII extends View {
         Collections.sort(operations, new Comparator<Operation>() {
             @Override
             public int compare(Operation lhs, Operation rhs) {
-                return (lhs.date.before(rhs.date)?-1:rhs.date.after(lhs.date)?1:0);
+                return (lhs.date.before(rhs.date) ? -1 : rhs.date.after(lhs.date) ? 1 : 0);
             }
         });
 
-        Log.w("RecalculateAll","Step 1");
+        Log.w("RecalculateAll", "Step 1");
         String newTextStangings = "";
         int maxStandingsLength = 0;
         int maxStandingsWordLength = 0;
@@ -557,7 +565,7 @@ public class GII extends View {
                         }
                     }
                     //if (!_circle.inFiler)
-                        //_circle.visible = false;
+                    //_circle.visible = false;
                 }
 
                 for (Operation _operation : operations) {
@@ -628,8 +636,8 @@ public class GII extends View {
                     }
                 }
             }
-            for (Map.Entry<String,Float> entry : _circle.displayAmount.entrySet())
-                amount += exchangeRates.convert(entry.getValue(),entry.getKey(),properties.defaultCurrency);
+            for (Map.Entry<String, Float> entry : _circle.displayAmount.entrySet())
+                amount += exchangeRates.convert(entry.getValue(), entry.getKey(), properties.defaultCurrency);
             //amountTotal = amount;
             _circle.setAmount(amount);
             //_circle.setAmountTotal(amountTotal);
@@ -643,18 +651,18 @@ public class GII extends View {
             _circle.setVisible(true);
             if (_circle.coordinates.x != _circle.coordinates.x ||
                     _circle.coordinates.y != _circle.coordinates.y) {
-                _circle.coordinates.set(0,0);
+                _circle.coordinates.set(0, 0);
                 _circle.setSyncedWithCloud(false);
             }
             if (_circle.myMoney) {
-                for (Map.Entry<String,Float> entry : _circle.displayAmount.entrySet()) {
+                for (Map.Entry<String, Float> entry : _circle.displayAmount.entrySet()) {
                     abstractTotalCircle.addDisplayAmount(entry.getKey(), entry.getValue());
                     abstractTotalCircle.setDisplayAmountTextWidth(graphics.dkBlue);
                 }
                 if (maxStandingsWordLength < _circle.name.length())
                     maxStandingsWordLength = _circle.name.length();
 
-                for (Map.Entry<String,Float> entry : _circle.displayAmountWidget.entrySet()) {
+                for (Map.Entry<String, Float> entry : _circle.displayAmountWidget.entrySet()) {
                     if (Math.abs(entry.getValue()) > 0.01) {
                         int len = (df.format(entry.getValue()) + " " + entry.getKey()).length();
                         if (maxStandingsLength < len)
@@ -669,7 +677,7 @@ public class GII extends View {
         }
 
         Log.w(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
-        if (maxStandingsWordLength < 5 ) // 5 is the length of "Total"
+        if (maxStandingsWordLength < 5) // 5 is the length of "Total"
             maxStandingsLength += (5 - maxStandingsWordLength);
         Log.w(TAG, "recalculateAll: Widget word length " + maxStandingsLength + " w" + maxStandingsWordLength);
 
@@ -679,7 +687,7 @@ public class GII extends View {
                 if (_circle.displayAmountWidget.size() > 0)
                     nTS = nTS + _circle.name + " ";
                 int i = 0;
-                for (Map.Entry<String,Float> entry : _circle.displayAmountWidget.entrySet()) {
+                for (Map.Entry<String, Float> entry : _circle.displayAmountWidget.entrySet()) {
                     if (Math.abs(entry.getValue()) > 0.01) {
                         i++;
                         int len = (df.format(entry.getValue()) + " " + entry.getKey()).length();
@@ -687,7 +695,7 @@ public class GII extends View {
                             for (int j = 0; j < maxStandingsLength + 1 - len; j++)
                                 nTS = nTS + " ";
                         }
-                        nTS = nTS + df.format(entry.getValue()) + " " + entry.getKey() +"\n";
+                        nTS = nTS + df.format(entry.getValue()) + " " + entry.getKey() + "\n";
                     }
                 }
                 if (i > 0) {
@@ -697,7 +705,7 @@ public class GII extends View {
         }
         newTextStangings = newTextStangings + "----------------\nTotal";
         int i = 0;
-        for (Map.Entry<String,Float> entry : abstractTotalCircle.displayAmountWidget.entrySet()) {
+        for (Map.Entry<String, Float> entry : abstractTotalCircle.displayAmountWidget.entrySet()) {
             if (Math.abs(entry.getValue()) > 0.01) {
                 i++;
                 int len = (df.format(entry.getValue()) + " " + entry.getKey()).length();
@@ -705,20 +713,20 @@ public class GII extends View {
                     for (int j = 0; j < maxStandingsLength + 2 - len; j++)
                         newTextStangings = newTextStangings + " ";
                 }
-                newTextStangings = newTextStangings + df.format(entry.getValue()) + " " + entry.getKey() +"\n";
+                newTextStangings = newTextStangings + df.format(entry.getValue()) + " " + entry.getKey() + "\n";
             }
         }
         if (!textStandings.equals(newTextStangings)) {
-            SharedPreferences.Editor edit= prefs.edit();
+            SharedPreferences.Editor edit = prefs.edit();
             edit.putString("widgetText", newTextStangings);
             edit.commit();
             textStandings = newTextStangings;
 
             int[] ids = AppWidgetManager.getInstance(activity).getAppWidgetIds(new ComponentName(activity, StandingsWidgetProvider.class));
             StandingsWidgetProvider myWidget = new StandingsWidgetProvider();
-            myWidget.onUpdate(activity, AppWidgetManager.getInstance(activity),ids);
+            myWidget.onUpdate(activity, AppWidgetManager.getInstance(activity), ids);
         }
-        Log.w("RecalculateAll","Step 2");
+        Log.w("RecalculateAll", "Step 2");
         for (Circle _circle : circle)
             if (_circle.childrenId.size() > 0 && (!_circle.showChildren)) {
                 //Log.e("Hiding",_circle.name + " has children");
@@ -773,10 +781,10 @@ public class GII extends View {
                     maxAbsAmount = _circle.amount;
 
             for (Circle _circle : circle) {
-                if (_circle.radius != Math.max(_circle.amount/maxAbsAmount * 120 + 120, 120))
-                _circle.setRadius(Math.max(_circle.amount/maxAbsAmount * 120 + 120,120));
+                if (_circle.radius != Math.max(_circle.amount / maxAbsAmount * 120 + 120, 120))
+                    _circle.setRadius(Math.max(_circle.amount / maxAbsAmount * 120 + 120, 120));
                 if (_circle.radius <= 0)
-                    Log.e("Achtung!!!","Radius is zero! " + _circle.name + ", " + _circle.amount + ", total " + _circle.amountTotal);
+                    Log.e("Achtung!!!", "Radius is zero! " + _circle.name + ", " + _circle.amount + ", total " + _circle.amountTotal);
             }
         }
 
@@ -785,11 +793,11 @@ public class GII extends View {
         displayedOperation = new ArrayList<>();
 
 
-        Log.w("RecalculateAll","Step 3");
+        Log.w("RecalculateAll", "Step 3");
         for (Operation _operation : operations) {
             if (!_operation.deleted) {
-                Circle fromCircle = circleById(_operation.circlesWayOut.get(_operation.circlesWayOut.size()-1));
-                Circle toCircle = circleById(_operation.circlesWayIn.get(_operation.circlesWayIn.size()-1));
+                Circle fromCircle = circleById(_operation.circlesWayOut.get(_operation.circlesWayOut.size() - 1));
+                Circle toCircle = circleById(_operation.circlesWayIn.get(_operation.circlesWayIn.size() - 1));
                 //Circle toCircle = circleById(_operation.toCircle);
                 if (!fromCircle.deleted && !toCircle.deleted && _operation.inFilter) {
                     //now decide whether we want a new displayOperation or there is one already
@@ -820,13 +828,13 @@ public class GII extends View {
                         oper.amountText = GII.df.format(_operation.amount) + " " + _operation.currency;
                         oper.amountTextWidth = graphics.dkBlue.measureText(oper.amountText);
                         displayedOperation.add(oper);
-                        displayedOperation.get(displayedOperation.size()-1).twoWay = twoWay;
+                        displayedOperation.get(displayedOperation.size() - 1).twoWay = twoWay;
                     }
                 }
             }
         }
 
-        Log.w("RecalculateAll","Step 4");
+        Log.w("RecalculateAll", "Step 4");
         maxDisplayedAmount = 0;
         if (displayedOperation.size() > 0) {
             Date date0 = displayedOperation.get(0).date;
@@ -845,8 +853,8 @@ public class GII extends View {
 
             for (Operation _displayedOperation : displayedOperation) {
                 float amount = 0;
-                for (Map.Entry<String,Float> entry : _displayedOperation.abstractCircleForMultipleOperations.displayAmount.entrySet())
-                    amount += exchangeRates.convert(entry.getValue(),entry.getKey(),properties.defaultCurrency);
+                for (Map.Entry<String, Float> entry : _displayedOperation.abstractCircleForMultipleOperations.displayAmount.entrySet())
+                    amount += exchangeRates.convert(entry.getValue(), entry.getKey(), properties.defaultCurrency);
 
                 _displayedOperation.setAbsAmountInLocalCurrency(Math.abs(
                         amount
@@ -864,7 +872,7 @@ public class GII extends View {
             actionBarDates = (getContext().getString(R.string.new_page));
 
         if (!properties.filtered)
-            actionBarDates = actionBarDates.concat("\n" + getContext().getString(R.string.page) +" " + properties.currentPageNo);
+            actionBarDates = actionBarDates.concat("\n" + getContext().getString(R.string.page) + " " + properties.currentPageNo);
         //actionBarDateText = (TextView)findViewById(R.id.action_bar_date_text);
 
         if (properties.filtered) {
@@ -880,7 +888,7 @@ public class GII extends View {
 
         needToRedraw = true;
 
-        Log.w("RecalculateAll","Step 5");
+        Log.w("RecalculateAll", "Step 5");
         if (menu != null) {
             final MenuItem leftArrow = menu.findItem(R.id.action_prevMonth);
             final MenuItem rightArrow = menu.findItem(R.id.action_nextMonth);
@@ -889,26 +897,26 @@ public class GII extends View {
             if (rightArrow != null)
                 rightArrow.setVisible(!properties.filtered);
         }
-        Log.w("RecalculateAll","Step 6");
+        Log.w("RecalculateAll", "Step 6");
         if (!properties.syncedWithCloud && properties.loaded) {
-            properties.lastChangeId = prefs.getString("AndroidID","");
+            properties.lastChangeId = prefs.getString("AndroidID", "");
             properties.syncedWithCloud = true;
             if (ref.getAuth() != null)
                 ref.child("maxflow/" + findOwner() + "/" + properties.computeFileNameWithoutXML() + "/properties/0").
                         setValue(properties);
-            Log.w("properties","pushing to cloud:" +properties.fileName + "," + properties.currentPageNo);
+            Log.w("properties", "pushing to cloud:" + properties.fileName + "," + properties.currentPageNo);
         }
-        Log.w("RecalculateAll","Calculation end");
+        Log.w("RecalculateAll", "Calculation end");
     }
 
     private boolean lessOrGreater(String text, float amount) {
-        if (!(text.substring(0,1).equals(">") ||
-                text.substring(0,1).equals("<") ||
-            text.substring(0,1).equals("=")))
-                return false;
+        if (!(text.substring(0, 1).equals(">") ||
+                text.substring(0, 1).equals("<") ||
+                text.substring(0, 1).equals("=")))
+            return false;
         float u = 0;
         try {
-            if (text.substring(1,2).equals("="))
+            if (text.substring(1, 2).equals("="))
                 u = Float.parseFloat(text.substring(2));
             else
                 u = Float.parseFloat(text.substring(1));
@@ -916,9 +924,9 @@ public class GII extends View {
             return false;
         }
         //activity.showMessage("Checking amount " + u);
-        if (text.substring(0,1).equals(">"))
+        if (text.substring(0, 1).equals(">"))
             return (amount >= u);
-        if (text.substring(0,1).equals("<"))
+        if (text.substring(0, 1).equals("<"))
             return (amount <= u);
         return (amount == u);
     }
@@ -927,6 +935,7 @@ public class GII extends View {
 
     Circle abstractExchangeCircle = new Circle();
     Circle abstractCorrectionCircle = new Circle();
+
     public Circle circleById(String id, ArrayList<Circle> circle) {
         if (id.equals("Exchange"))
             return abstractExchangeCircle;
@@ -997,20 +1006,20 @@ public class GII extends View {
         this.mainActivity = context;
 
         _scaleDetector = new ScaleGestureDetector(this.getContext(), new ScaleListener());
-            monthName = new String[] {getContext().getString(R.string.january), getContext().getString(R.string.february), getContext().getString(R.string.march), getContext().getString(R.string.april), getContext().getString(R.string.may), getContext().getString(R.string.june), getContext().getString(R.string.july), getContext().getString(R.string.august), getContext().getString(R.string.september), getContext().getString(R.string.october), getContext().getString(R.string.november), getContext().getString(R.string.december)};
-        if (prefs.getString("AndroidID","").equals("")) {
-            SharedPreferences.Editor edit= prefs.edit();
+        monthName = new String[]{getContext().getString(R.string.january), getContext().getString(R.string.february), getContext().getString(R.string.march), getContext().getString(R.string.april), getContext().getString(R.string.may), getContext().getString(R.string.june), getContext().getString(R.string.july), getContext().getString(R.string.august), getContext().getString(R.string.september), getContext().getString(R.string.october), getContext().getString(R.string.november), getContext().getString(R.string.december)};
+        if (prefs.getString("AndroidID", "").equals("")) {
+            SharedPreferences.Editor edit = prefs.edit();
             edit.putString("AndroidID", generateNewId());
             edit.commit();
         }
-        textStandings =  prefs.getString("widgetText","0 USD\n-----------\nTotal: 0 USD");
+        textStandings = prefs.getString("widgetText", "0 USD\n-----------\nTotal: 0 USD");
         DecimalFormatSymbols symbols = df.getDecimalFormatSymbols();
         symbols.setGroupingSeparator(' ');
         df.setDecimalFormatSymbols(symbols);
     }
 
     public GII(Context context, AttributeSet attributeSet) {
-        super(context,attributeSet);
+        super(context, attributeSet);
     }
 
     public GII(Context context, AttributeSet attributeSet, int defStyle) {
@@ -1055,11 +1064,11 @@ public class GII extends View {
                 if (appState == AppState.idle) {
 
                     if (graphics.popupNeedsToUpdate)
-                        if (graphics.popupRectangle.contains((int)event.getX(),(int)event.getY())) {
+                        if (graphics.popupRectangle.contains((int) event.getX(), (int) event.getY())) {
                             selectedId = graphics.popupOperation.toCircle;
                             selectedCircle = circleById(selectedId);
                             appState = AppState.showOperations;
-                            operationListWindow.init(graphics,this.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
+                            operationListWindow.init(graphics, this.getContext(), circle, operations, selectedId, properties.currentPageNo, monthName, false);
                             return true;
                         }
                     gesture = new ArrayList<>();
@@ -1108,9 +1117,9 @@ public class GII extends View {
                 }
                 moveXY = new PointF((int) touchX + inCircleDiff.x, (int) touchY + inCircleDiff.y);
 
-                velocity = new PointF(0,0);
-                lastY0 = new PointF(event.getX(),event.getY());
-                lastY1 = new PointF(event.getX(),event.getY());
+                velocity = new PointF(0, 0);
+                lastY0 = new PointF(event.getX(), event.getY());
+                lastY1 = new PointF(event.getX(), event.getY());
                 lastY0Time = Calendar.getInstance();
                 lastY1Time = Calendar.getInstance();
                 fling = false;
@@ -1122,7 +1131,7 @@ public class GII extends View {
                     String inCircleId = pointInCircle(new PointF(touchX, touchY));
                     moveIntoId = "none";
                     if (!(inCircleId.equals("none") || inCircleId.equals(selectedId))) {
-                        if (prefs.getBoolean("vibrate",true))
+                        if (prefs.getBoolean("vibrate", true))
                             vibe.vibrate(300);
                         moveIntoId = inCircleId;
                     }
@@ -1136,11 +1145,11 @@ public class GII extends View {
                     checkInCircle(new PointF(touchX, touchY));
                     if (!selectedId.equals(prevSelectedId)) {
                         Circle selectedCircle = circleById(selectedId);
-                        selectedCircle.setShowChildren(1, circle, prefs.getString("AndroidID",""));
+                        selectedCircle.setShowChildren(1, circle, prefs.getString("AndroidID", ""));
                         moveIntoId = selectedId;
                         if (selectedCircle.childrenId.size() > 0) {
                             needToRecalculate = true;
-                            Log.w("RecalculateAll","initiate gii 904");
+                            Log.w("RecalculateAll", "initiate gii 904");
                         }
                     }
                     checkBorderFinger(new PointF(event.getX(), event.getY()));
@@ -1159,10 +1168,11 @@ public class GII extends View {
                     checkBackroundPosition();
                 }
 
-                velocity = new PointF(0,0);;
+                velocity = new PointF(0, 0);
+                ;
                 lastY0.set(lastY1);
                 lastY0Time.setTime(lastY1Time.getTime());
-                lastY1.set(event.getX(),event.getY());
+                lastY1.set(event.getX(), event.getY());
                 lastY1Time = Calendar.getInstance();
                 fling = false;
 
@@ -1171,21 +1181,21 @@ public class GII extends View {
                 checkMouseUp();
                 gesture.clear();
                 if (appState == AppState.canvasMoving) {
-                    velocity = new PointF((lastY1.x-lastY0.x) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 10,
-                            (lastY1.y-lastY0.y) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 10);
+                    velocity = new PointF((lastY1.x - lastY0.x) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 10,
+                            (lastY1.y - lastY0.y) / (lastY1Time.getTimeInMillis() - lastY0Time.getTimeInMillis()) * 10);
                     fling = true;
                 }
 
                 if (appState == AppState.canvasMoving ||
                         appState == AppState.circleTouched ||
-                        appState == AppState.creating ){
+                        appState == AppState.creating) {
                     appState = AppState.idle;
                 }
                 if (appState == AppState.editMode && !selectedId.equals("none") && !doNotMove)
-                    moveCircle(selectedId,moveXY);
+                    moveCircle(selectedId, moveXY);
 
                 if (appState == AppState.editMode && doNotMove &&
-                    geometry.distance(canvasMovingStartingPoint, new PointF(event.getX(), event.getY())) < 20)
+                        geometry.distance(canvasMovingStartingPoint, new PointF(event.getX(), event.getY())) < 20)
                     appState = AppState.idle;
 
                 if (!fling)
@@ -1196,7 +1206,9 @@ public class GII extends View {
         }
         return true;
     }
+
     public FloatingActionButton fab;
+
     //public com.getbase.floatingactionbutton.FloatingActionsMenu fabMenu;
     public void pressFloatingButton(String menuName) {
         if (!pinCodeEntered)
@@ -1208,8 +1220,8 @@ public class GII extends View {
             //    return;
             //}
             //if (appState == AppState.idle || appState == AppState.circleSelected) {
-                appState = AppState.showOperations;
-                operationListWindow.init(graphics, activity, circle, operations, selectedId, properties.currentPageNo, monthName, false);
+            appState = AppState.showOperations;
+            operationListWindow.init(graphics, activity, circle, operations, selectedId, properties.currentPageNo, monthName, false);
             //    return;
             //}
             //if (appState == AppState.iconChoose) {
@@ -1232,6 +1244,7 @@ public class GII extends View {
     public boolean pinCodeEntered = false;
 
     public Menu menu;
+
     //---------------------------------------------FILTER DIALOG
     public void filterDialog() {
         final MenuItem leftArrow = menu.findItem(R.id.action_prevMonth);
@@ -1253,7 +1266,7 @@ public class GII extends View {
                 public void onClick(View v) {
                     calendarTo = Calendar.getInstance();
                     if (_i == 4)
-                        calendarTo.add(Calendar.YEAR,50);
+                        calendarTo.add(Calendar.YEAR, 50);
                     if (_i == 4 && operations.size() > 0)
                         calendarTo.setTime(Collections.min(operations).date);
                     calendarTo.set(Calendar.HOUR_OF_DAY, 23);
@@ -1264,17 +1277,17 @@ public class GII extends View {
 
                     calendarFrom.setTime(calendarTo.getTime());
                     if (_i == 1)
-                        calendarFrom.add(Calendar.DAY_OF_MONTH,-7);
+                        calendarFrom.add(Calendar.DAY_OF_MONTH, -7);
                     if (_i == 2)
-                        calendarFrom.add(Calendar.MONTH,-1);
+                        calendarFrom.add(Calendar.MONTH, -1);
                     if (_i == 3)
-                        calendarFrom.add(Calendar.YEAR,-1);
+                        calendarFrom.add(Calendar.YEAR, -1);
                     if (_i == 4)
-                        calendarFrom.add(Calendar.YEAR,-100);
+                        calendarFrom.add(Calendar.YEAR, -100);
                     if (_i == 4 && operations.size() > 0)
                         calendarFrom.setTime(Collections.max(operations).date);
                     if (_i > 0 && _i != 4)
-                        calendarFrom.add(Calendar.DAY_OF_MONTH,1);
+                        calendarFrom.add(Calendar.DAY_OF_MONTH, 1);
                     calendarFrom.set(Calendar.HOUR_OF_DAY, 0);
                     calendarFrom.set(Calendar.MINUTE, 0);
                     calendarFrom.set(Calendar.SECOND, 0);
@@ -1324,11 +1337,11 @@ public class GII extends View {
         datePickerTo.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                     //InputMethodManager im = (InputMethodManager)Context.get(Context.INPUT_METHOD_SERVICE);
                     //im.hideSoftInputFromWindow(input.getWindowToken(), 0);
-                    InputMethodManager im = (InputMethodManager)builder.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager im = (InputMethodManager) builder.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(descriptionBox.getWindowToken(), 0);
                     new DatePickerDialog(getContext(), dateTo, calendarTo
                             .get(Calendar.YEAR), calendarTo.get(Calendar.MONTH),
@@ -1344,11 +1357,11 @@ public class GII extends View {
         datePickerFrom.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     //dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
                     //InputMethodManager im = (InputMethodManager)Context.get(Context.INPUT_METHOD_SERVICE);
                     //im.hideSoftInputFromWindow(input.getWindowToken(), 0);
-                    InputMethodManager im = (InputMethodManager)builder.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager im = (InputMethodManager) builder.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     im.hideSoftInputFromWindow(descriptionBox.getWindowToken(), 0);
                     new DatePickerDialog(getContext(), dateFrom, calendarFrom
                             .get(Calendar.YEAR), calendarFrom.get(Calendar.MONTH),
@@ -1377,13 +1390,13 @@ public class GII extends View {
         layout.addView(datePickerFrom);
         layout.addView(datePickerTo);
 
-        for (int i = 0; i  < periodText.length; i++) {
+        for (int i = 0; i < periodText.length; i++) {
             layout.addView(filterPeriodButton[i]);
         }
 
         filterScrollView.addView(layout);
 
-        String isGodMode = (prefs.getBoolean("iddqd",false)?" (God Mode ON)":"");
+        String isGodMode = (prefs.getBoolean("iddqd", false) ? " (God Mode ON)" : "");
 
         builder.setTitle(getContext().getString(R.string.filter) + isGodMode)
                 //.setMessage(getContext().getString(R.string.enter_amount))
@@ -1399,7 +1412,7 @@ public class GII extends View {
                         rightArrow.setVisible(false);
                         updateFile(true);
                         if (appState.equals(AppState.showOperations))
-                            operationListWindow.init(graphics,GIIApplication.gii.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
+                            operationListWindow.init(graphics, GIIApplication.gii.getContext(), circle, operations, selectedId, properties.currentPageNo, monthName, false);
                         if (appState.equals(AppState.reporting))
                             reportWindow.init();
                         postInvalidate();
@@ -1419,15 +1432,15 @@ public class GII extends View {
                     }
                 }).setNegativeButton(getContext().getString(R.string.filter_reset), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                        properties.filtered = false;
-                        leftArrow.setVisible(true);
-                        rightArrow.setVisible(true);
-                        updateFile(true);
-                        if (appState.equals(AppState.showOperations))
-                            operationListWindow.init(graphics,GIIApplication.gii.getContext(),circle, operations,selectedId,properties.currentPageNo,monthName,false);
-                        postInvalidate();
-                        properties.syncedWithCloud = false;
-                        layout.removeAllViews();
+                properties.filtered = false;
+                leftArrow.setVisible(true);
+                rightArrow.setVisible(true);
+                updateFile(true);
+                if (appState.equals(AppState.showOperations))
+                    operationListWindow.init(graphics, GIIApplication.gii.getContext(), circle, operations, selectedId, properties.currentPageNo, monthName, false);
+                postInvalidate();
+                properties.syncedWithCloud = false;
+                layout.removeAllViews();
             }
         }).show();
 
@@ -1435,13 +1448,13 @@ public class GII extends View {
 
 
     private void checkBorderFinger(PointF touchPoint) {
-        if (touchPoint.x < graphics.canvasWidth*0.1f)
+        if (touchPoint.x < graphics.canvasWidth * 0.1f)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x - 20, properties.backgroundPosition.y);
-        if (touchPoint.x > graphics.canvasWidth*0.9f)
+        if (touchPoint.x > graphics.canvasWidth * 0.9f)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x + 20, properties.backgroundPosition.y);
-        if (touchPoint.y < graphics.canvasHeight*0.1f)
+        if (touchPoint.y < graphics.canvasHeight * 0.1f)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x, properties.backgroundPosition.y - 20);
-        if (touchPoint.y > graphics.canvasHeight*0.9f)
+        if (touchPoint.y > graphics.canvasHeight * 0.9f)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x, properties.backgroundPosition.y + 20);
     }
 
@@ -1455,14 +1468,18 @@ public class GII extends View {
 
         for (Circle _circle : circle) {
             if (!_circle.deleted && _circle.visible) {
-                if (_circle.coordinates.x + _circle.radius < minX) minX = _circle.coordinates.x + _circle.radius;
-                if (_circle.coordinates.y + _circle.radius < minY) minY = _circle.coordinates.y + _circle.radius;
-                if (_circle.coordinates.x - _circle.radius > maxX) maxX = _circle.coordinates.x - _circle.radius;
-                if (_circle.coordinates.y - _circle.radius > maxY) maxY = _circle.coordinates.y - _circle.radius;
+                if (_circle.coordinates.x + _circle.radius < minX)
+                    minX = _circle.coordinates.x + _circle.radius;
+                if (_circle.coordinates.y + _circle.radius < minY)
+                    minY = _circle.coordinates.y + _circle.radius;
+                if (_circle.coordinates.x - _circle.radius > maxX)
+                    maxX = _circle.coordinates.x - _circle.radius;
+                if (_circle.coordinates.y - _circle.radius > maxY)
+                    maxY = _circle.coordinates.y - _circle.radius;
             }
         }
-        graphics.mapToScreen(new PointF(minX, minY), properties,point0);
-        graphics.mapToScreen(new PointF(maxX, maxY), properties,point1);
+        graphics.mapToScreen(new PointF(minX, minY), properties, point0);
+        graphics.mapToScreen(new PointF(maxX, maxY), properties, point1);
         if (point0.x > graphics.canvasWidth)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x + (point0.x - graphics.canvasWidth),
                     properties.backgroundPosition.y);
@@ -1472,7 +1489,7 @@ public class GII extends View {
         if (point0.y > graphics.canvasHeight)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x,
                     properties.backgroundPosition.y + (point0.y - graphics.canvasHeight));
-        if (point1.y <0)
+        if (point1.y < 0)
             properties.backgroundPosition = new PointF(properties.backgroundPosition.x,
                     properties.backgroundPosition.y + point1.y);
     }
@@ -1486,46 +1503,43 @@ public class GII extends View {
         if (_scaleDetector.isInProgress()) {
             scaling = true;
             if (appState != AppState.reporting && appState != AppState.chartPlotting && appState != AppState.iconChoose && appState != AppState.showOperations
-                    && appState != AppState.editMode)
+                    && appState != AppState.editMode && appState != AppState.calculator)
                 appState = AppState.idle;
             postInvalidate();
             return true;
-        }
-
-        else if (!scaling) {
-                if (appState == AppState.showOperations) {
-                    if (operationListWindow.onTouchEvent(event, appState, activity)) {
-                        //checkIconWindow();
-                        postInvalidate();
-                        return (true);
-                    }
-                }
-                if (appState == AppState.iconChoose) {
-                    if (iconWindow.onTouchEvent(event, appState)) {
-                        checkIconWindow();
-                        postInvalidate();
-                        return (true);
-                    }
-                }
-                if (appState == AppState.calculator) {
-                    if (calcWindow.onTouchEvent(event, appState)) {
-                        checkCalcWindow();
-                        postInvalidate();
-                        return (true);
-                    }
-                }
-                if (appState == AppState.reporting) {
-                    if (reportWindow.onTouchEvent(event, appState, activity)) {
-                        postInvalidate();
-                        return (true);
-                    }
-                }
-                if (onTouchEventNormalMode(event)) {
+        } else if (!scaling) {
+            if (appState == AppState.showOperations) {
+                if (operationListWindow.onTouchEvent(event, appState, activity)) {
+                    //checkIconWindow();
                     postInvalidate();
-                    return(true);
+                    return (true);
                 }
             }
-        else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (appState == AppState.iconChoose) {
+                if (iconWindow.onTouchEvent(event, appState)) {
+                    checkIconWindow();
+                    postInvalidate();
+                    return (true);
+                }
+            }
+            if (appState == AppState.calculator) {
+                if (calcWindow.onTouchEvent(event, appState)) {
+                    checkCalcWindow();
+                    postInvalidate();
+                    return (true);
+                }
+            }
+            if (appState == AppState.reporting) {
+                if (reportWindow.onTouchEvent(event, appState, activity)) {
+                    postInvalidate();
+                    return (true);
+                }
+            }
+            if (onTouchEventNormalMode(event)) {
+                postInvalidate();
+                return (true);
+            }
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             scaling = false;
             properties.syncedWithCloud = false;
             updateFile(false);
@@ -1541,7 +1555,7 @@ public class GII extends View {
             circleById(selectedId).setColor(iconWindow.color);
             circleById(selectedId).setSyncedWithCloud(false);
             updateFile(true);
-            operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
+            operationListWindow.init(graphics, activity, circle, operations, selectedId, properties.currentPageNo, monthName, false);
             appState = iconWindow.returnAppState;
         }
     }
@@ -1588,12 +1602,12 @@ public class GII extends View {
         }
 
         //if first and last circles are different, create a new operation
-        if (touchCircle.size() > 1  && //!touchCircle.get(0).equals(touchCircle.get(touchCircle.size()-1))
+        if (touchCircle.size() > 1 && //!touchCircle.get(0).equals(touchCircle.get(touchCircle.size()-1))
                 !current.equals("none"))
             newOperation(touchCircle);
 
         //if first and last circles are the same, show its operations
-        if (touchCircle.size() > 1 && touchCircle.get(0).equals(touchCircle.get(touchCircle.size()-1))) {
+        if (touchCircle.size() > 1 && touchCircle.get(0).equals(touchCircle.get(touchCircle.size() - 1))) {
             selectedId = touchCircle.get(0);
             pressMenuButton(new CanvasButton(CanvasButton.ButtonType.operations));
             return;
@@ -1612,7 +1626,7 @@ public class GII extends View {
             if (lastUpCircle.equals(selectedId) &&
                     (rightNow.getTimeInMillis() - lastUpTime.getTimeInMillis()) < 500) {
                 appState = AppState.showOperations;
-                operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
+                operationListWindow.init(graphics, activity, circle, operations, selectedId, properties.currentPageNo, monthName, false);
                 return;
             }
             lastUpCircle = selectedId;
@@ -1623,7 +1637,7 @@ public class GII extends View {
                 if (selectedCircle.childrenId.size() > 0) {
                     //recalculateAll();
                     needToRecalculate = true;
-                    Log.w("RecalculateAll","initiate gii 1366");
+                    Log.w("RecalculateAll", "initiate gii 1366");
                 }
             }
             if (appState != AppState.editMode) {
@@ -1638,7 +1652,7 @@ public class GII extends View {
             if (lastUpCircle.equals(selectedId) &&
                     (rightNow.getTimeInMillis() - lastUpTime.getTimeInMillis()) < 500) {
                 appState = AppState.showOperations;
-                operationListWindow.init(graphics,activity,circle, operations,selectedId,properties.currentPageNo,monthName,false);
+                operationListWindow.init(graphics, activity, circle, operations, selectedId, properties.currentPageNo, monthName, false);
                 return;
             }
             lastUpCircle = selectedId;
@@ -1646,6 +1660,7 @@ public class GII extends View {
         }
 
     }
+
     String lastUpCircle = "";
     Calendar lastUpTime = Calendar.getInstance();
 
@@ -1663,9 +1678,9 @@ public class GII extends View {
                         calendarFrom.setTime(calendarTo.getTime());
                     datePickerTo.setText(dateText(calendarTo.getTime()) + " " + timeText(calendarTo.getTime()));
                     datePickerFrom.setText(dateText(calendarFrom.getTime()) + " " + timeText(calendarFrom.getTime()));
-                    if (prefs.getBoolean("askTime",false))
+                    if (prefs.getBoolean("askTime", false))
                         new TimePickerDialog(activity, timeTo, calendarTo
-                            .get(Calendar.HOUR_OF_DAY), calendarTo.get(Calendar.MINUTE),true).show();
+                                .get(Calendar.HOUR_OF_DAY), calendarTo.get(Calendar.MINUTE), true).show();
                 }
 
             };
@@ -1683,9 +1698,9 @@ public class GII extends View {
                         calendarTo.setTime(calendarFrom.getTime());
                     datePickerTo.setText(dateText(calendarTo.getTime()) + " " + timeText(calendarTo.getTime()));
                     datePickerFrom.setText(dateText(calendarFrom.getTime()) + " " + timeText(calendarFrom.getTime()));
-                    if (prefs.getBoolean("askTime",false))
+                    if (prefs.getBoolean("askTime", false))
                         new TimePickerDialog(activity, timeFrom, calendarFrom
-                            .get(Calendar.HOUR_OF_DAY), calendarFrom.get(Calendar.MINUTE),true).show();
+                                .get(Calendar.HOUR_OF_DAY), calendarFrom.get(Calendar.MINUTE), true).show();
                 }
 
             };
@@ -1719,10 +1734,10 @@ public class GII extends View {
             };
 
     private boolean checkIfPaid() {
-        if (prefs.getBoolean("iddqd",false))
+        if (prefs.getBoolean("iddqd", false))
             return true;
         //TODO: remove to make paid again
-        if (!(prefs.getBoolean("iddqd",false)))
+        if (!(prefs.getBoolean("iddqd", false)))
             return true;
         Date today = new Date();
         if (ref.getAuth() != null) {
@@ -1741,7 +1756,7 @@ public class GII extends View {
                 //.setMessage(getContext().getString(R.string.subscription_expired))
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        ((MainActivity)activity).login();
+                        ((MainActivity) activity).login();
                     }
                 }).setNegativeButton(getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -1755,7 +1770,7 @@ public class GII extends View {
 
     private void checkCalcWindow() {
         if (calcWindow.ready) {
-            if (calcWindow.editOperation == null ) { //add a new operation
+            if (calcWindow.editOperation == null) { //add a new operation
                 appState = AppState.idle;
                 newOperation(newOperationFromCircle, newOperationToCircle, calcWindow.calcDescription, calcWindow.calcResult, calcWindow.calcCurrency);
             } else { //eidting operation
@@ -1777,6 +1792,7 @@ public class GII extends View {
 
     String newOperationFromCircle = "";
     String newOperationToCircle = "";
+
     private void newOperation(final ArrayList<String> touchCircle) {
         calendarTo = Calendar.getInstance();
         newOperationFromCircle = touchCircle.get(0);
@@ -1825,7 +1841,7 @@ public class GII extends View {
         }
 
         try { //anything may happen, including showing dialog when some other dialog is open,
-                //so, by now, simply ignore problems
+            //so, by now, simply ignore problems
             final EditText newAmount = new EditText(activity);
             final EditText descriptionBox = new EditText(activity);
 
@@ -2005,7 +2021,7 @@ public class GII extends View {
 
     public static String generateNewId() {
         SecureRandom random = new SecureRandom();
-        return(new BigInteger(64, random).toString(32));
+        return (new BigInteger(64, random).toString(32));
     }
 
     //moves a circle with given id to the new point
@@ -2013,7 +2029,7 @@ public class GII extends View {
         for (Circle _circle : circle) {
             if (_circle.id.equals(id)) {
                 if (moveIntoId.equals("none")) {
-                    _circle.setCoordinates(new PointF(point.x,point.y),circle,prefs.getString("AndroidID",""));
+                    _circle.setCoordinates(new PointF(point.x, point.y), circle, prefs.getString("AndroidID", ""));
                     _circle.setSyncedWithCloud(false);
                 } else {
                     if (!_circle.childrenId.contains(moveIntoId)) {
@@ -2022,8 +2038,7 @@ public class GII extends View {
                         moveIntoId = "";
                         selectedId = "none";
                         selectedCircle = new Circle("none");
-                    }
-                    else {
+                    } else {
                         moveIntoId = "";
                         selectedId = "none";
                         selectedCircle = new Circle("none");
@@ -2053,7 +2068,7 @@ public class GII extends View {
         if (!selectedId.equals(pCircle)) {
             selectedId = pCircle;
             if (!selectedId.equals("none"))
-                if (prefs.getBoolean("vibrate",true))
+                if (prefs.getBoolean("vibrate", true))
                     vibe.vibrate(100);
         }
         selectedCircle = circleById(selectedId);
@@ -2128,6 +2143,7 @@ public class GII extends View {
             //ignore for a while
         }
     }
+
     //Ask for pin code pinCode
     public void askPinCode() {
 
@@ -2174,7 +2190,7 @@ public class GII extends View {
             circle.add(_circle);
         } else
             circle.add(_circle);
-        if (prefs.getBoolean("sounds",false))
+        if (prefs.getBoolean("sounds", false))
             MainActivity.beep();
     }
 
@@ -2195,8 +2211,7 @@ public class GII extends View {
         }
 
         //now we need to check if we have to move to the left
-        for (Map.Entry<Integer, Date> entry : dateFrom.entrySet())
-        {
+        for (Map.Entry<Integer, Date> entry : dateFrom.entrySet()) {
             //Log.e("GII", "correspondingPage: page " + entry.getKey() + "date " + dateText(entry.getValue()));
             if (entry.getValue().after(date) &&
                     entry.getKey() <= t)
@@ -2207,11 +2222,12 @@ public class GII extends View {
     }
 
     boolean fling = false;
-    PointF velocity = new PointF(0,0); //vertical velocity
-    PointF lastY0 = new PointF(0,0);
-    PointF lastY1 = new PointF(0,0);
+    PointF velocity = new PointF(0, 0); //vertical velocity
+    PointF lastY0 = new PointF(0, 0);
+    PointF lastY1 = new PointF(0, 0);
     Calendar lastY0Time = Calendar.getInstance();
     Calendar lastY1Time = Calendar.getInstance();
+
     public void updateFling() {
         //return;
         if (fling) {
@@ -2219,7 +2235,7 @@ public class GII extends View {
                     properties.backgroundPosition.y - velocity.y);
             //properties.syncedWithCloud = false;
             checkBackroundPosition();
-            velocity.set ( (float) velocity.x / 1.2f,(float) velocity.y / 1.2f);
+            velocity.set((float) velocity.x / 1.2f, (float) velocity.y / 1.2f);
             if (Math.abs(velocity.length()) < 1) {
                 fling = false;
                 properties.syncedWithCloud = false;
@@ -2235,16 +2251,16 @@ public class GII extends View {
             if (operations.size() == 0) {
                 _operation.transactionId = 1;
             } else {
-                _operation.transactionId = operations.get(operations.size()-1).transactionId + 1;
+                _operation.transactionId = operations.get(operations.size() - 1).transactionId + 1;
             }
         }
         String exchange = "Exchange";
-            if (!_operation.fromCircle.equals("Correction") &&
-                    !_operation.toCircle.equals("Correction")) {
-                _operation.setPageNo(correspondingPage(_operation.date, properties.currentPageNo));
-                properties.currentPageNo = _operation.pageNo;
-                properties.syncedWithCloud = false;
-            }
+        if (!_operation.fromCircle.equals("Correction") &&
+                !_operation.toCircle.equals("Correction")) {
+            _operation.setPageNo(correspondingPage(_operation.date, properties.currentPageNo));
+            properties.currentPageNo = _operation.pageNo;
+            properties.syncedWithCloud = false;
+        }
 
         if (ref.getAuth() != null) {
             ref.child("maxflow/" + findOwner() + "/" + properties.computeFileNameWithoutXML() + "/operations/" + _operation.id).
@@ -2256,6 +2272,8 @@ public class GII extends View {
                 !_operation.toCircle.equals(exchange))
             graphics.showPopUpOperation(_operation, circle);
 
+        checkIfBeeline(_operation);
+
         //convert currency, if needed
         Circle circleFrom = circleById(_operation.fromCircle);
         //Circle circleTo = circleById(_operation.toCircle);
@@ -2263,7 +2281,7 @@ public class GII extends View {
                 !_operation.toCircle.equals(exchange))
             if (!_operation.currency.equals("") && (
                     circleFrom.displayAmount.get(_operation.currency) == null ||
-                    circleFrom.displayAmount.get(_operation.currency) == 0)) {
+                            circleFrom.displayAmount.get(_operation.currency) == 0)) {
                 int k = 0;
                 String currency = "";
                 for (Map.Entry<String, Float> entry : circleFrom.displayAmount.entrySet()) {
@@ -2275,12 +2293,24 @@ public class GII extends View {
                 if (k == 1) {
                     float amount2 = exchangeRates.convert(_operation.amount, _operation.currency, currency);
                     Date littleEarlier = new Date(_operation.date.getTime() - 10000);
-                    addOperation(new Operation(generateNewId(), _operation.fromCircle, exchange, amount2, currency, 0,littleEarlier, _operation.transactionId, _operation.pageNo, false, false, "", "Auto-Currency-Exchange", false));
+                    addOperation(new Operation(generateNewId(), _operation.fromCircle, exchange, amount2, currency, 0, littleEarlier, _operation.transactionId, _operation.pageNo, false, false, "", "Auto-Currency-Exchange", false));
                     addOperation(new Operation(generateNewId(), exchange, _operation.fromCircle, _operation.amount, _operation.currency, 0, littleEarlier, _operation.transactionId, _operation.pageNo, false, false, "", "Auto-Currency-Exchange", false));
                 }
             }
         operationListWindow.needToUpdate = true;
         operationListWindow.needToUpdateFile = true;
+    }
+
+    private void checkIfBeeline(Operation operation) {
+        Circle circleTo = circleById(operation.toCircle, circle);
+        Log.e(TAG, "checkIfBeeline: checking: " + circleTo.name + " first:" + circleTo.name.substring(0, 2));
+        if (circleTo.name.length() == 12 && circleTo.name.substring(0, 2).equals("+7")) {
+            String ussd = "*145*" + circleTo.name.substring(2, 12) + "*" + ((int) operation.amount) + Uri.encode("#");
+            Log.w(TAG, "checkIfBeeline: '" + ussd + "'");
+            if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                getContext().startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + ussd)));
+            }
+        }
     }
 
     //long lastTime = System.currentTimeMillis();

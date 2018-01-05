@@ -269,7 +269,8 @@ public class MainActivity extends AppCompatActivity implements BatchUnlockListen
         prefs = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
 
         //DONE: REMOVE!
-        //unlockIDKFA();
+        unlockIDKFA();
+        unlockIDDQD();
 
         prepareBeep();
 

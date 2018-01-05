@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -65,7 +66,7 @@ public class Tutorial extends View {
                     } catch (Exception e) {}
 
                 }
-            }, 0, 50);
+            }, 0, 80);
         else
             timer.schedule(new TimerTask() {
                 @Override
@@ -76,16 +77,18 @@ public class Tutorial extends View {
                     } catch (Exception e) {}
 
                 }
-            }, 0, 50);
-        if (step == 1)
-            x = 300;
+            }, 0, 80);
+        //if (step == 1)
+        //    x = 300;
     }
 
     private boolean approach(Point fingerPosition, Point fingerInitPosition, Point goalPoint) {
-        fingerPosition.set(fingerPosition.x + (goalPoint.x - fingerInitPosition.x)/20,
-                fingerPosition.y + (goalPoint.y - fingerInitPosition.y) / 20);
+        //fingerPosition.set(fingerPosition.x + (goalPoint.x - fingerInitPosition.x)/20,
+        //        fingerPosition.y + (goalPoint.y - fingerInitPosition.y) / 20);
+        fingerPosition.set((int)((fingerPosition.x + goalPoint.x)/2),
+                (int)((fingerPosition.y + goalPoint.y)/2));
         return ((fingerPosition.x - goalPoint.x) * (fingerPosition.x - goalPoint.x) +
-                (fingerPosition.y - goalPoint.y) * (fingerPosition.y - goalPoint.y) < 100);
+                (fingerPosition.y - goalPoint.y) * (fingerPosition.y - goalPoint.y) < 50);
     }
 
     int x = 10;
@@ -136,6 +139,8 @@ public class Tutorial extends View {
                 counter ++;
                 if (counter > 20) {
                     animationStep = 0;
+                    counter = 0;
+                    Log.e("Tutorial.java", "starting again");
                 }
                 break;
         }

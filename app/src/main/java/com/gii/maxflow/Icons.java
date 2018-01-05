@@ -153,7 +153,7 @@ public class Icons {
 
                     if (GIIApplication.gii.ref.getAuth() == null &&
                             !GIIApplication.gii.prefs.getBoolean("idkfa",false) &&
-                            GIIApplication.gii.graphics.drawableIconCategory[i] < 0) {
+                            GIIApplication.gii.graphics.drawableIconCategory[i] < 0 && 1+1==3) {
                         final AlertDialog.Builder builder = new AlertDialog.Builder(GIIApplication.gii.activity);
                         //final AlertDialog dialog = builder.create();
 
@@ -220,7 +220,7 @@ public class Icons {
                             graphics.drawIcon(null, i, (i * 3) % graphics.circleColor.length, (i * 3) % graphics.circleColor.length, drawRects[i], 0, false, canvas);
                             if (GIIApplication.gii.ref.getAuth() == null &&
                                     !GIIApplication.gii.prefs.getBoolean("idkfa", false) &&
-                                    GIIApplication.gii.graphics.drawableIconCategory[i] < 0) {
+                                    GIIApplication.gii.graphics.drawableIconCategory[i] < 0 && 1+1==3) {
                                 canvas.drawLine(drawRects[i].left, drawRects[i].top,
                                         drawRects[i].right, drawRects[i].bottom, paintGray);
                             }

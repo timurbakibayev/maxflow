@@ -104,7 +104,6 @@ public class Circle {
         this.color = color;
     }
 
-
     public void setAmount(float amount) {
         this.amount = amount;
     }
@@ -419,6 +418,7 @@ public class Circle {
         }
         lastChangeId = androidID;
     }
+
     public void move() {
         if (!moving)
             return;
@@ -432,7 +432,7 @@ public class Circle {
             currentCoordinates = coordinates;
         }
     }
-    
+
     public void recalculateChildren(ArrayList<Circle> circle) {
         this.childrenId = new ArrayList<>();
         int[] a = new int[circle.size()];

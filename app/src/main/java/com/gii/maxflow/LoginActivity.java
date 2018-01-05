@@ -303,7 +303,7 @@ public class LoginActivity extends AppCompatActivity implements IabBroadcastRece
                 return;
             }
 
-            if (inventory != null && inventory.getSkuDetails("cloud1m").getPrice() != null) {
+            if (2 == 3 && inventory != null && inventory.getSkuDetails("cloud1m").getPrice() != null) {
 
                 cloud1mPrice =
                         inventory.getSkuDetails("cloud1m").getPrice();
